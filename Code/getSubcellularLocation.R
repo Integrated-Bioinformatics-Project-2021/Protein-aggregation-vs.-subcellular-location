@@ -50,35 +50,11 @@ for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and
   hashed_proteins[current_protein_name] <- locations_short[i,]
 }
 
-
-#for (i in 1:dim(subcellular_locations)[1]) { # Iterate over every protein in the list
-  #string_location = subcellular_locations[i,]
-  #while (grepl("\\{", string_location[length(string_location)])) { # As long as there is a "{" left, splitting needs to happen
-    #string_location[length(string_location)] = strsplit(toString(string_location[length(string_location)]), "{", perl = TRUE)
-  #}
-  #string_location = unlist(string_location)
-  #n = length(string_location)-1
-  #if (n > 0) {
-    #string_location = string_location[1:n]
-    #for (j in 1:n) { # For every subcellular location, remove the unnecessary information
-     #string_location[j] = sub(".*:", "", string_location[j])
-      #if (grepl("\\.", string_location[j])) {
-        #string_location[j] = sub(".subc*\\.", "", string_location[j])
-      #}
-    #}
-    
-  #}
-  #print(string_location)
-#}
-
 #Adding the subcellular location to the dataset
 locations_short<- cbind(locations_short, Protein = row.names(subcellular_locations)) #creating a second column Protein
 complete_data = merge(locations_short, human_proteome, by="Protein", all.y = TRUE) #merging the dataframes on column Protein, keeping non matches
 
 
-#secretory_pathway("")
-
-#typeof(search_terms)
 
 
 
