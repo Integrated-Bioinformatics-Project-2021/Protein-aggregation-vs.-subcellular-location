@@ -54,6 +54,47 @@ for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and
 locations_short<- cbind(locations_short, Protein = row.names(subcellular_locations)) #creating a second column Protein
 complete_data = merge(locations_short, human_proteome, by="Protein", all.y = TRUE) #merging the dataframes on column Protein, keeping non matches
 
+# To check if the merging is working
+# complete_data[complete_data$Protein=="P40259",c("Protein","subcellular_location")]
+
+secretory <- c("Cell membrane", "Endoplasmatic Reticulum", "Golgi apparatus", "Lysosomes", "Secreted region")
+non_secretory <- c("Cytoplasm", "Nucleus", "Mitochondrion")
+
+for (i in 1:nrow(locations_short)){
+
+  locations_str <- sapply(locations_short[i,]["subcellular_location"], as.character)
+  locations_vector <- strsplit(locations_str, split = ", ")
+  
+  result = ""
+  
+  if(length(locations_vector$subcellular_location) != 0)
+  {
+    for (j in 1:length(locations_vector$subcellular_location))
+    {
+      if (locations_vector$subcellular_location[j] %in% secretory)
+      {
+        result = paste(result, "a", sep = "")
+      }
+      else if(locations_vector$subcellular_location[j] %in% non_secretory)
+      {
+        result = paste(result, "b", sep = "")
+      }
+    }
+  }
+  
+  if (grepl("a", result, fixed = TRUE) & grepl("b", result, fixed = TRUE)){
+    locations_short[i,]["Secretory"] = "3"
+  }
+  else if (grepl("a", result, fixed = TRUE)){
+    locations_short[i,]["Secretory"] = "1"
+  }
+  else if (grepl("b", result, fixed = TRUE)){
+    locations_short[i,]["Secretory"] = "2"
+  }
+  else{
+    locations_short[i,]["Secretory"] = "3"
+  }
+}
 
 
 
