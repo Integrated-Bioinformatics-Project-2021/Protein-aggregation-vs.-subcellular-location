@@ -25,9 +25,52 @@ proteins
 locations = GetSubcellular_location(proteins[5000:5005], directorypath = NULL)
 subcellular_locations = locations[1] # Remove NA's from intramembrane, topological domain and transmembrane information
 search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmatic Reticulum", "Golgi apparatus", "Lysosomes", "Cytoplasm", "Secreted region", "Extracellular region")
+
 subcellular_location = matrix(ncol = 1, nrow = 0) 
-locations_short = data.frame(subcellular_location) # creating a dataframe to add the subcellular locations
+secretory_pathway = matrix(ncol = 1, nrow = 0)
+
+locations_short = data.frame(subcellular_location, secretory_pathway) # creating a dataframe to add the subcellular locations
 hashed_proteins = hash() #generate dictionary
+
+secretory <- c("Cell membrane", "Endoplasmatic Reticulum", "Golgi apparatus", "Lysosomes", "Secreted region")
+non_secretory <- c("Cytoplasm", "Nucleus", "Mitochondrion")
+
+check_secretory <- function(x) {
+  
+  locations_str <- as.character(x)
+  locations_vector <- strsplit(locations_str, split = ", ")
+  result = ""
+
+  if(length(locations_vector) != 0)
+  {
+    for (j in 1:length(locations_vector))
+    {
+      if (locations_vector[j] %in% secretory)
+      {
+        print("Secretory")
+        result = paste(result, "sec", sep = "")
+      }
+      else if(locations_vector[j] %in% non_secretory)
+      {
+        result = paste(result, "nonSec", sep = "")
+      }
+    }
+  }
+  
+  if (grepl("sec", result, fixed = TRUE) & grepl("nonSec", result, fixed = TRUE)){
+    return(NA)
+  }
+  else if (grepl("sec", result, fixed = TRUE)){
+    return(TRUE)
+  }
+  else if (grepl("nonSec", result, fixed = TRUE)){
+    return(FALSE)
+  }
+  else {
+    return(NA)
+  }
+}
+
 for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and the "SUBCELLULAR LOCATION"
   #print(subcellular_locations[i,])
   string_location <- str_contains(subcellular_locations[i,], search_terms)
@@ -40,62 +83,21 @@ for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and
       x <- paste(x, collapse = ", ")
       print(x)
     }
-    locations_short[nrow(locations_short) + 1,] = x #adding each value to the dataframe
-    print(locations_short)
+    locations_short[nrow(locations_short) + 1,1] = x # adding each value to the dataframe
+    locations_short[nrow(locations_short),2] = check_secretory(x) # stating whether the proteins is found in an intracellular or extracellular location
   }
   else {
     locations_short[nrow(locations_short) + 1,] = ""
   }
   current_protein_name = proteins[4999+i]
   hashed_proteins[current_protein_name] <- locations_short[i,]
+  current_protein_name = toString(current_protein_name)
+  print(hashed_proteins[[current_protein_name]][["subcellular_location"]])
+  data$Subcellular_location[data$Protein == current_protein_name]  <- hashed_proteins[[current_protein_name]][["subcellular_location"]]
+  data$secretory_pathway[data$Protein == current_protein_name]  <- hashed_proteins[[current_protein_name]][["secretory_pathway"]]
 }
 
-#Adding the subcellular location to the dataset
-locations_short<- cbind(locations_short, Protein = row.names(subcellular_locations)) #creating a second column Protein
-complete_data = merge(locations_short, human_proteome, by="Protein", all.y = TRUE) #merging the dataframes on column Protein, keeping non matches
-save(complete_data, file = "Data/complete_data.RData")
-
-# To check if the merging is working
-# complete_data[complete_data$Protein=="P40259",c("Protein","subcellular_location")]
-
-secretory <- c("Cell membrane", "Endoplasmatic Reticulum", "Golgi apparatus", "Lysosomes", "Secreted region")
-non_secretory <- c("Cytoplasm", "Nucleus", "Mitochondrion")
-
-for (i in 1:nrow(locations_short)){
-
-  locations_str <- sapply(locations_short[i,]["subcellular_location"], as.character)
-  locations_vector <- strsplit(locations_str, split = ", ")
-  
-  result = ""
-  
-  if(length(locations_vector$subcellular_location) != 0)
-  {
-    for (j in 1:length(locations_vector$subcellular_location))
-    {
-      if (locations_vector$subcellular_location[j] %in% secretory)
-      {
-        result = paste(result, "a", sep = "")
-      }
-      else if(locations_vector$subcellular_location[j] %in% non_secretory)
-      {
-        result = paste(result, "b", sep = "")
-      }
-    }
-  }
-  
-  if (grepl("a", result, fixed = TRUE) & grepl("b", result, fixed = TRUE)){
-    locations_short[i,]["Secretory"] = "3"
-  }
-  else if (grepl("a", result, fixed = TRUE)){
-    locations_short[i,]["Secretory"] = "1"
-  }
-  else if (grepl("b", result, fixed = TRUE)){
-    locations_short[i,]["Secretory"] = "2"
-  }
-  else{
-    locations_short[i,]["Secretory"] = "3"
-  }
-}
+save(data, file = "Data/complete_data.RData")
 
 
 
