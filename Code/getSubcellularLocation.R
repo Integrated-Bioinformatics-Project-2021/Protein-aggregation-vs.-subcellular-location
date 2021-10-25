@@ -1,12 +1,12 @@
-install.packages("UniprotR")
-install.packages("BiocManager")
-BiocManager::install("Biostrings")
-BiocManager::install("GenomicAlignments")
-install.packages("sjmisc") # Used for str_contains
-install.packages("hash")
+# install.packages("UniprotR")
+# install.packages("BiocManager")
+# BiocManager::install("Biostrings")
+# BiocManager::install("GenomicAlignments")
+# install.packages("sjmisc")
+# install.packages("hash")
 library(UniprotR)
 library(stringr) # Used to get the last word of a string
-library(sjmisc)
+library(sjmisc) # Used for str_contains
 library(hash)
 
 ## Defining the working directory
@@ -53,6 +53,7 @@ for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and
 #Adding the subcellular location to the dataset
 locations_short<- cbind(locations_short, Protein = row.names(subcellular_locations)) #creating a second column Protein
 complete_data = merge(locations_short, human_proteome, by="Protein", all.y = TRUE) #merging the dataframes on column Protein, keeping non matches
+save(complete_data, file = "Data/complete_data.RData")
 
 # To check if the merging is working
 # complete_data[complete_data$Protein=="P40259",c("Protein","subcellular_location")]
