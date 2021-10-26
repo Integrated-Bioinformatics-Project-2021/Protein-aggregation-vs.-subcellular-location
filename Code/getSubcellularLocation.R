@@ -97,7 +97,17 @@ for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and
   data$secretory_pathway[data$Protein == current_protein_name]  <- hashed_proteins[[current_protein_name]][["secretory_pathway"]]
 }
 
-save(data, file = "Data/complete_data.RData")
+# save(data, file = "Data/complete_data.RData") # Uncomment to save the results to a file
+
+# Return a list with all the protein IDs of that contain the given subcellular location.
+get_proteins_with_given_subcellular_location <- function(given_subcellular_location){
+  wanted_proteins <- sapply(keys(hashed_proteins), function(x) grepl(given_subcellular_location, hashed_proteins[[x]][["subcellular_location"]]))
+  wanted_proteins <- keys(hashed_proteins)[wanted_proteins]
+  return (wanted_proteins)
+}
+
+proteins_cell_membrane = get_proteins_with_given_subcellular_location("Cell membrane")
+proteins_nucleus = get_proteins_with_given_subcellular_location("Nucleus")
 
 
 
