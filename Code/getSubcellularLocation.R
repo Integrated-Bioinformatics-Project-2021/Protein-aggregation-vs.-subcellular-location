@@ -1,13 +1,15 @@
-# install.packages("UniprotR")
-# install.packages("BiocManager")
-# BiocManager::install("Biostrings")
-# BiocManager::install("GenomicAlignments")
-# install.packages("sjmisc")
-# install.packages("hash")
+#install.packages("UniprotR")
+#install.packages("BiocManager")
+#BiocManager::install("Biostrings")
+#BiocManager::install("GenomicAlignments")
+#install.packages("sjmisc")
+#install.packages("hash")
+#install.packages("dplyr")
 library(UniprotR)
 library(stringr) # Used to get the last word of a string
 library(sjmisc) # Used for str_contains
 library(hash)
+library(dplyr) # Used for aggregate function
 
 ## Defining the working directory
 directory = dirname(rstudioapi::getSourceEditorContext()$path) # Should work when data is placed in same folder
@@ -17,9 +19,14 @@ setwd(directory)
 load("Data/human_proteome_df.RData")
 data = human_proteome
 
+#Delete all proteins witch were found in transmembrane regions or that are signal peptides (THMM, THMM_domain, SingalIP)
+data <- subset(data, TMHMM == "No"& TMHMM_domain == "No"& SignalP == "No")
+
 ## Get all unique protein identifiers
 proteins <- unique(data$Protein)
 proteins
+
+
 
 ## Get subcellular location of every protein
 locations = GetSubcellular_location(proteins[5000:5005], directorypath = NULL)
@@ -40,14 +47,13 @@ check_secretory <- function(x) {
   locations_str <- as.character(x)
   locations_vector <- strsplit(locations_str, split = ", ")
   result = ""
-
+  
   if(length(locations_vector) != 0)
   {
     for (j in 1:length(locations_vector))
     {
       if (locations_vector[j] %in% secretory)
       {
-        print("Secretory")
         result = paste(result, "sec", sep = "")
       }
       else if(locations_vector[j] %in% non_secretory)
@@ -72,11 +78,8 @@ check_secretory <- function(x) {
 }
 
 for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and the "SUBCELLULAR LOCATION"
-  #print(subcellular_locations[i,])
   string_location <- str_contains(subcellular_locations[i,], search_terms)
-  print(string_location)
   x <- search_terms[string_location]
-  #print(x)
   if (length(x) != 0) {
     print(length(x))
     if (length(x) > 1) {
@@ -92,7 +95,6 @@ for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and
   current_protein_name = proteins[4999+i]
   hashed_proteins[current_protein_name] <- locations_short[i,]
   current_protein_name = toString(current_protein_name)
-  print(hashed_proteins[[current_protein_name]][["subcellular_location"]])
   data$Subcellular_location[data$Protein == current_protein_name]  <- hashed_proteins[[current_protein_name]][["subcellular_location"]]
   data$secretory_pathway[data$Protein == current_protein_name]  <- hashed_proteins[[current_protein_name]][["secretory_pathway"]]
 }
@@ -103,13 +105,35 @@ for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and
 get_proteins_with_given_subcellular_location <- function(given_subcellular_location){
   wanted_proteins <- sapply(keys(hashed_proteins), function(x) grepl(given_subcellular_location, hashed_proteins[[x]][["subcellular_location"]]))
   wanted_proteins <- keys(hashed_proteins)[wanted_proteins]
-  return (wanted_proteins)
+  return (data.frame(wanted_proteins))
 }
 
 proteins_cell_membrane = get_proteins_with_given_subcellular_location("Cell membrane")
 proteins_nucleus = get_proteins_with_given_subcellular_location("Nucleus")
 
 
+# Acquire only the vital rows of each protein (APRs)
+data <- subset(data, APRdef2_tango > 0)
+
+# Get average tango score for each protein
+unique_data <- data[!duplicated(data[,c(1,10)]),]
+
+by_protein <- aggregate(avgScore ~ Protein, unique_data, mean)
+
+#get average Tango score for each subcellular locations 
+#Not managing this, maybe if we create a hash for by_proteins
+avgTotalScore = 0
+for (j in 1:dim(proteins_nucleus)[1]){
+  if (proteins_nucleus$wanted_proteins[j] %in% by_protein$Protein) {
+    avgTotalScore = avgTotalScore + by_protein[which(by_protein$Protein %in% proteins_nucleus$wanted_proteins[j]), "avgScore"]
+  }
+}
+
+
+# Classify into 3 subset dataframes (peptides with only APR, peptides with APR and GK and peptides with APR, GK and 2 FR )
+APR_peptides <- subset(data, APRdef2_tango < 2)
+GK_peptides <- subset(data, APRdef2_tango < 3)
+FR_peptides<-  subset(data, APRdef2_tango < 5)
 
 
 
