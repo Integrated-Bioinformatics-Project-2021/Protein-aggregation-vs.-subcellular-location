@@ -4,12 +4,14 @@
 #BiocManager::install("GenomicAlignments")
 #install.packages("sjmisc")
 #install.packages("hash")
-#install.packages("dplyr")
+# install.packages("dplyr")
+# install.packages("Peptides")
 library(UniprotR)
 library(stringr) # Used to get the last word of a string
 library(sjmisc) # Used for str_contains
 library(hash)
 library(dplyr)
+library(Peptides)
 
 ## Defining the working directory
 directory = dirname(rstudioapi::getSourceEditorContext()$path) # Should work when data is placed in same folder
@@ -108,9 +110,8 @@ get_proteins_with_given_subcellular_location <- function(given_subcellular_locat
   return (data.frame(wanted_proteins))
 }
 
-proteins_cell_membrane = get_proteins_with_given_subcellular_location("Cell membrane")
-proteins_nucleus = get_proteins_with_given_subcellular_location("Nucleus")
 
+# ------------------ tango scores ---------------------------
 
 # Acquire only the vital rows of each protein (APRs)
 data <- subset(data, APRdef2_tango > 0)
@@ -132,13 +133,24 @@ get_average_tango_score <- function(given_protein_list) {
   return (avgTotalScore)
 }
 
+# Get the average tango score for each subcellular location
+tango_scores = c()
+for (i in 1:length(search_terms)) {
+  given_protein_list = get_proteins_with_given_subcellular_location(search_terms[i])
+  if (! is.na(given_protein_list$wanted_proteins[1])) {
+    tango_scores = append(tango_scores, get_average_tango_score(given_protein_list))
+  }
+  else {
+    tango_scores = append(tango_scores, NA)
+  }
+}
+print(tango_scores)
+# TODO: make table with all scores for each subcellular location, also check if intra/extra
+barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms) # TODO: make it pretty ^_^ library(ggplot2)
 
-
+# ------------------ peptides ---------------------------
 
 # Classify into 3 subset dataframes (peptides with only APR, peptides with APR and GK and peptides with APR, GK and 2 FR )
 APR_peptides <- subset(data, APRdef2_tango < 2)
 GK_peptides <- subset(data, APRdef2_tango < 3)
 FR_peptides<-  subset(data, APRdef2_tango < 5)
-
-
-
