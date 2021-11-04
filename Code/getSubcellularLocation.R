@@ -1,15 +1,15 @@
-#install.packages("UniprotR")
-#install.packages("BiocManager")
-#BiocManager::install("Biostrings")
-#BiocManager::install("GenomicAlignments")
-#install.packages("sjmisc")
-#install.packages("hash")
-#install.packages("dplyr")
+install.packages("UniprotR")
+install.packages("BiocManager")
+BiocManager::install("Biostrings")
+BiocManager::install("GenomicAlignments")
+install.packages("sjmisc")
+install.packages("hash")
+install.packages("dplyr")
 library(UniprotR)
 library(stringr) # Used to get the last word of a string
 library(sjmisc) # Used for str_contains
 library(hash)
-library(dplyr) # Used for aggregate function
+library(dplyr)
 
 ## Defining the working directory
 directory = dirname(rstudioapi::getSourceEditorContext()$path) # Should work when data is placed in same folder
@@ -121,13 +121,18 @@ unique_data <- data[!duplicated(data[,c(1,10)]),]
 by_protein <- aggregate(avgScore ~ Protein, unique_data, mean)
 
 #get average Tango score for each subcellular locations 
-#Not managing this, maybe if we create a hash for by_proteins
-avgTotalScore = 0
-for (j in 1:dim(proteins_nucleus)[1]){
-  if (proteins_nucleus$wanted_proteins[j] %in% by_protein$Protein) {
-    avgTotalScore = avgTotalScore + by_protein[which(by_protein$Protein %in% proteins_nucleus$wanted_proteins[j]), "avgScore"]
+
+get_average_tango_score <- function(given_protein_list) {
+  avgTotalScore = 0
+  for (j in 1:dim(given_protein_list)[1]){
+    if (given_protein_list$wanted_proteins[j] %in% by_protein$Protein) {
+      avgTotalScore <- avgTotalScore + by_protein[which(by_protein$Protein %in% given_protein_list$wanted_proteins[j]), "avgScore"]
+    }
   }
+  return (avgTotalScore)
 }
+
+
 
 
 # Classify into 3 subset dataframes (peptides with only APR, peptides with APR and GK and peptides with APR, GK and 2 FR )
