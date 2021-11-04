@@ -1,10 +1,10 @@
-install.packages("UniprotR")
-install.packages("BiocManager")
-BiocManager::install("Biostrings")
-BiocManager::install("GenomicAlignments")
-install.packages("sjmisc")
-install.packages("hash")
-install.packages("dplyr")
+#install.packages("UniprotR")
+#install.packages("BiocManager")
+#BiocManager::install("Biostrings")
+#BiocManager::install("GenomicAlignments")
+#install.packages("sjmisc")
+#install.packages("hash")
+#install.packages("dplyr")
 library(UniprotR)
 library(stringr) # Used to get the last word of a string
 library(sjmisc) # Used for str_contains
