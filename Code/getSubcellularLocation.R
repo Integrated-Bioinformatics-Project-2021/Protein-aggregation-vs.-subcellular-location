@@ -9,9 +9,9 @@
 library(UniprotR)
 library(stringr) # Used to get the last word of a string
 library(sjmisc) # Used for str_contains
-library(hash)
-library(dplyr)
-library(Peptides)
+library(hash) # Used to make a disctionary
+library(dplyr) # Used for aggregate (get avg tango score of protein)
+library(Peptides) # Used for charge (get the charge of a peptide sequence) ETC
 
 ## Defining the working directory
 directory = dirname(rstudioapi::getSourceEditorContext()$path) # Should work when data is placed in same folder
@@ -156,15 +156,15 @@ GK_peptides <- subset(data, APRdef2_tango < 3)
 FR_peptides<-  subset(data, APRdef2_tango < 5)
 
 # For every APR in the list peptides_name, calculate the net charge
-get_charge <- function(peptides_name) {
+get_charge <- function(peptides_name, ph = 7) {
   protein_charges = hash()
   unique_APRs = unique(peptides_name$APRcount_tango)
   for (i in 1:length(unique_APRs)) {
     peptides_for_APR = subset(peptides_name, peptides_name$APRcount_tango == unique_APRs[i])
     sequence = paste(peptides_for_APR$Residue, collapse = "")
-    protein_charges[unique_APRs[i]] <- charge(sequence)
-    #key = toString(unique_APRs[i])
-    #print(protein_charges[[key]])
+    protein_charges[unique_APRs[i]] <- charge(sequence, pH = ph)
+    key = toString(unique_APRs[i])
+    print(protein_charges[[key]])
   }
   return (protein_charges)
 }
@@ -173,3 +173,4 @@ protein_sequences_APR_peptides = get_charge(APR_peptides)
 # protein_sequences_GK_peptides = get_charge(GK_peptides)
 # protein_sequences_FR_peptides = get_charge(FR_peptides)
 
+# Make a histogram
