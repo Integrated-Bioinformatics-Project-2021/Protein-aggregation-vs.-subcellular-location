@@ -7,7 +7,6 @@
 # install.packages("dplyr")
 # install.packages("Peptides")
 library(UniprotR)
-library(stringr) # Used to get the last word of a string
 library(sjmisc) # Used for str_contains
 library(hash) # Used to make a disctionary
 library(dplyr) # Used for aggregate (get avg tango score of protein)
@@ -31,7 +30,7 @@ proteins
 
 
 ## Get subcellular location of every protein
-locations = GetSubcellular_location(proteins[5000:5005], directorypath = NULL)
+locations = GetSubcellular_location(proteins, directorypath = NULL)
 subcellular_locations = locations[1] # Remove NA's from intramembrane, topological domain and transmembrane information
 search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmatic Reticulum", "Golgi apparatus", "Lysosomes", "Cytoplasm", "Secreted region", "Extracellular region")
 
@@ -83,10 +82,8 @@ for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and
   string_location <- str_contains(subcellular_locations[i,], search_terms)
   x <- search_terms[string_location]
   if (length(x) != 0) {
-    print(length(x))
     if (length(x) > 1) {
       x <- paste(x, collapse = ", ")
-      print(x)
     }
     locations_short[nrow(locations_short) + 1,1] = x # adding each value to the dataframe
     locations_short[nrow(locations_short),2] = check_secretory(x) # stating whether the proteins is found in an intracellular or extracellular location
