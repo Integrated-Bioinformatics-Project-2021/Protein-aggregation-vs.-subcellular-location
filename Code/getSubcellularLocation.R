@@ -33,9 +33,8 @@ proteins
 ## Get subcellular location of every protein
 locations = GetSubcellular_location(proteins[5000:5005], directorypath = NULL)
 subcellular_locations = locations[1] # Remove NA's from intramembrane, topological domain and transmembrane information
-search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmatic Reticulum", "Golgi apparatus", "Lysosomes", "Cytoplasm", "Secreted region", "Extracellular region")
+search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Secreted", "Extracellular space")
 
-subcellular_location = matrix(ncol = 1, nrow = 0) 
 secretory_pathway = matrix(ncol = 1, nrow = 0)
 
 locations_short = data.frame(subcellular_location, secretory_pathway) # creating a dataframe to add the subcellular locations
@@ -80,7 +79,7 @@ check_secretory <- function(x) {
 }
 
 for (i in 1:dim(subcellular_locations)[1]) { #Deleting everything between {} and the "SUBCELLULAR LOCATION"
-  string_location <- str_contains(subcellular_locations[i,], search_terms)
+  string_location <- str_contains(subcellular_locations[i,], search_terms, ignore.case = TRUE)
   x <- search_terms[string_location]
   if (length(x) != 0) {
     print(length(x))
