@@ -130,7 +130,7 @@ get_average_tango_score <- function(given_protein_list) {
       avgTotalScore <- avgTotalScore + by_protein[which(by_protein$Protein %in% given_protein_list$wanted_proteins[j]), "avgScore"]
     }
   }
-  return (avgTotalScore/(nrow(given_protein_list))
+  return (avgTotalScore/(nrow(given_protein_list)))
 }
 
 # Get the average tango score for each subcellular location
