@@ -30,7 +30,7 @@ proteins
 
 
 ## Get subcellular location of every protein
-locations = GetSubcellular_location(proteins, directorypath = NULL)
+locations = GetSubcellular_location(proteins[4999:5200], directorypath = NULL)
 subcellular_locations = locations[1] # Remove NA's from intramembrane, topological domain and transmembrane information
 search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Secreted", "Extracellular space")
 
@@ -39,7 +39,7 @@ secretory_pathway = matrix(ncol = 1, nrow = 0)
 locations_short = data.frame(subcellular_location, secretory_pathway) # creating a dataframe to add the subcellular locations
 hashed_proteins = hash() #generate dictionary
 
-secretory <- c("Cell membrane", "Endoplasmatic Reticulum", "Golgi apparatus", "Lysosomes", "Secreted region")
+secretory <- c("Cell membrane", "Endoplasmatic Reticulum", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Secreted region", "Secreted", "Extracellular space")
 non_secretory <- c("Cytoplasm", "Nucleus", "Mitochondrion")
 
 check_secretory <- function(x) {
@@ -114,35 +114,43 @@ data <- subset(data, APRdef2_tango > 0)
 
 # Get average tango score for each protein
 unique_data <- data[!duplicated(data[,c(1,10)]),]
-
 by_protein <- aggregate(avgScore ~ Protein, unique_data, mean)
 
 #get average Tango score for each subcellular locations 
-
 get_average_tango_score <- function(given_protein_list) {
-  avgTotalScore = 0
-  for (j in 1:dim(given_protein_list)[1]){
+  avgScores = c()
+  for (j in 1:nrow(given_protein_list)){
     if (given_protein_list$wanted_proteins[j] %in% by_protein$Protein) {
-      avgTotalScore <- avgTotalScore + by_protein[which(by_protein$Protein %in% given_protein_list$wanted_proteins[j]), "avgScore"]
+      avgScores <- append(avgScores,by_protein[which(by_protein$Protein %in% given_protein_list$wanted_proteins[j]), "avgScore"])
     }
+    else {avgScores <- append(avgScores,NA)}
   }
-  return (avgTotalScore/(nrow(given_protein_list)))
+  return (avgScores)
 }
 
 # Get the average tango score for each subcellular location
-tango_scores = c()
+tango_scores = data.frame()
 for (i in 1:length(search_terms)) {
   given_protein_list = get_proteins_with_given_subcellular_location(search_terms[i])
-  if (! is.na(given_protein_list$wanted_proteins[1])) {
-    tango_scores = append(tango_scores, get_average_tango_score(given_protein_list))
-  }
-  else {
-    tango_scores = append(tango_scores, NA)
-  }
+  tango_scores[nrow(tango_scores)+1:nrow(given_protein_list),1] = given_protein_list
+  newIndex = nrow(tango_scores)+1-nrow(given_protein_list)
+  tango_scores[newIndex:(newIndex+nrow(given_protein_list)-1),2] = rep(search_terms[[i]], nrow(given_protein_list))
+  #if (! is.na(given_protein_list$wanted_proteins)) {
+  avgScores = get_average_tango_score(given_protein_list)
+  tango_scores[newIndex:(newIndex+nrow(given_protein_list)-1),3] = avgScores
+  tango_scores[newIndex:(newIndex+nrow(given_protein_list)-1),4] = rep(check_secretory(search_terms[i]), nrow(given_protein_list))
+    #}
 }
-print(tango_scores)
-# TODO: make table with all scores for each subcellular location, also check if intra/extra
-barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms) # TODO: make it pretty ^_^ library(ggplot2)
+colnames(tango_scores) <- c("Proteins", "Subcellular_location", "Tango_scores", "Secretory")
+
+#barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms) # TODO: make it pretty ^_^ library(ggplot2)
+
+library(ggplot2)
+box_tango_sub <- ggplot(tango_scores, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
+  geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
+box_tango_sub + theme_minimal() + facet_wrap(~Secretory)
+
+# TODO: join secreted and extracellular
 
 # ------------------ peptides ---------------------------
 
