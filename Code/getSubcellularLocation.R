@@ -148,7 +148,7 @@ colnames(tango_scores) <- c("Proteins", "Subcellular_location", "Tango_scores", 
 library(ggplot2)
 box_tango_sub <- ggplot(tango_scores, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
   geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
-box_tango_sub + theme_minimal() + facet_wrap(~Secretory)
+box_tango_sub + theme_minimal() + stat_summary(fun.y=mean, geom="point", shape=20, size=5, color="red", fill="red")
 
 # TODO: join secreted and extracellular
 
