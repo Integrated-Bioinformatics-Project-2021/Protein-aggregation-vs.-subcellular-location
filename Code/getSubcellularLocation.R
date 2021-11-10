@@ -30,16 +30,17 @@ proteins
 
 
 ## Get subcellular location of every protein
-locations = GetSubcellular_location(proteins[4999:5200], directorypath = NULL)
+locations = GetSubcellular_location(proteins, directorypath = NULL)
 subcellular_locations = locations[1] # Remove NA's from intramembrane, topological domain and transmembrane information
 search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Secreted", "Extracellular space")
 
+subcellular_location = matrix(ncol = 1, nrow = 0)
 secretory_pathway = matrix(ncol = 1, nrow = 0)
 
 locations_short = data.frame(subcellular_location, secretory_pathway) # creating a dataframe to add the subcellular locations
 hashed_proteins = hash() #generate dictionary
 
-secretory <- c("Cell membrane", "Endoplasmatic Reticulum", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Secreted region", "Secreted", "Extracellular space")
+secretory <- c("Cell membrane", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Secreted", "Extracellular space")
 non_secretory <- c("Cytoplasm", "Nucleus", "Mitochondrion")
 
 check_secretory <- function(x) {
@@ -143,7 +144,7 @@ for (i in 1:length(search_terms)) {
 }
 colnames(tango_scores) <- c("Proteins", "Subcellular_location", "Tango_scores", "Secretory")
 
-#barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms) # TODO: make it pretty ^_^ library(ggplot2)
+#barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms)
 
 library(ggplot2)
 box_tango_sub <- ggplot(tango_scores, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
