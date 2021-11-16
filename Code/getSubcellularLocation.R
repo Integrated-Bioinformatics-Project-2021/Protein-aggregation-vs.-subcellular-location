@@ -15,17 +15,12 @@ library(Peptides) # Used for charge (get the charge of a peptide sequence) ETC
 ## Defining the working directory
 directory = dirname(rstudioapi::getSourceEditorContext()$path) # Should work when data is placed in same folder
 setwd(directory)
-
 source("load_data.R")
-data = read_data()
+source("subcellular_location_annotation.R")
 
-# Return a list with all the protein IDs of that contain the given subcellular location.
-get_proteins_with_given_subcellular_location <- function(given_subcellular_location){
-  wanted_proteins <- sapply(keys(hashed_proteins), function(x) grepl(given_subcellular_location, hashed_proteins[[x]][["subcellular_location"]]))
-  wanted_proteins <- keys(hashed_proteins)[wanted_proteins]
-  return (data.frame(wanted_proteins))
-}
-
+return_value = read_data() # See load_data.R
+data = return_value[1]
+hashed_proteins = return_value[2]
 
 # ------------------ tango scores ---------------------------
 
