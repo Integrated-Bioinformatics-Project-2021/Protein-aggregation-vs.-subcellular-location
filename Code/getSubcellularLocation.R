@@ -183,19 +183,20 @@ get_normalized_number_APR_regions <- function(given_protein_list) {
   avgNumbers = c()
   for (j in 1:length(unique_proteins_in_list)){ # loop over all unique proteins in the given list
     peptides_for_protein = subset(given_protein_list, given_protein_list$Protein == unique_proteins_in_list[j])
-    total_length = length(peptides_for_protein) # count every row for the protein representing each residue 
+    total_length = nrow(peptides_for_protein) # count every row for the protein representing each residue 
     APR_list <- unique(peptides_for_protein$APRcount_tango) # add all unique APR ideas to the list
     # get the number of APR regions in the current protein
     number_APR_regions = length(APR_list)
     # divide by the total length of the protein
     avgNumber <- number_APR_regions/total_length
+    # print(avgNumber)
     # append to the data frame
     avgNumbers <- append(avgNumbers, avgNumber)
   }
   return (avgNumbers)
 }
 
-# normalized_number_APR_regions <- get_normalized_number_APR_regions(only_APR_data)
+# normalized_number_APR_regions <- get_normalized_number_APR_regions(data)
 
 #barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms)
 
