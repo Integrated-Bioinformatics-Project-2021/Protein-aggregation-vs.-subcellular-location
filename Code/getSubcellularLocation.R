@@ -151,17 +151,18 @@ for (i in 1:length(search_terms)) {
   normalized_number_APR_regions[newIndex_CP:(newIndex_CP+nrow(given_protein_list)-1),4] = rep(check_secretory(search_terms[i]), nrow(given_protein_list))
 
 }
-colnames(normalized_number_APR_regions) <- c("Proteins", "Subcellular_location", "Nb_APRs", "Secretory")
+normalized_number_APR_regions_copy = normalized_number_APR_regions
+normalized_number_APR_regions_copy$Subcellular_location[normalized_number_APR_regions$Subcellular_location == "Secreted" & ! normalized_number_APR_regions$Proteins %in% normalized_number_APR_regions$Proteins[normalized_number_APR_regions$Subcellular_location == "Extracellular space"]] = "Extracellular space" 
 
-#barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms)
+colnames(normalized_number_APR_regions_copy) <- c("Proteins", "Subcellular_location", "Nb_APRs", "Secretory")
 
 #Plot normalized number of APR regions
-box_normalized_number_APR_regions <- ggplot(normalized_number_APR_regions, aes(x=Nb_APRs, y = Subcellular_location, fill = Secretory)) + 
+box_normalized_number_APR_regions <- ggplot(normalized_number_APR_regions_copy, aes(x=Nb_APRs, y = Subcellular_location, fill = Secretory)) + 
   geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
 box_normalized_number_APR_regions + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 
 #Plot for difference between secretory and non-secretory
-box_normalized_number_APR_regions_secretory <- ggplot(normalized_number_APR_regions, aes(x=Nb_APRs, y = Secretory, fill = Secretory)) + 
+box_normalized_number_APR_regions_secretory <- ggplot(normalized_number_APR_regions_copy, aes(x=Nb_APRs, y = Secretory, fill = Secretory)) + 
   geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
 box_normalized_number_APR_regions_secretory + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 
