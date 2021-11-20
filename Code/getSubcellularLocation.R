@@ -19,8 +19,8 @@ source("load_data.R")
 source("subcellular_location_annotation.R")
 
 return_value = read_data() # See load_data.R
-data = return_value[1]
-hashed_proteins = return_value[2]
+data = return_value$data
+hashed_proteins = return_value$hashed_proteins
 
 # ------------------ tango scores ---------------------------
 
@@ -87,27 +87,6 @@ for (i in 1:length(search_terms)) {
 colnames(tango_scores_complete_protein) <- c("Proteins", "Subcellular_location", "Tango_scores", "Secretory")
 colnames(tango_scores_APR_protein)  <- c("Proteins", "Subcellular_location", "Tango_scores", "Secretory")
 
-#get normalized number of APR regions for a protein list
-get_normalized_number_APR_regions <- function(given_protein_list) {
-  unique_proteins_in_list = unique(given_protein_list$Protein)
-  avgNumbers = c()
-  for (j in 1:length(unique_proteins_in_list)){ # loop over all unique proteins in the given list
-    peptides_for_protein = subset(given_protein_list, given_protein_list$Protein == unique_proteins_in_list[j])
-    total_length = nrow(peptides_for_protein) # count every row for the protein representing each residue 
-    APR_list <- unique(peptides_for_protein$APRcount_tango) # add all unique APR ideas to the list
-    # get the number of APR regions in the current protein
-    number_APR_regions = length(APR_list)
-    # divide by the total length of the protein
-    avgNumber <- number_APR_regions/total_length
-    # print(avgNumber)
-    # append to the data frame
-    avgNumbers <- append(avgNumbers, avgNumber)
-  }
-  return (avgNumbers)
-}
-
-# normalized_number_APR_regions <- get_normalized_number_APR_regions(data)
-
 #barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms)
 
 library(ggplot2)
@@ -132,6 +111,54 @@ box_tango_sec_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom=
 box_tango_sec_APR_proteins <- ggplot(tango_scores_APR_protein, aes(x=Tango_scores, y = Secretory, fill = Secretory)) + 
   geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
 box_tango_sec_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
+
+
+# Number of APRs per subcellular location -------------------------------------
+
+#get normalized number of APR regions for a protein list
+get_normalized_number_APR_regions <- function(given_protein_list) {
+  unique_proteins_in_list = unique(given_protein_list$Protein)
+  avgNumbers = c()
+  for (j in 1:length(unique_proteins_in_list)){ # loop over all unique proteins in the given list
+    peptides_for_protein = subset(given_protein_list, given_protein_list$Protein == unique_proteins_in_list[j])
+    total_length = nrow(peptides_for_protein) # count every row for the protein representing each residue 
+    APR_list <- unique(peptides_for_protein$APRcount_tango) # add all unique APR ideas to the list
+    # get the number of APR regions in the current protein
+    number_APR_regions = length(APR_list)
+    # divide by the total length of the protein
+    avgNumber <- number_APR_regions/total_length
+    # print(avgNumber)
+    # append to the data frame
+    avgNumbers <- append(avgNumbers, avgNumber)
+  }
+  return (avgNumbers)
+}
+
+# get normalized number of APR regions for each subcellular location
+normalized_number_APR_regions = data.frame()
+for (i in 1:length(search_terms)) {
+  given_protein_list = get_proteins_with_given_subcellular_location(search_terms[i])
+  given_protein_list_extended = subset(data, data$Protein %in% given_protein_list[[1]])
+  
+  normalized_number_APR_regions[nrow(normalized_number_APR_regions)+1:nrow(given_protein_list),1] = given_protein_list
+  
+  newIndex_CP = nrow(normalized_number_APR_regions)+1-nrow(given_protein_list)
+  
+  normalized_number_APR_regions[newIndex_CP:(newIndex_CP+nrow(given_protein_list)-1),2] = rep(search_terms[[i]], nrow(given_protein_list))
+
+  avg_normalized_number_APR_regions = get_normalized_number_APR_regions(given_protein_list_extended)
+  normalized_number_APR_regions[newIndex_CP:(newIndex_CP+nrow(given_protein_list)-1),3] = avg_normalized_number_APR_regions
+  normalized_number_APR_regions[newIndex_CP:(newIndex_CP+nrow(given_protein_list)-1),4] = rep(check_secretory(search_terms[i]), nrow(given_protein_list))
+
+}
+colnames(normalized_number_APR_regions) <- c("Proteins", "Subcellular_location", "Nb_APRs", "Secretory")
+
+#barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms)
+
+#Plot normalized number of APR regions
+box_normalized_number_APR_regions <- ggplot(normalized_number_APR_regions, aes(x=Nb_APRs, y = Subcellular_location, fill = Secretory)) + 
+  geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
+box_normalized_number_APR_regions + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 
 
 # ------------------ peptides ---------------------------

@@ -20,13 +20,14 @@ read_data <- function() {
     # Retrieve the wanted subcellular location information, check if this is secretory
     # or non-secretory and add it to the data
     return_value = add_subcellular_location_and_secretory_information(data, proteins)
-    data = return_value[1]
-    hashed_proteins = return_value[2]
+    data = return_value$data
+    hashed_proteins = return_value$hashed_proteins
     
     save(data, file = "Data/complete_data.RData") # Uncomment to save the results to a file
+    save(hashed_proteins, file = "Data/hashed_proteins.RData")
   } else {
     load("Data/complete_data.RData")
-    hashed_proteins = get_hashed_proteins(data)
+    load("Data/hashed_proteins.RData")
   }
-  return (c(data, hashed_proteins))
+  return (list("data" = data, "hashed_proteins" = hashed_proteins))
 }

@@ -42,26 +42,26 @@ add_subcellular_location_and_secretory_information <- function(data, proteins) {
     data$Subcellular_location[data$Protein == current_protein_name]  <- hashed_proteins[[current_protein_name]][["subcellular_location"]]
     data$secretory_pathway[data$Protein == current_protein_name]  <- hashed_proteins[[current_protein_name]][["secretory_pathway"]]
   }
-  return (c(data, hashed_proteins))
+  return (list("data" = data, "hashed_proteins" = hashed_proteins))
 }
 
 # Get hashed_proteins when complete_data.R is loaded ---------------------------
-get_hashed_proteins <- function(complete_data) {
-  proteins = unique(complete_data$Protein)
-  hashed_proteins = hash() #generate dictionary
-  subcellular_location = matrix(ncol = 1, nrow = 0)
-  secretory_pathway = matrix(ncol = 1, nrow = 0)
-  
-  locations_short = data.frame(subcellular_location, secretory_pathway) # creating a dataframe to add the subcellular locations
-  
-  for (i in 1:length(proteins)) {
-    current_protein_name = proteins[i]
-    locations_short[1,1] = complete_data$Subcellular_location[complete_data$Protein == current_protein_name][1]
-    locations_short[1,2] = complete_data$Subcellular_location[complete_data$Protein == secretory_pathway][1]
-    hashed_proteins[current_protein_name] <- locations_short[1,]
-  }
-  return (hashed_proteins)
-}
+# get_hashed_proteins <- function(complete_data) {
+#   proteins = unique(complete_data$Protein)
+#   hashed_proteins = hash() #generate dictionary
+#   subcellular_location = matrix(ncol = 1, nrow = 0)
+#   secretory_pathway = matrix(ncol = 1, nrow = 0)
+#   
+#   locations_short = data.frame(subcellular_location, secretory_pathway) # creating a dataframe to add the subcellular locations
+#   
+#   for (i in 1:length(proteins)) {
+#     current_protein_name = proteins[i]
+#     locations_short[1,1] = complete_data$Subcellular_location[complete_data$Protein == current_protein_name][1]
+#     locations_short[1,2] = complete_data$Subcellular_location[complete_data$Protein == secretory_pathway][1]
+#     hashed_proteins[current_protein_name] <- locations_short[1,]
+#   }
+#   return (hashed_proteins)
+# }
 
 # Check secretory --------------------------------------------------------------
 
