@@ -160,6 +160,11 @@ box_normalized_number_APR_regions <- ggplot(normalized_number_APR_regions, aes(x
   geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
 box_normalized_number_APR_regions + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 
+#Plot for difference between secretory and non-secretory
+box_normalized_number_APR_regions_secretory <- ggplot(normalized_number_APR_regions, aes(x=Nb_APRs, y = Secretory, fill = Secretory)) + 
+  geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
+box_normalized_number_APR_regions_secretory + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
+
 
 # ------------------ peptides ---------------------------
 
