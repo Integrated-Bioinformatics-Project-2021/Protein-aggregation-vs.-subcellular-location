@@ -85,7 +85,9 @@ calculate_average_tango_scores <- function() {
 }
 
 plots_average_tango_scores <- function() {
-  calculate_average_tango_scores()
+  if (! exists("tango_scores_APR_protein")) {
+    calculate_average_tango_scores()
+  }
   
   #barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms)
   
