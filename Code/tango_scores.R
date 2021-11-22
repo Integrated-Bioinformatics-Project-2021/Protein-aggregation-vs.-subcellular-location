@@ -3,18 +3,21 @@
 source("subcellular_location_annotation.R")
 # Average TANGO scores --------------------------------------------------------
 
-# Acquire only the vital rows of each protein (APRs)
-only_APR_data <- subset(data, APRdef2_tango > 0)
-
-
-# Get average tango score for each complete protein 
-unique_data <- data[!((data$APRcount_tango == 0) & (data$maxProtscore != 0)),]
-unique_data <- unique_data[!duplicated(unique_data[,c(1,10)]),]
-by_protein <- aggregate(avgScore ~ Protein, unique_data, mean)
-
-# Get average tango score for each APR protein
-unique_APR_data <- only_APR_data[!duplicated(only_APR_data[,c(1,10)]),]
-by_APR_protein <- aggregate(avgScore ~ Protein, unique_APR_data, mean)
+initialize_by_APR_protein <- function() {
+  # Acquire only the vital rows of each protein (APRs)
+  only_APR_data <- subset(data, APRdef2_tango > 0)
+  
+  
+  # Get average tango score for each complete protein 
+  unique_data <- data[!((data$APRcount_tango == 0) & (data$maxProtscore != 0)),]
+  unique_data <- unique_data[!duplicated(unique_data[,c(1,10)]),]
+  by_protein <<- aggregate(avgScore ~ Protein, unique_data, mean) # Save by_protein globally
+  
+  # Get average tango score for each APR protein
+  unique_APR_data <- only_APR_data[!duplicated(only_APR_data[,c(1,10)]),]
+  by_APR_protein <<- aggregate(avgScore ~ Protein, unique_APR_data, mean) # Save by_APR_protein globally
+}
+initialize_by_APR_protein()
 
 #get average Tango score for each subcellular locations for complete proteins 
 get_average_tango_score_complete_protein <- function(given_protein_list) {
@@ -53,7 +56,7 @@ get_average_tango_score_APR_protein <- function(given_protein_list) {
 }
 
 # Get the average tango score for each subcellular location
-plots_average_tango_scores <- function() {
+calculate_average_tango_scores <- function() {
   tango_scores_complete_protein = data.frame() # For all proteins
   tango_scores_APR_protein = data.frame() # For proteins with an APR region
   for (i in 1:length(search_terms)) {
@@ -77,6 +80,12 @@ plots_average_tango_scores <- function() {
   }
   colnames(tango_scores_complete_protein) <- c("Proteins", "Subcellular_location", "Tango_scores", "Secretory")
   colnames(tango_scores_APR_protein)  <- c("Proteins", "Subcellular_location", "Tango_scores", "Secretory")
+  tango_scores_complete_protein <<- tango_scores_complete_protein # Save object globally
+  tango_scores_APR_protein <<- tango_scores_APR_protein # Save object globally
+}
+
+plots_average_tango_scores <- function() {
+  calculate_average_tango_scores()
   
   #barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms)
   
