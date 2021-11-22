@@ -38,16 +38,12 @@ plot_average_tango_scores_complete_proteins_joined_secreted()
 plot_average_tango_scores_APR_proteins()
 plot_average_tango_scores_APR_proteins_joined_secreted()
 
-# TODO for each function: split function calculate_average_tango_scores and plots_average_tango_scores
-# this way the plots can be replotted without redoing the calculations
-# Check if calc has ran before executing plot
-# Plot separate plots
-# Improve documentation
+# TODO: Improve documentation
 
 # Distribution of maximal tango scores
 plot_max_tango_scores()
 
-# Distribution of number of APR regions per protein normalized for protein lenght
+# Distribution of number of APR regions per protein normalized for protein length
 plot_normalized_number_APR_regions() # Takes some time to load
 plot_normalized_number_APR_regions_joined_secreted()
 

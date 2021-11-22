@@ -1,0 +1,84 @@
+---
+title: "Protein_aggregation_vs_subcellular_location"
+output: html_notebook
+---
+
+<!-- This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  -->
+
+<!-- Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.  -->
+
+<!-- Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*. -->
+
+<!-- When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file). -->
+
+<!-- The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed. -->
+
+# Initialization
+
+## Install all the needed libraries.
+
+```{r}
+#install.packages("UniprotR")
+#install.packages("BiocManager")
+#BiocManager::install("Biostrings")
+#BiocManager::install("GenomicAlignments")
+#install.packages("sjmisc")
+#install.packages("hash")
+#install.packages("dplyr")
+#install.packages("Peptides")
+```
+
+## Load the needed libraries.
+```{r}
+library(UniprotR)
+library(sjmisc) # Used for str_contains
+library(hash) # Used to make a disctionary
+library(dplyr) # Used for aggregate (get avg tango score of protein)
+library(Peptides) # Used for charge (get the charge of a peptide sequence) ETC
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+library(tidyverse)
+```
+
+## Define the working directory.
+```{r}
+directory = dirname(rstudioapi::getSourceEditorContext()$path) # Should work when data is placed in same folder
+setwd(directory)
+```
+
+## Load the data.
+```{r}
+source("load_data.R")
+return_value = read_data() # See load_data.R
+data = return_value$data
+hashed_proteins = return_value$hashed_proteins
+rm(return_value) # To get rid of the extra memory usage
+```
+
+# TANGO scores
+```{r}
+source("tango_scores.R")
+```
+
+## Average tango score distribution in all proteins
+```{r}
+plot_average_tango_scores_complete_proteins()
+plot_average_tango_scores_complete_proteins_joined_secreted()
+```
+## Average tango score distribution in proteins with an APR region
+```{r}
+plot_average_tango_scores_APR_proteins()
+plot_average_tango_scores_APR_proteins_joined_secreted()
+```
+## Distribution of maximal tango scores
+```{r}
+plot_max_tango_scores()
+```
+## Distribution of number of APR regions per protein normalized for protein length
+```{r}
+plot_average_tango_scores_complete_proteins()
+plot_average_tango_scores_complete_proteins_joined_secreted()
+```
+# Peptides
+TODO
