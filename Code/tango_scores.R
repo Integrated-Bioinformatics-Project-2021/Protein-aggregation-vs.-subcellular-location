@@ -179,7 +179,7 @@ get_normalized_number_APR_regions <- function(given_protein_list) {
 }
 
 # get normalized number of APR regions for each subcellular location
-plots_normalized_number_APR_regions <- function() {
+calculated_normalized_number_APR_regions <- function() {
   normalized_number_APR_regions = data.frame()
   for (i in 1:length(search_terms)) {
     given_protein_list = get_proteins_with_given_subcellular_location(search_terms[i])
@@ -197,16 +197,26 @@ plots_normalized_number_APR_regions <- function() {
     
   }
   colnames(normalized_number_APR_regions) <- c("Proteins", "Subcellular_location", "Nb_APRs", "Secretory")
-  normalized_number_APR_regions_copy = normalized_number_APR_regions
-  normalized_number_APR_regions_copy$Subcellular_location[normalized_number_APR_regions$Subcellular_location == "Secreted" & ! normalized_number_APR_regions$Proteins %in% normalized_number_APR_regions$Proteins[normalized_number_APR_regions$Subcellular_location == "Extracellular space"]] = "Extracellular space" 
-  
+  normalized_number_APR_regions$Subcellular_location[normalized_number_APR_regions$Subcellular_location == "Secreted" & ! normalized_number_APR_regions$Proteins %in% normalized_number_APR_regions$Proteins[normalized_number_APR_regions$Subcellular_location == "Extracellular space"]] = "Extracellular space" 
+  normalized_number_APR_regions <<- normalized_number_APR_regions
+}
+
+plot_normalized_number_APR_regions <- function() {
+  if (! exists("normalized_number_APR_regions")) {
+    calculated_normalized_number_APR_regions()
+  }
   #Plot normalized number of APR regions
-  box_normalized_number_APR_regions <- ggplot(normalized_number_APR_regions_copy, aes(x=Nb_APRs, y = Subcellular_location, fill = Secretory)) + 
+  box_normalized_number_APR_regions <- ggplot(normalized_number_APR_regions, aes(x=Nb_APRs, y = Subcellular_location, fill = Secretory)) + 
     geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
   box_normalized_number_APR_regions + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
-  
+}
+
+plot_normalized_number_APR_regions_joined_secreted <- function() {
+  if (! exists("normalized_number_APR_regions")) {
+    calculated_normalized_number_APR_regions()
+  }
   #Plot for difference between secretory and non-secretory
-  box_normalized_number_APR_regions_secretory <- ggplot(normalized_number_APR_regions_copy, aes(x=Nb_APRs, y = Secretory, fill = Secretory)) + 
+  box_normalized_number_APR_regions_secretory <- ggplot(normalized_number_APR_regions, aes(x=Nb_APRs, y = Secretory, fill = Secretory)) + 
     geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
   box_normalized_number_APR_regions_secretory + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }

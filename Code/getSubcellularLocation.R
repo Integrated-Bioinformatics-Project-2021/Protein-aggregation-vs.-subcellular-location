@@ -47,7 +47,9 @@ plot_average_tango_scores_APR_proteins_joined_secreted()
 # Distribution of maximal tango scores
 plot_max_tango_scores()
 
-plots_normalized_number_APR_regions() # Takes some time to load
+# Distribution of number of APR regions per protein normalized for protein lenght
+plot_normalized_number_APR_regions() # Takes some time to load
+plot_normalized_number_APR_regions_joined_secreted()
 
 # ------------------ peptides ---------------------------
 
