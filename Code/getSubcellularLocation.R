@@ -30,8 +30,11 @@ rm(return_value) # To get rid of the extra memory usage
 # ------------------ tango scores ---------------------------
 source("tango_scores.R")
 
+# Average tango score distribution in all proteins
 plot_average_tango_scores_complete_proteins()
 plot_average_tango_scores_complete_proteins_joined_secreted()
+
+# Average tango score distribution in proteins with an APR region
 plot_average_tango_scores_APR_proteins()
 plot_average_tango_scores_APR_proteins_joined_secreted()
 
@@ -41,7 +44,8 @@ plot_average_tango_scores_APR_proteins_joined_secreted()
 # Plot separate plots
 # Improve documentation
 
-plots_max_tango_scores()
+# Distribution of maximal tango scores
+plot_max_tango_scores()
 
 plots_normalized_number_APR_regions() # Takes some time to load
 

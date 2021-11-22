@@ -128,8 +128,8 @@ plot_average_tango_scores_APR_proteins_joined_secreted <- function() {
 
 # ----------- Max Tango Scores for each protein and APR -----------------------
 
-plots_max_tango_scores <- function() {
-  by_protein_max = aggregate(maxProtscore~Protein, data, max)
+calculate_max_tango_scores <- function() {
+  by_protein_max <<- aggregate(maxProtscore~Protein, data, max)
   scores_protein = data.frame()
   
   for(i in 1:length(search_terms))
@@ -145,8 +145,14 @@ plots_max_tango_scores <- function() {
     scores_protein[newIndex_CP:(newIndex_CP+nrow(given_protein_list)-1),4] = rep(check_secretory(search_terms[i]), nrow(given_protein_list))
   }
   colnames(scores_protein) <- c("Proteins", "Subcellular_location", "Tango_scores", "Secretory")
-  
-  box_avgmax_complete_proteins <- ggplot(scores_protein, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
+  max_tango_scores <<- scores_protein
+}
+
+plot_max_tango_scores <- function() {
+  if (! exists("max_tango_scores")) {
+    calculate_max_tango_scores()
+  }
+  box_avgmax_complete_proteins <- ggplot(max_tango_scores, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
     geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
   box_avgmax_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
