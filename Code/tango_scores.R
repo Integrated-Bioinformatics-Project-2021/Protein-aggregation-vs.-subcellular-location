@@ -84,34 +84,46 @@ calculate_average_tango_scores <- function() {
   tango_scores_APR_protein <<- tango_scores_APR_protein # Save object globally
 }
 
-plots_average_tango_scores <- function() {
+plot_average_tango_scores_complete_proteins <- function() {
   if (! exists("tango_scores_APR_protein")) {
     calculate_average_tango_scores()
   }
-  
-  #barplot(tango_scores, xlab = "subcellular location", names.arg = search_terms)
-  
   #Plot complete proteins
   box_tango_sub_complete_proteins <- ggplot(tango_scores_complete_protein, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
     geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
   box_tango_sub_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
-  
-  #Plot APR proteins
-  box_tango_sub_APR_proteins <- ggplot(tango_scores_APR_protein, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
-    geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
-  box_tango_sub_APR_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
+}
 
-  # TODO: join secreted and extracellular
-  
+plot_average_tango_scores_complete_proteins_joined_secreted <- function() {
+  if (! exists("tango_scores_APR_protein")) {
+    calculate_average_tango_scores()
+  }
   #Plot for difference between secretory and non-secretory 
   #Plot complete proteins
   box_tango_sec_complete_proteins <- ggplot(tango_scores_complete_protein, aes(x=Tango_scores, y = Secretory, fill = Secretory)) + 
     geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
   box_tango_sec_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
+}
+
+plot_average_tango_scores_APR_proteins <- function() {
+  if (! exists("tango_scores_APR_protein")) {
+    calculate_average_tango_scores()
+  }
+  #Plot APR proteins
+  box_tango_sub_APR_proteins <- ggplot(tango_scores_APR_protein, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
+    geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
+  box_tango_sub_APR_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
+}
+
+plot_average_tango_scores_APR_proteins_joined_secreted <- function() {
+  if (! exists("tango_scores_APR_protein")) {
+    calculate_average_tango_scores()
+  }
+  #Plot for difference between secretory and non-secretory 
   #Plot APR proteins
   box_tango_sec_APR_proteins <- ggplot(tango_scores_APR_protein, aes(x=Tango_scores, y = Secretory, fill = Secretory)) + 
     geom_boxplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
-  box_tango_sec_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
+  box_tango_sec_APR_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
 
 # ----------- Max Tango Scores for each protein and APR -----------------------

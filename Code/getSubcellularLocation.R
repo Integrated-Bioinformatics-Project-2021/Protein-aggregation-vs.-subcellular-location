@@ -29,7 +29,11 @@ hashed_proteins = return_value$hashed_proteins
 # ------------------ tango scores ---------------------------
 source("tango_scores.R")
 
-plots_average_tango_scores()
+plot_average_tango_scores_complete_proteins()
+plot_average_tango_scores_complete_proteins_joined_secreted()
+plot_average_tango_scores_APR_proteins()
+plot_average_tango_scores_APR_proteins_joined_secreted()
+
 # TODO for each function: split function calculate_average_tango_scores and plots_average_tango_scores
 # this way the plots can be replotted without redoing the calculations
 # Check if calc has ran before executing plot
