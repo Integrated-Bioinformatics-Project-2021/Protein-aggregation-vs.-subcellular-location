@@ -5,7 +5,7 @@ source("subcellular_location_annotation.R")
 
 initialize_by_APR_protein <- function() {
   # Acquire only the vital rows of each protein (APRs)
-  only_APR_data <- subset(data, APRdef2_tango > 0)
+  only_APR_data <<- subset(data, APRdef2_tango > 0)
   
   
   # Get average tango score for each complete protein 

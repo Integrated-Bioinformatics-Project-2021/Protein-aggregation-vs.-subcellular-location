@@ -48,11 +48,8 @@ plot_normalized_number_APR_regions() # Takes some time to load
 plot_normalized_number_APR_regions_joined_secreted()
 
 # ------------------ peptides ---------------------------
-
-# Classify into 3 subset dataframes (peptides with only APR, peptides with APR and GK and peptides with APR, GK and 2 FR )
-APR_peptides <- subset(only_APR_data, APRdef2_tango < 2)
-GK_peptides <- subset(only_APR_data, APRdef2_tango < 3)
-FR_peptides<-  subset(only_APR_data, APRdef2_tango < 5)
+source("charges.R")
+classify_subsets()
 
 # For every APR in the list peptides_name, calculate the net charge
 get_charge <- function(peptides_name, ph = 7) {
