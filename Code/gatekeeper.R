@@ -41,7 +41,9 @@ analyse_gate_keeper_regions <- function() {
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  return (list("cts_gk" = cts_gk,
+  return (list("GK_residues" = GK_residues,
+               "GK_FL_residues" = GK_FL_residues,
+               "cts_gk" = cts_gk,
                "cts_gk_side" = cts_gk_side,
                "cts_gk_fl" = cts_gk_fl,
                "cts_gk_fl_side" = cts_gk_fl_side))
@@ -139,4 +141,48 @@ pie_plot_percentage_of_specific_residue <- function(given_region, residue_string
     guides(fill = guide_legend(title = "Side"))+
     theme_void()+
     ggtitle(title)
+}
+
+# FOR EACH SUBCELLULAR LOCATION
+
+get_counts_for_subcellular_location <- function(subcellular_location, GK_analysis) {
+  source("subcellular_location_annotation.R")
+  
+  given_protein_list = get_proteins_with_given_subcellular_location(subcellular_location)
+  
+  wanted <- GK_analysis$GK_residues[which(GK_analysis$GK_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_residues)]
+  wanted2 <- GK_analysis$GK_FL_residues[which(GK_analysis$GK_FL_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_residues)]
+  
+  # FOR ALL GK IN GIVEN SUBCELLULAR LOCATION
+  
+  cts_gk_s <- wanted %>% 
+    group_by(Residue) %>% # Variable to be transformed
+    count() %>% 
+    ungroup() %>% 
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  cts_gk_fl_s <- wanted2 %>% 
+    group_by(Residue) %>% # Variable to be transformed
+    count() %>% 
+    ungroup() %>% 
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  return (list("cts_gk_s" = cts_gk_s,
+               "cts_gk_fl_s" = cts_gk_fl_s))
+}
+
+pie_plot_subcellular_location <- function(counts, side_string, subcellular_location) {
+  title = paste("Percentage of every residue in ", side_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
+  plot = ggplot(counts, aes(x = "", y = perc, fill = Residue)) +
+    geom_col() +
+    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
+    coord_polar(theta = "y")+
+    guides(fill = guide_legend(title = "Residue"))+
+    theme_void()+
+    ggtitle(title)
+  print(plot)
 }
