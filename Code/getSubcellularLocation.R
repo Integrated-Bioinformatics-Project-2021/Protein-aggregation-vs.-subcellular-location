@@ -51,20 +51,8 @@ plot_normalized_number_APR_regions_joined_secreted()
 source("charges.R")
 classify_subsets()
 
-# For every APR in the list peptides_name, calculate the net charge
-get_charge <- function(peptides_name, ph = 7) {
-  protein_charges = hash()
-  unique_APRs = unique(peptides_name$APRcount_tango)
-  for (i in 1:length(unique_APRs)) {
-    peptides_for_APR = subset(peptides_name, peptides_name$APRcount_tango == unique_APRs[i])
-    sequence = paste(peptides_for_APR$Residue, collapse = "")
-    protein_charges[unique_APRs[i]] <- charge(sequence, pH = ph)
-    key = toString(unique_APRs[i])
-    print(protein_charges[[key]])
-  }
-  return (protein_charges)
-}
-
+# TODO: make plots showing the differences between APR, GK and FR based on charges
+# TODO: see if differences when split into subcellular locations
 protein_sequences_APR_peptides = get_charge(APR_peptides)
 # protein_sequences_GK_peptides = get_charge(GK_peptides)
 # protein_sequences_FR_peptides = get_charge(FR_peptides)
