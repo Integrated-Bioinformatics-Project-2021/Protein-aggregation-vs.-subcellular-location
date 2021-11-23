@@ -59,3 +59,27 @@ pie_plot_percentage_of_all_residues <- function(given_region, region_string) {
   #scale_fill_brewer(palette="PiYG")+
   #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
 }
+
+# PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+
+analyse_interested_gate_keeper_regions <- function(GK_analysis) {
+  interested_aa <- c("K","R","D","E","S","P")
+  cts_interest_gk <- GK_analysis$cts_gk[which(GK_analysis$cts_gk$Residue %in% interested_aa),colnames(GK_analysis$cts_gk)]
+  cts_interest_gk_fl <- GK_analysis$cts_gk_fl[which(GK_analysis$cts_gk_fl$Residue %in% interested_aa),colnames(GK_analysis$cts_gk_fl)]
+  return (list("cts_interest_gk" = cts_interest_gk,
+               "cts_interest_gk_fl" = cts_interest_gk_fl))
+}
+
+pie_plot_percentage_of_interested_residues <- function(given_region, region_string) {
+  title = paste("PERCENTAGE OF INTERESTED RESIDUES FOR ALL\n OF THE ", region_string," IN ALL PROTEINS", sep="", collapse=NULL)
+  ggplot(given_region, aes(x = "", y = perc, fill = Residue)) +
+    geom_col() +
+    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
+    coord_polar(theta = "y")+
+    guides(fill = guide_legend(title = "Residue"))+
+    theme_void()+
+    scale_fill_brewer(palette="Dark2")+
+    ggtitle(title)
+  #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
+}
+

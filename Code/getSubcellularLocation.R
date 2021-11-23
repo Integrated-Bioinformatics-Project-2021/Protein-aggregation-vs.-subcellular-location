@@ -58,6 +58,10 @@ protein_sequences_APR_peptides = get_charge(APR_peptides)
 # protein_sequences_FR_peptides = get_charge(FR_peptides)
 
 #--------- Pie Plot for the residues ------------
+# Lysine (Lys) --> K
+# Arginine (Arg) --> R
+# Aspartic acid (Asp) --> D
+# Glutamic acid (Glu) --> E
 
 source("gatekeeper.R")
 
@@ -78,33 +82,16 @@ pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 # Glutamic acid (Glu) --> E
 # Serine (Ser) --> S
 # Proline (Pro) --> P
-interested_aa <- c("K","R","D","E","S","P")
-cts_interest_gk <- cts_gk[which(cts_gk$Residue %in% interested_aa),colnames(cts_gk)]
-cts_interest_gk_fl <- cts_gk_fl[which(cts_gk_fl$Residue %in% interested_aa),colnames(cts_gk_fl)]
 
-ggplot(cts_interest_gk, aes(x = "", y = perc, fill = Residue)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Residue"))+
-  theme_void()+
-  scale_fill_brewer(palette="Dark2")+
-  ggtitle("PERCENTAGE OF INTERESTED RESIDUES FOR ALL\n OF THE GK REGIONS IN ALL PROTEINS")
-#geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
+GK_analysis_interested_aa = analyse_interested_gate_keeper_regions(GK_analysis)
+
+pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk, "GK REGIONS")
 
 #### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
-
-ggplot(cts_interest_gk_fl, aes(x = "", y = perc, fill = Residue)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Residue"))+
-  theme_void()+
-  scale_fill_brewer(palette="Dark2")+
-  ggtitle("PERCENTAGE OF INTERESTED RESIDUES FOR ALL\n OF THE GK + FL REGIONS IN ALL PROTEINS")
+pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk_fl, "GK + FL REGIONS")
 
 # This one is done for all of the proteins, but now we will be working on all the proteins that
-# is belonging to a specific subcellular location
+# belong to a specific subcellular location
 
 #### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
 
