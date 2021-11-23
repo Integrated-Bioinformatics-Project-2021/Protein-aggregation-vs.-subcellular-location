@@ -83,3 +83,60 @@ pie_plot_percentage_of_interested_residues <- function(given_region, region_stri
   #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
 }
 
+# PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
+analyse_gate_keeper_residues <- function(GK_analysis) {
+  lys_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "K",]
+  arg_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "R",]
+  asp_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "D",]
+  glu_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "E",]
+  ser_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "S",]
+  pro_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "P",]
+  
+  lys_ct_gk <- lys_ct_gk %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  arg_ct_gk <- arg_ct_gk %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  asp_ct_gk <- asp_ct_gk %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  glu_ct_gk <- glu_ct_gk %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  ser_ct_gk <- ser_ct_gk %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  pro_ct_gk <- pro_ct_gk %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  return (list("lys_ct_gk" = lys_ct_gk,
+               "arg_ct_gk" = arg_ct_gk,
+               "asp_ct_gk" = asp_ct_gk,
+               "glu_ct_gk" = glu_ct_gk,
+               "ser_ct_gk" = ser_ct_gk,
+               "pro_ct_gk" = pro_ct_gk))
+}
+
+pie_plot_percentage_of_specific_residue <- function(given_region, residue_string) {
+  title = paste("PERCENTAGE OF ", residue_string," RESIDUES FOR\n ALL OF THE GK SIDES", sep="", collapse=NULL)
+  ggplot(given_region, aes(x = "", y = perc, fill = Side)) +
+    geom_col() +
+    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
+    coord_polar(theta = "y")+
+    guides(fill = guide_legend(title = "Side"))+
+    theme_void()+
+    ggtitle(title)
+}

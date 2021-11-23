@@ -95,90 +95,14 @@ pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interes
 
 #### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
 
-lys_ct_gk = cts_gk_side[cts_gk_side$Residue == "K",]
-arg_ct_gk = cts_gk_side[cts_gk_side$Residue == "R",]
-asp_ct_gk = cts_gk_side[cts_gk_side$Residue == "D",]
-glu_ct_gk = cts_gk_side[cts_gk_side$Residue == "E",]
-ser_ct_gk = cts_gk_side[cts_gk_side$Residue == "S",]
-pro_ct_gk = cts_gk_side[cts_gk_side$Residue == "P",]
+GK_analysis_GK_residues = analyse_gate_keeper_residues(GK_analysis)
 
-lys_ct_gk <- lys_ct_gk %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-arg_ct_gk <- arg_ct_gk %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-asp_ct_gk <- asp_ct_gk %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-glu_ct_gk <- glu_ct_gk %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-ser_ct_gk <- ser_ct_gk %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-pro_ct_gk <- pro_ct_gk %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-ggplot(lys_ct_gk, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF LYS RESIDUES FOR\n ALL OF THE GK SIDES")
-
-ggplot(arg_ct_gk, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF ARG RESIDUES FOR\n ALL OF THE GK SIDES")
-
-ggplot(asp_ct_gk, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF ASP RESIDUES FOR\n ALL OF THE GK SIDES")
-
-ggplot(glu_ct_gk, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF GLU RESIDUES FOR\n ALL OF THE GK SIDES")
-
-ggplot(ser_ct_gk, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF SER RESIDUES FOR\n ALL OF THE GK SIDES")
-
-ggplot(pro_ct_gk, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF PRO RESIDUES FOR\n ALL OF THE GK SIDES")
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$lys_ct_gk, "LYS")
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$arg_ct_gk, "ARG")
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$asp_ct_gk, "ASP")
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$glu_ct_gk, "GLU")
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$ser_ct_gk, "SER")
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$pro_ct_gk, "PRO")
 
 #### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
 
