@@ -59,50 +59,14 @@ protein_sequences_APR_peptides = get_charge(APR_peptides)
 
 #--------- Pie Plot for the residues ------------
 
+source("gatekeeper.R")
+
 # Only for the GK regions
-GK_residues <- subset(data, APRdef2_tango == 2, select = c("Protein","Residue","APRdef2_tango","Side"))
-GK_FL_residues <- subset(data, APRdef2_tango > 1, select = c("Protein","Residue","APRdef2_tango","Side"))
-
-# Lysine (Lys) --> K
-# Arginine (Arg) --> R
-# Aspartic acid (Asp) --> D
-# Glutamic acid (Glu) --> E
-
-cts_gk <- GK_residues %>% 
-  group_by(Residue) %>% # Variable to be transformed
-  count() %>% 
-  ungroup() %>% 
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-cts_gk_side <- GK_residues %>% 
-  group_by(Residue, Side) %>% # Variable to be transformed
-  count() %>% 
-  ungroup() %>% 
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-cts_gk_fl <- GK_FL_residues %>% 
-  group_by(Residue) %>% # Variable to be transformed
-  count() %>% 
-  ungroup() %>% 
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-cts_gk_fl_side <- GK_FL_residues %>% 
-  group_by(Residue, Side) %>% # Variable to be transformed
-  count() %>% 
-  ungroup() %>% 
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
+GK_analysis = analyse_gate_keeper_regions()
 
 #### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
 
-ggplot(cts_gk, aes(x = "", y = perc, fill = Residue)) +
+ggplot(GK_analysis$cts_gk, aes(x = "", y = perc, fill = Residue)) +
   geom_col() +
   geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
   coord_polar(theta = "y")+
@@ -114,7 +78,7 @@ ggplot(cts_gk, aes(x = "", y = perc, fill = Residue)) +
 
 #### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
 
-ggplot(cts_gk_fl, aes(x = "", y = perc, fill = Residue)) +
+ggplot(GK_analysis$cts_gk_fl, aes(x = "", y = perc, fill = Residue)) +
   geom_col() +
   geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
   coord_polar(theta = "y")+
