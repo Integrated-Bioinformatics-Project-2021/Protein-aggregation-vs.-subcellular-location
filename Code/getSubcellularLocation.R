@@ -95,101 +95,27 @@ pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interes
 
 #### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
 
-GK_analysis_GK_residues = analyse_gate_keeper_residues(GK_analysis)
+GK_analysis_GK_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_side)
+side_string = "GK"
 
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$lys_ct_gk, "LYS")
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$arg_ct_gk, "ARG")
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$asp_ct_gk, "ASP")
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$glu_ct_gk, "GLU")
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$ser_ct_gk, "SER")
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$pro_ct_gk, "PRO")
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$lys_ct, "LYS", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$arg_ct, "ARG", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$asp_ct, "ASP", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$glu_ct, "GLU", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$ser_ct, "SER", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$pro_ct, "PRO", side_string)
 
 #### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
 
-lys_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "K",]
-arg_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "R",]
-asp_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "D",]
-glu_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "E",]
-ser_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "S",]
-pro_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "P",]
+GK_analysis_GK_and_FL_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_fl_side)
+side_string = "GK + FL"
 
-lys_ct_gk_fl <- lys_ct_gk_fl %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-arg_ct_gk_fl <- arg_ct_gk_fl %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-asp_ct_gk_fl <- asp_ct_gk_fl %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-glu_ct_gk_fl <- glu_ct_gk_fl %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-ser_ct_gk_fl <- ser_ct_gk_fl %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-pro_ct_gk_fl <- pro_ct_gk_fl %>%
-  mutate(perc = `n` / sum(`n`)) %>% 
-  arrange(perc) %>%
-  mutate(labels = scales::percent(perc))
-
-ggplot(lys_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF LYS RESIDUES FOR\n ALL OF THE GK + FL SIDES")
-
-ggplot(arg_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF ARG RESIDUES FOR\n ALL OF THE GK + FL SIDES")
-
-ggplot(asp_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF ASP RESIDUES FOR\n ALL OF THE GK + FL SIDES")
-
-ggplot(glu_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF GLU RESIDUES FOR\n ALL OF THE GK + FL SIDES")
-
-ggplot(ser_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF SER RESIDUES FOR\n ALL OF THE GK + FL SIDES")
-
-ggplot(pro_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Side"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF PRO RESIDUES FOR\n ALL OF THE GK + FL SIDES")
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$lys_ct, "LYS", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$arg_ct, "ARG", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$asp_ct, "ASP", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$glu_ct, "GLU", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "SER", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
 
 # FOR EACH SUBCELLULAR LOCATION
 

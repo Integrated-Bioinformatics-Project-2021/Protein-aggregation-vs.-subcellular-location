@@ -83,55 +83,55 @@ pie_plot_percentage_of_interested_residues <- function(given_region, region_stri
   #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
 }
 
-# PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
-analyse_gate_keeper_residues <- function(GK_analysis) {
-  lys_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "K",]
-  arg_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "R",]
-  asp_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "D",]
-  glu_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "E",]
-  ser_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "S",]
-  pro_ct_gk = GK_analysis$cts_gk_side[GK_analysis$cts_gk_side$Residue == "P",]
+# PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE SPECIFIED SIDES
+analyse_gate_keeper_residues <- function(sides) {
+  lys_ct = sides[sides$Residue == "K",]
+  arg_ct = sides[sides$Residue == "R",]
+  asp_ct = sides[sides$Residue == "D",]
+  glu_ct = sides[sides$Residue == "E",]
+  ser_ct = sides[sides$Residue == "S",]
+  pro_ct = sides[sides$Residue == "P",]
   
-  lys_ct_gk <- lys_ct_gk %>%
+  lys_ct <- lys_ct %>%
     mutate(perc = `n` / sum(`n`)) %>% 
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  arg_ct_gk <- arg_ct_gk %>%
+  arg_ct <- arg_ct %>%
     mutate(perc = `n` / sum(`n`)) %>% 
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  asp_ct_gk <- asp_ct_gk %>%
+  asp_ct <- asp_ct %>%
     mutate(perc = `n` / sum(`n`)) %>% 
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  glu_ct_gk <- glu_ct_gk %>%
+  glu_ct <- glu_ct %>%
     mutate(perc = `n` / sum(`n`)) %>% 
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  ser_ct_gk <- ser_ct_gk %>%
+  ser_ct <- ser_ct %>%
     mutate(perc = `n` / sum(`n`)) %>% 
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  pro_ct_gk <- pro_ct_gk %>%
+  pro_ct <- pro_ct %>%
     mutate(perc = `n` / sum(`n`)) %>% 
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  return (list("lys_ct_gk" = lys_ct_gk,
-               "arg_ct_gk" = arg_ct_gk,
-               "asp_ct_gk" = asp_ct_gk,
-               "glu_ct_gk" = glu_ct_gk,
-               "ser_ct_gk" = ser_ct_gk,
-               "pro_ct_gk" = pro_ct_gk))
+  return (list("lys_ct" = lys_ct,
+               "arg_ct" = arg_ct,
+               "asp_ct" = asp_ct,
+               "glu_ct" = glu_ct,
+               "ser_ct" = ser_ct,
+               "pro_ct" = pro_ct))
 }
 
-pie_plot_percentage_of_specific_residue <- function(given_region, residue_string) {
-  title = paste("PERCENTAGE OF ", residue_string," RESIDUES FOR\n ALL OF THE GK SIDES", sep="", collapse=NULL)
+pie_plot_percentage_of_specific_residue <- function(given_region, residue_string, side_string) {
+  title = paste("PERCENTAGE OF ", residue_string," RESIDUES FOR\n ALL OF THE ", side_string, " SIDES", sep="", collapse=NULL)
   ggplot(given_region, aes(x = "", y = perc, fill = Side)) +
     geom_col() +
     geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
