@@ -1,6 +1,8 @@
 ---
 title: "Protein_aggregation_vs_subcellular_location"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
 <!-- This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  -->
@@ -80,5 +82,124 @@ plot_max_tango_scores()
 plot_average_tango_scores_complete_proteins()
 plot_average_tango_scores_complete_proteins_joined_secreted()
 ```
-# Peptides
-TODO
+# Peptide charges
+```{r}
+source("charges.R")
+classify_subsets()
+```
+```{r}
+# TODO: make plots showing the differences between APR, GK and FR based on charges
+# TODO: see if differences when split into subcellular locations
+
+# protein_sequences_APR_peptides = get_charge(APR_peptides)
+# protein_sequences_GK_peptides = get_charge(GK_peptides)
+# protein_sequences_FR_peptides = get_charge(FR_peptides)
+```
+
+# Pie Plot for the residues
+
+Lysine (Lys) --> K <br />
+Arginine (Arg) --> R <br />
+Aspartic acid (Asp) --> D <br />
+Glutamic acid (Glu) --> E
+```{r}
+source("gatekeeper.R")
+```
+## Only for the GK regions
+```{r}
+GK_analysis = analyse_gate_keeper_regions()
+```
+PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+```{r}
+pie_plot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
+```
+PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+```{r}
+pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
+```
+## Interested residues
+Lysine (Lys) --> K <br />
+Arginine (Arg) --> R <br />
+Aspartic acid (Asp) --> D <br />
+Glutamic acid (Glu) --> E <br />
+Serine (Ser) --> S <br />
+Proline (Pro) --> P <br />
+PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+```{r}
+GK_analysis_interested_aa = analyse_interested_gate_keeper_regions(GK_analysis)
+```
+```{r}
+pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk, "GK REGIONS")
+```
+PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+```{r}
+pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk_fl, "GK + FL REGIONS")
+```
+
+PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
+```{r}
+GK_analysis_GK_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_side)
+side_string = "GK"
+```
+```{r}
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$lys_ct, "LYS", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$arg_ct, "ARG", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$asp_ct, "ASP", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$glu_ct, "GLU", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$ser_ct, "SER", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$pro_ct, "PRO", side_string)
+```
+PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+```{r}
+GK_analysis_GK_and_FL_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_fl_side)
+side_string = "GK + FL"
+```
+
+```{r}
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$lys_ct, "LYS", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$arg_ct, "ARG", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$asp_ct, "ASP", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$glu_ct, "GLU", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "SER", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
+```
+ 
+## Subcellular location
+Previous analyses are done for all of the proteins, but now we will be working on all the proteins that belong to a specific subcellular location
+```{r}
+# Statistics for each subcellular location
+for (i in 1:length(search_terms)) {
+  counts = get_counts_for_subcellular_location(search_terms[i], GK_analysis)
+  
+  residue_category = "all"
+  pie_plot_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
+  pie_plot_subcellular_location(counts$cts_gk_fl, residue_category, "GK + FL", search_terms[i])
+  
+  # PERCENTAGE OF INTERESTED PROTEINS IN SUBCELLULAR LOCATIONS
+  
+  counts_interest <- analyse_interested_gate_keeper_regions(counts)
+  residue_category = "interested"
+  pie_plot_subcellular_location(counts_interest$cts_interest_gk, residue_category, "GK", search_terms[i])
+  pie_plot_subcellular_location(counts_interest$cts_interest_gk_fl, residue_category, "GK + FL", search_terms[i])
+  
+  # NOW THE SIDES PART
+  counts_side_gk <- analyse_sides(counts$cts_gk_side)
+  counts_side_gk_fl <- analyse_sides(counts$cts_gk_fl_side)
+
+  region_string = "GK"
+  pie_plot_sides(counts_side_gk$lys_ct, "LYS", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$arg_ct, "ARG", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$asp_ct, "ASP", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$glu_ct, "GLU", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$ser_ct, "SER", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$pro_ct, "PRO", region_string, search_terms[i])
+  
+  region_string = "GK + FL"
+  pie_plot_sides(counts_side_gk_fl$lys_ct, "LYS", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$arg_ct, "ARG", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$asp_ct, "ASP", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$glu_ct, "GLU", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$ser_ct, "SER", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$pro_ct, "PRO", region_string, search_terms[i])
+}
+```
