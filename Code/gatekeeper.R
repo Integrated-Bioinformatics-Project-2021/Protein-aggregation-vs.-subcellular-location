@@ -150,12 +150,12 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
   
   given_protein_list = get_proteins_with_given_subcellular_location(subcellular_location)
   
-  wanted <- GK_analysis$GK_residues[which(GK_analysis$GK_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_residues)]
-  wanted2 <- GK_analysis$GK_FL_residues[which(GK_analysis$GK_FL_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_residues)]
+  cts_interest_gk <- GK_analysis$GK_residues[which(GK_analysis$GK_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_residues)]
+  cts_interest_gk_fl <- GK_analysis$GK_FL_residues[which(GK_analysis$GK_FL_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_residues)]
   
   # FOR ALL GK IN GIVEN SUBCELLULAR LOCATION
   
-  cts_gk_s <- wanted %>% 
+  cts_gk <- cts_interest_gk %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
@@ -163,7 +163,7 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  cts_gk_fl_s <- wanted2 %>% 
+  cts_gk_fl <- cts_interest_gk_fl %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
@@ -171,12 +171,12 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  return (list("cts_gk_s" = cts_gk_s,
-               "cts_gk_fl_s" = cts_gk_fl_s))
+  return (list("cts_gk" = cts_gk,
+               "cts_gk_fl" = cts_gk_fl))
 }
 
-pie_plot_subcellular_location <- function(counts, side_string, subcellular_location) {
-  title = paste("Percentage of every residue in ", side_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
+pie_plot_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
+  title = paste("Percentage of ", residue_category, " residues in ", side_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
   plot = ggplot(counts, aes(x = "", y = perc, fill = Residue)) +
     geom_col() +
     geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+

@@ -123,32 +123,17 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "
 for (i in 1:length(search_terms)) {
   counts = get_counts_for_subcellular_location(search_terms[i], GK_analysis)
   
-  pie_plot_subcellular_location(counts$cts_gk_s, "GK", search_terms[i])
-  pie_plot_subcellular_location(counts$cts_gk_fl_s, "GK + FL", search_terms[i])
-}  
-
-# PERCENTAGE OF INTERESTED PROTEINS IN SUBCELLULAR LOCATIONS
+  residue_category = "all"
+  pie_plot_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
+  pie_plot_subcellular_location(counts$cts_gk_fl, residue_category, "GK + FL", search_terms[i])
   
-  cts_interest_gk <- cts_gk_s[which(cts_gk_s$Residue %in% interested_aa),colnames(cts_gk_s)]
-  cts_interest_gk_fl <- cts_gk_fl_s[which(cts_gk_fl_s$Residue %in% interested_aa),colnames(cts_gk_fl_s)]
+  # PERCENTAGE OF INTERESTED PROTEINS IN SUBCELLULAR LOCATIONS
   
-  ggplot(cts_interest_gk, aes(x = "", y = perc, fill = Residue)) +
-    geom_col() +
-    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-    coord_polar(theta = "y")+
-    guides(fill = guide_legend(title = "Residue"))+
-    theme_void()+
-    scale_fill_brewer(palette="Dark2")+
-    ggtitle("Percentage of interested residues in GK regions for",search_terms[[i]])
-  
-  ggplot(cts_interest_gk_fl, aes(x = "", y = perc, fill = Residue)) +
-    geom_col() +
-    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-    coord_polar(theta = "y")+
-    guides(fill = guide_legend(title = "Residue"))+
-    theme_void()+
-    scale_fill_brewer(palette="Dark2")+
-    ggtitle("Percentage of interested residues in GK + FL regions for",search_terms[[i]])
+  counts_interest <- analyse_interested_gate_keeper_regions(counts)
+  residue_category = "interested"
+  pie_plot_subcellular_location(counts_interest$cts_interest_gk, residue_category, "GK", search_terms[i])
+  pie_plot_subcellular_location(counts_interest$cts_interest_gk_fl, residue_category, "GK + FL", search_terms[i])
+}
   
   # NOW THE SIDES PART
   
