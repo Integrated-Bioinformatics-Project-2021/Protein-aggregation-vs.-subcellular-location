@@ -171,8 +171,26 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
+  cts_gk_side <- cts_interest_gk %>% 
+    group_by(Residue, Side) %>% # Variable to be transformed
+    count() %>% 
+    ungroup() %>% 
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  cts_gk_fl_side <- cts_interest_gk_fl %>% 
+    group_by(Residue, Side) %>% # Variable to be transformed
+    count() %>% 
+    ungroup() %>% 
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
   return (list("cts_gk" = cts_gk,
-               "cts_gk_fl" = cts_gk_fl))
+               "cts_gk_fl" = cts_gk_fl,
+               "cts_gk_side" = cts_gk_side,
+               "cts_gk_fl_side" = cts_gk_fl_side))
 }
 
 pie_plot_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
@@ -182,6 +200,64 @@ pie_plot_subcellular_location <- function(counts, residue_category, side_string,
     geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
     coord_polar(theta = "y")+
     guides(fill = guide_legend(title = "Residue"))+
+    theme_void()+
+    ggtitle(title)
+  print(plot)
+}
+
+analyse_sides <- function(cts) {
+  lys_ct = cts[cts$Residue == "K",]
+  arg_ct = cts[cts$Residue == "R",]
+  asp_ct = cts[cts$Residue == "D",]
+  glu_ct = cts[cts$Residue == "E",]
+  ser_ct = cts[cts$Residue == "S",]
+  pro_ct = cts[cts$Residue == "P",]
+  
+  lys_ct <- lys_ct %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  arg_ct <- arg_ct %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  asp_ct <- asp_ct %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  glu_ct <- glu_ct %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  ser_ct <- ser_ct %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  pro_ct <- pro_ct %>%
+    mutate(perc = `n` / sum(`n`)) %>% 
+    arrange(perc) %>%
+    mutate(labels = scales::percent(perc))
+  
+  return (list("lys_ct" = lys_ct,
+               "arg_ct" = arg_ct,
+               "asp_ct" = asp_ct,
+               "glu_ct" = glu_ct,
+               "ser_ct" = ser_ct,
+               "pro_ct" = pro_ct))
+}
+
+pie_plot_sides <- function(counts, residue_string, region_string, subcellular_location) {
+  title = paste("Percentage of ", residue_string, " residue sides in ", region_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
+  plot = ggplot(counts, aes(x = "", y = perc, fill = Side)) +
+    geom_col() +
+    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
+    coord_polar(theta = "y")+
+    guides(fill = guide_legend(title = "Side"))+
     theme_void()+
     ggtitle(title)
   print(plot)

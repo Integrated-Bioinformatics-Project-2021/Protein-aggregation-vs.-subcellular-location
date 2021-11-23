@@ -133,195 +133,25 @@ for (i in 1:length(search_terms)) {
   residue_category = "interested"
   pie_plot_subcellular_location(counts_interest$cts_interest_gk, residue_category, "GK", search_terms[i])
   pie_plot_subcellular_location(counts_interest$cts_interest_gk_fl, residue_category, "GK + FL", search_terms[i])
-}
   
   # NOW THE SIDES PART
-  
-  cts_gk_side <- wanted %>% 
-    group_by(Residue, Side) %>% # Variable to be transformed
-    count() %>% 
-    ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
-  
-  cts_gk_fl_side <- wanted2 %>% 
-    group_by(Residue, Side) %>% # Variable to be transformed
-    count() %>% 
-    ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
-  
-    lys_ct = cts_gk_side[cts_gk_side$Residue == "K",]
-    arg_ct = cts_gk_side[cts_gk_side$Residue == "R",]
-    asp_ct = cts_gk_side[cts_gk_side$Residue == "D",]
-    glu_ct = cts_gk_side[cts_gk_side$Residue == "E",]
-    ser_ct = cts_gk_side[cts_gk_side$Residue == "S",]
-    pro_ct = cts_gk_side[cts_gk_side$Residue == "P",]
-    
-    lys_ct <- lys_ct %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    arg_ct <- arg_ct %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    asp_ct <- asp_ct %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    glu_ct <- glu_ct %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    ser_ct <- ser_ct %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    pro_ct <- pro_ct %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    lys_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "K",]
-    arg_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "R",]
-    asp_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "D",]
-    glu_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "E",]
-    ser_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "S",]
-    pro_ct_gk_fl = cts_gk_fl_side[cts_gk_fl_side$Residue == "P",]
-    
-    lys_ct_gk_fl <- lys_ct_gk_fl %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    arg_ct_gk_fl <- arg_ct_gk_fl %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    asp_ct_gk_fl <- asp_ct_gk_fl %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    glu_ct_gk_fl <- glu_ct_gk_fl %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    ser_ct_gk_fl <- ser_ct_gk_fl %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    pro_ct_gk_fl <- pro_ct_gk_fl %>%
-      mutate(perc = `n` / sum(`n`)) %>% 
-      arrange(perc) %>%
-      mutate(labels = scales::percent(perc))
-    
-    ggplot(lys_ct, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Lys residue sides in GK regions for",search_terms[[i]])
-    
-    ggplot(arg_ct, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Arg residue sides in GK regions for",search_terms[[i]])
-    
-    ggplot(asp_ct, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Asp residue sides in GK regions for",search_terms[[i]])
-    
-    ggplot(glu_ct, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Glu residue sides in GK regions for",search_terms[[i]])
-    
-    ggplot(ser_ct, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Ser residue sides in GK regions for",search_terms[[i]])
-    
-    ggplot(pro_ct, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Pro residue sides in GK regions for",search_terms[[i]])
-    
-    # FOR GK + FL
+  counts_side_gk <- analyse_sides(counts$cts_gk_side)
+  counts_side_gk_fl <- analyse_sides(counts$cts_gk_fl_side)
 
-    ggplot(lys_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Lys residue sides in GK + FL regions for",search_terms[[i]])
-    
-    ggplot(arg_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Arg residue sides in GK + FL regions for",search_terms[[i]])
-    
-    ggplot(asp_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Asp residue sides in GK + FL regions for",search_terms[[i]])
-    
-    ggplot(glu_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Glu residue sides in GK + FL regions for",search_terms[[i]])
-    
-    ggplot(ser_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Ser residue sides in GK + FL regions for",search_terms[[i]])
-    
-    ggplot(pro_ct_gk_fl, aes(x = "", y = perc, fill = Side)) +
-      geom_col() +
-      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-      coord_polar(theta = "y")+
-      guides(fill = guide_legend(title = "Side"))+
-      theme_void()+
-      ggtitle("Percentage of Pro residue sides in GK + FL regions for",search_terms[[i]])
+  region_string = "GK"
+  pie_plot_sides(counts_side_gk$lys_ct, "LYS", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$arg_ct, "ARG", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$asp_ct, "ASP", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$glu_ct, "GLU", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$ser_ct, "SER", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$pro_ct, "PRO", region_string, search_terms[i])
+  
+  region_string = "GK + FL"
+  pie_plot_sides(counts_side_gk_fl$lys_ct, "LYS", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$arg_ct, "ARG", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$asp_ct, "ASP", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$glu_ct, "GLU", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$ser_ct, "SER", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$pro_ct, "PRO", region_string, search_terms[i])
+}
     
