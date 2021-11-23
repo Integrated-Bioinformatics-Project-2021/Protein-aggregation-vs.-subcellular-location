@@ -65,28 +65,10 @@ source("gatekeeper.R")
 GK_analysis = analyse_gate_keeper_regions()
 
 #### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
-
-ggplot(GK_analysis$cts_gk, aes(x = "", y = perc, fill = Residue)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Residue"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF ALL RESIDUES FOR ALL\n OF THE GK REGIONS IN ALL PROTEINS")
-  #scale_fill_brewer(palette="PiYG")+
-  #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
+pie_plot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
 
 #### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
-
-ggplot(GK_analysis$cts_gk_fl, aes(x = "", y = perc, fill = Residue)) +
-  geom_col() +
-  geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-  coord_polar(theta = "y")+
-  guides(fill = guide_legend(title = "Residue"))+
-  theme_void()+
-  ggtitle("PERCENTAGE OF ALL RESIDUES FOR ALL\n OF THE GK + FL REGIONS IN ALL PROTEINS")
-  #scale_fill_brewer(palette="PiYG")+
-  #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
+pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 
 #### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
 

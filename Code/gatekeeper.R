@@ -46,3 +46,16 @@ analyse_gate_keeper_regions <- function() {
                "cts_gk_fl" = cts_gk_fl,
                "cts_gk_fl_side" = cts_gk_fl_side))
 }
+
+pie_plot_percentage_of_all_residues <- function(given_region, region_string) {
+  title = paste("PERCENTAGE OF ALL RESIDUES FOR ALL\n OF THE ", region_string,  " IN ALL PROTEINS", sep="", collapse=NULL)
+  ggplot(given_region, aes(x = "", y = perc, fill = Residue)) +
+    geom_col() +
+    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
+    coord_polar(theta = "y")+
+    guides(fill = guide_legend(title = "Residue"))+
+    theme_void()+
+    ggtitle(title)
+  #scale_fill_brewer(palette="PiYG")+
+  #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
+}
