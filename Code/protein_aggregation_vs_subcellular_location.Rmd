@@ -117,6 +117,15 @@ PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 ```
+PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK REGIONS IN ALL PROTEINS
+```{r}
+pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
+```
+PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK + FL REGIONS IN ALL PROTEINS
+```{r}
+pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK REGIONS")
+```
+
 ## Interested residues
 Lysine (Lys) --> K <br />
 Arginine (Arg) --> R <br />
@@ -163,6 +172,37 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$glu_ct, "
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "SER", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
 ```
+##INTERESTED GROUPINGS
+Postive charged (positive) --> K <br />
+Negative charged (negative) --> R <br />
+Uncharged (uncharged) --> D <br />
+Special cases (special) --> E <br />
+Hydrophobic (hydrophobic) --> S <br />
+PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+```{r}
+GK_analysis_GK_groupings = analyse_gate_keeper_groupings(GK_analysis$cts_gk_groups_side)
+side_string = "GK"
+```
+```{r}
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$positive, "positive charged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$negative, "negative charged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$uncharged, "uncharged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$special, "special cases", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$hydrophobic, "hydrophobic", side_string)
+```
+PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+```{r}
+GK_analysis_GK_and_FL_groupings = analyse_gate_keeper_residues(GK_analysis$cts_gk_fl_groups_side)
+side_string = "GK + FL"
+```
+
+```{r}
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$positive, "positive charged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$negative, "negative charged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$uncharged, "uncharged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$special, "special cases", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$hydrophobic, "hydrophobic", side_string)
+```
  
 ## Subcellular location
 Previous analyses are done for all of the proteins, but now we will be working on all the proteins that belong to a specific subcellular location
@@ -173,7 +213,9 @@ for (i in 1:length(search_terms)) {
   
   residue_category = "all"
   pie_plot_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
+  pie_plot_subcellular_location(counts$cts_gk_groups, residue_category, "GK", search_terms[i])
   pie_plot_subcellular_location(counts$cts_gk_fl, residue_category, "GK + FL", search_terms[i])
+  pie_plot_subcellular_location(counts$cts_gk_groups, residue_category, "GK", search_terms[i])
   
   # PERCENTAGE OF INTERESTED PROTEINS IN SUBCELLULAR LOCATIONS
   
@@ -185,6 +227,8 @@ for (i in 1:length(search_terms)) {
   # NOW THE SIDES PART
   counts_side_gk <- analyse_sides(counts$cts_gk_side)
   counts_side_gk_fl <- analyse_sides(counts$cts_gk_fl_side)
+  counts_side_gk_groups <- analyse_sides(counts$cts_gk_groups_side)
+  counts_side_gk_fl_groups <- analyse_sides(counts$cts_gk_groups_side)
 
   region_string = "GK"
   pie_plot_sides(counts_side_gk$lys_ct, "LYS", region_string, search_terms[i])
@@ -193,6 +237,11 @@ for (i in 1:length(search_terms)) {
   pie_plot_sides(counts_side_gk$glu_ct, "GLU", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$ser_ct, "SER", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$pro_ct, "PRO", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$pos_ct, "negative", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$neg_ct, "positive", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$unc_ct, "uncharged", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$spe_ct, "special cases", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$hyd_ct, "hydrophobic", region_string, search_terms[i])
   
   region_string = "GK + FL"
   pie_plot_sides(counts_side_gk_fl$lys_ct, "LYS", region_string, search_terms[i])
@@ -201,5 +250,10 @@ for (i in 1:length(search_terms)) {
   pie_plot_sides(counts_side_gk_fl$glu_ct, "GLU", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_fl$ser_ct, "SER", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_fl$pro_ct, "PRO", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$pos_ct, "positive", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$neg_ct, "negative", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$unc_ct, "uncharged", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$spe_ct, "special cases", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl$hyd_ct, "hydrophobic", region_string, search_terms[i])
 }
 ```
