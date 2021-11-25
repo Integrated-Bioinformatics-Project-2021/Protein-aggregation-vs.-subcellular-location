@@ -134,7 +134,7 @@ analyse_gate_keeper_regions <- function() {
   return (list("GK_residues" = GK_residues,
                "GK_FL_residues" = GK_FL_residues,
                "GK_groups" = GK_groupings,
-               "GK_FL_groupings" + GK_FL_groupings
+               "GK_FL_groupings" = GK_FL_groupings,
                "cts_gk" = cts_gk,
                "cts_gk_side" = cts_gk_side,
                "cts_gk_fl" = cts_gk_fl,
@@ -142,8 +142,7 @@ analyse_gate_keeper_regions <- function() {
                "cts_gk_groups" = cts_gk_groups,
                "cts_gk_groups_side" = cts_gk_groups_side,
                "cts_gk_fl_groups" = cts_gk_fl_groups,
-               "cts_gk_fl_groups_side" = cts_gk_fl_groups_side,
-               ))
+               "cts_gk_fl_groups_side" = cts_gk_fl_groups_side))
 }
 
 pie_plot_percentage_of_all_residues <- function(given_region, region_string) {
@@ -231,11 +230,11 @@ analyse_gate_keeper_residues <- function(sides) {
 
 #PERCENTAGE OF ALL GROUPING FOR ALL SPECIFIED SITES 
 analyse_gate_keeper_groupings <- function(sides) {
-    pos_ct = sides[sides == "positive",]
-    neg_ct = sides[sides == "negative",]
-    unc_ct = sides[sides == "uncharged",]
-    spe_ct = sides[sides == "special",]
-    hyd_ct = sides[sides == "hydrophobic",]
+    pos_ct = sides[sides$Residue == "positive",]
+    neg_ct = sides[sides$Residue == "negative",]
+    unc_ct = sides[sides$Residue == "uncharged",]
+    spe_ct = sides[sides$Residue == "special",]
+    hyd_ct = sides[sides$Residue == "hydrophobic",]
 
     pos_ct <- pos_ct %>%
         mutate(perc = `n` / sum(`n`)) %>% 
@@ -262,11 +261,11 @@ analyse_gate_keeper_groupings <- function(sides) {
         arrange(perc) %>%
         mutate(labels = scales::percent(perc))
 
-      return (list("pos_ct" = pos_ct,
-               "neg_ct" = neg_ct,
-               "unc_ct" = unc_ct,
-               "spe_ct" = spe_ct,
-               "hyd_ct" = hyd_ct))
+      return (list("positive" = pos_ct,
+               "negative" = neg_ct,
+               "uncharged" = unc_ct,
+               "special" = spe_ct,
+               "hydrophobic" = hyd_ct))
 }
 
 pie_plot_percentage_of_specific_residue <- function(given_region, residue_string, side_string) {
@@ -289,7 +288,7 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
   
   cts_interest_gk <- GK_analysis$GK_residues[which(GK_analysis$GK_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_residues)]
   cts_interest_gk_fl <- GK_analysis$GK_FL_residues[which(GK_analysis$GK_FL_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_residues)]
-  cts_interest_gk_groups <- GK_analysis$GK_groupings[which(GK_analysis$GK_groupings$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_groupings)]
+  cts_interest_gk_groups <- GK_analysis$GK_groups[which(GK_analysis$GK_groups$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_groups)]
   cts_interest_gk_fl_groups <- GK_analysis$GK_FL_groupings[which(GK_analysis$GK_FL_groupings %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_groupings)]
 
   # FOR ALL GK IN GIVEN SUBCELLULAR LOCATION

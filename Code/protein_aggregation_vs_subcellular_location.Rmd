@@ -45,7 +45,7 @@ library(tidyverse)
 
 ## Define the working directory.
 ```{r}
-directory = dirname(rstudioapi::getSourceEditorContext()$path) # Should work when data is placed in same folder
+directory = dirname(rstudioapi::getSourceEditorContext()$path) # Place the data in a Data folder on the path of this file
 setwd(directory)
 ```
 
@@ -73,6 +73,14 @@ plot_average_tango_scores_complete_proteins_joined_secreted()
 plot_average_tango_scores_APR_proteins()
 plot_average_tango_scores_APR_proteins_joined_secreted()
 ```
+Is this significantly different from the analysis without proteins that don't have an APR region?
+```{r}
+source("statistical_analysis.R")
+
+# F_test(unlist(tango_scores_complete_protein, recursive = TRUE, use.names = TRUE), unlist(tango_scores_APR_protein, recursive = TRUE, use.names = TRUE))
+# TODO
+```
+
 ## Distribution of maximal tango scores
 ```{r}
 plot_max_tango_scores()
@@ -192,7 +200,7 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$hydrophobic, "h
 ```
 PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
 ```{r}
-GK_analysis_GK_and_FL_groupings = analyse_gate_keeper_residues(GK_analysis$cts_gk_fl_groups_side)
+GK_analysis_GK_and_FL_groupings = analyse_gate_keeper_groupings(GK_analysis$cts_gk_fl_groups_side)
 side_string = "GK + FL"
 ```
 
@@ -209,7 +217,7 @@ Previous analyses are done for all of the proteins, but now we will be working o
 ```{r}
 # Statistics for each subcellular location
 for (i in 1:length(search_terms)) {
-  counts = get_counts_for_subcellular_location(search_terms[i], GK_analysis)
+  counts = get_counts_for_subcellular_location(search_terms[i], GK_analysis) # Takes a while to run
   
   residue_category = "all"
   pie_plot_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
@@ -237,7 +245,7 @@ for (i in 1:length(search_terms)) {
   pie_plot_sides(counts_side_gk$glu_ct, "GLU", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$ser_ct, "SER", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$pro_ct, "PRO", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk$pos_ct, "negative", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk$pos_ct, "negative", region_string, search_terms[i]) # TODO: gives empty data frames for the groups neg/pos/unc/spe/hyd
   pie_plot_sides(counts_side_gk$neg_ct, "positive", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$unc_ct, "uncharged", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$spe_ct, "special cases", region_string, search_terms[i])

@@ -3,16 +3,16 @@
 source("subcellular_location_annotation.R")
 # Average TANGO scores --------------------------------------------------------
 
-initialize_by_APR_protein <- function() {
+initialize_by_protein <- function() {
   # Acquire only the vital rows of each protein (APRs)
   only_APR_data <<- subset(data, APRdef2_tango > 0)
   
  
   # Get average tango score for each APR protein
   unique_data <- only_APR_data[!duplicated(only_APR_data[,c(1,10)]),]
-  by_protein <<- aggregate(avgScore ~ Protein, unique_data, mean) # Save by_APR_protein globally
+  by_protein <<- aggregate(avgScore ~ Protein, unique_data, mean) # Save by_protein globally
 }
-initialize_by_APR_protein()
+initialize_by_protein()
 
 #get average max Tango score for each subcellular locations for complete proteins 
 get_avgmax_tango_score_complete_protein <- function(given_protein_list) {
@@ -27,11 +27,11 @@ get_avgmax_tango_score_complete_protein <- function(given_protein_list) {
 }
 
 #get average Tango score for each subcellular locations for APR proteins 
-get_average_tango_score_APR_protein <- function(given_protein_list) {
+get_average_tango_score <- function(given_protein_list) {
   avgScores = c()
   for (j in 1:nrow(given_protein_list)){
-    if (given_protein_list$wanted_proteins[j] %in% by_APR_protein$Protein) {
-      avgScores <- append(avgScores,by_APR_protein[which(by_APR_protein$Protein %in% given_protein_list$wanted_proteins[j]), "avgScore"])
+    if (given_protein_list$wanted_proteins[j] %in% by_protein$Protein) {
+      avgScores <- append(avgScores,by_protein[which(by_protein$Protein %in% given_protein_list$wanted_proteins[j]), "avgScore"])
     }
     else {avgScores <- append(avgScores,NA)}
   }
@@ -62,12 +62,12 @@ calculate_average_tango_scores <- function() {
 }
 
 plot_average_tango_scores_complete_proteins <- function() {
-  if (! exists("tango_scores_APR_protein")) {
+  if (! exists("tango_scores_complete_protein")) {
     calculate_average_tango_scores()
   }
   #Plot complete proteins
   violin_tango_sub_complete_proteins <- ggplot(tango_scores_complete_protein, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
-    geom_violinplot(notch=TRUE) + scale_color_brewer(palette="Dark2")
+    geom_violin(notch=TRUE) + scale_color_brewer(palette="Dark2")
   violin_tango_sub_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
 
@@ -130,7 +130,7 @@ plot_max_tango_scores <- function() {
   if (! exists("max_tango_scores")) {
     calculate_max_tango_scores()
   }
- violin_avgmax_complete_proteins <- ggplot(scores_protein, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
+ violin_avgmax_complete_proteins <- ggplot(max_tango_scores, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
   geom_violin(trim=FALSE) + scale_color_brewer(palette="Dark2")
  violin_avgmax_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
