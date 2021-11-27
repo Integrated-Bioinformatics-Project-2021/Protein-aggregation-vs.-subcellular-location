@@ -267,7 +267,7 @@ for (i in 1:length(search_terms)) {
   counts_side_gk <- analyse_sides(counts$cts_gk_side)
   counts_side_gk_fl <- analyse_sides(counts$cts_gk_fl_side)
   counts_side_gk_groups <- analyse_sides(counts$cts_gk_groups_side)
-  counts_side_gk_fl_groups <- analyse_sides(counts$cts_gk_groups_side)
+  counts_side_gk_fl_groups <- analyse_sides(counts$cts_gk_fl_groups_side)
 
   region_string = "GK"
   pie_plot_sides(counts_side_gk$lys_ct, "LYS", region_string, search_terms[i])
@@ -276,11 +276,11 @@ for (i in 1:length(search_terms)) {
   pie_plot_sides(counts_side_gk$glu_ct, "GLU", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$ser_ct, "SER", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$pro_ct, "PRO", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk$pos_ct, "negative", region_string, search_terms[i]) # TODO: gives empty data frames for the groups neg/pos/unc/spe/hyd
-  pie_plot_sides(counts_side_gk$neg_ct, "positive", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk$unc_ct, "uncharged", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk$spe_ct, "special cases", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk$hyd_ct, "hydrophobic", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_groups$pos_ct, "negative", region_string, search_terms[i]) 
+  pie_plot_sides(counts_side_gk_groups$neg_ct, "positive", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_groups$unc_ct, "uncharged", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_groups$spe_ct, "special cases", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_groups$hyd_ct, "hydrophobic", region_string, search_terms[i])
   
   region_string = "GK + FL"
   pie_plot_sides(counts_side_gk_fl$lys_ct, "LYS", region_string, search_terms[i])
@@ -289,10 +289,10 @@ for (i in 1:length(search_terms)) {
   pie_plot_sides(counts_side_gk_fl$glu_ct, "GLU", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_fl$ser_ct, "SER", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_fl$pro_ct, "PRO", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk_fl$pos_ct, "positive", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk_fl$neg_ct, "negative", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk_fl$unc_ct, "uncharged", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk_fl$spe_ct, "special cases", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk_fl$hyd_ct, "hydrophobic", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl_groups$pos_ct, "positive", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl_groups$neg_ct, "negative", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl_groups$unc_ct, "uncharged", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl_groups$spe_ct, "special cases", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_fl_groups$hyd_ct, "hydrophobic", region_string, search_terms[i])
 }
 ```
