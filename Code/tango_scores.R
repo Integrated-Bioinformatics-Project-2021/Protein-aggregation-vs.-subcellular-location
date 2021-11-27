@@ -93,10 +93,6 @@ plot_average_tango_scores_complete_proteins_joined_secreted <- function() {
 violin_tango_sec_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
 
-significance_tango_scores_complete_proteins_joined_secreted <- function(){
-  test_significance_secretory(tango_scores_complete_protein)
-}
-
 plot_average_tango_scores_APR_proteins <- function() {
   if (! exists("tango_scores_APR_protein")) {
     calculate_average_tango_scores()
@@ -119,9 +115,6 @@ plot_average_tango_scores_APR_proteins_joined_secreted <- function() {
  violin_tango_sec_APR_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
 
-significance_tango_scores_APR_proteins_joined_secreted <- function(){
-  test_significance_secretory(tango_scores_APR_protein)
-}
 # ----------- Max Tango Scores for each protein and APR -----------------------
 
 calculate_max_tango_scores <- function() {
@@ -154,10 +147,6 @@ plot_max_tango_scores <- function() {
 }
 
 #TODO: violin plot max tango score per secretory pathway missing!
-
-significance_tango_scores_max_joined_secreted <- function(){
-  test_significance_secretory(max_tango_scores)
-}
 
 # Number of APRs per subcellular location -------------------------------------
 

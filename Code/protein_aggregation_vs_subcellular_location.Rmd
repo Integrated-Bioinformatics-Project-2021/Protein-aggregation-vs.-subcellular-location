@@ -73,7 +73,7 @@ source("tango_scores.R")
 ```{r}
 plot_average_tango_scores_complete_proteins()
 plot_average_tango_scores_complete_proteins_joined_secreted()
-significance_tango_scores_complete_proteins_joined_secreted()
+test_significance_secretory(tango_scores_complete_protein)
 ```
 
 ## Average tango score distribution in proteins with an APR region
@@ -81,7 +81,7 @@ significance_tango_scores_complete_proteins_joined_secreted()
 ```{r}
 plot_average_tango_scores_APR_proteins()
 plot_average_tango_scores_APR_proteins_joined_secreted()
-significance_tango_scores_APR_proteins_joined_secreted()
+test_significance_secretory(tango_scores_APR_protein)
 ```
 
 Is this significantly different from the analysis without proteins that don't have an APR region?
@@ -97,7 +97,7 @@ Is this significantly different from the analysis without proteins that don't ha
 
 ```{r}
 plot_max_tango_scores()
-significance_tango_scores_max_joined_secreted()
+test_significance_secretory(max_tango_scores)
 ```
 
 ## Distribution of number of APR regions per protein normalized for protein length
@@ -276,8 +276,8 @@ for (i in 1:length(search_terms)) {
   pie_plot_sides(counts_side_gk$glu_ct, "GLU", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$ser_ct, "SER", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk$pro_ct, "PRO", region_string, search_terms[i])
-  pie_plot_sides(counts_side_gk_groups$pos_ct, "negative", region_string, search_terms[i]) 
-  pie_plot_sides(counts_side_gk_groups$neg_ct, "positive", region_string, search_terms[i])
+  pie_plot_sides(counts_side_gk_groups$pos_ct, "positive", region_string, search_terms[i]) 
+  pie_plot_sides(counts_side_gk_groups$neg_ct, "negative", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_groups$unc_ct, "uncharged", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_groups$spe_ct, "special cases", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_groups$hyd_ct, "hydrophobic", region_string, search_terms[i])
