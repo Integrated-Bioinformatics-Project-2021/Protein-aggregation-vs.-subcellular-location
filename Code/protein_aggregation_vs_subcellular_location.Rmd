@@ -84,15 +84,6 @@ plot_average_tango_scores_APR_proteins_joined_secreted()
 test_significance_secretory(tango_scores_APR_protein)
 ```
 
-Is this significantly different from the analysis without proteins that don't have an APR region?
-
-```{r}
-# source("statistical_analysis.R")
-
-# F_test(unlist(tango_scores_complete_protein, recursive = TRUE, use.names = TRUE), unlist(tango_scores_APR_protein, recursive = TRUE, use.names = TRUE))
-# TODO
-```
-
 ## Distribution of maximal tango scores
 
 ```{r}
