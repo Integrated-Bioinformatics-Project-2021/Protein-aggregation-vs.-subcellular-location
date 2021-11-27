@@ -289,7 +289,7 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
   cts_interest_gk <- GK_analysis$GK_residues[which(GK_analysis$GK_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_residues)]
   cts_interest_gk_fl <- GK_analysis$GK_FL_residues[which(GK_analysis$GK_FL_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_residues)]
   cts_interest_gk_groups <- GK_analysis$GK_groups[which(GK_analysis$GK_groups$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_groups)]
-  cts_interest_gk_fl_groups <- GK_analysis$GK_FL_groupings[which(GK_analysis$GK_FL_groupings %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_groupings)]
+  cts_interest_gk_fl_groups <- GK_analysis$GK_FL_groupings[which(GK_analysis$GK_FL_groupings$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_groupings)]
 
   # FOR ALL GK IN GIVEN SUBCELLULAR LOCATION
   
