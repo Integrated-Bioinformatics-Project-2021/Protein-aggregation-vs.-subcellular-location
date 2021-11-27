@@ -387,7 +387,7 @@ analyse_sides <- function(cts) {
   glu_ct = cts[cts$Residue == "E",]
   ser_ct = cts[cts$Residue == "S",]
   pro_ct = cts[cts$Residue == "P",]
-  pos_ct = cts[cts$Residue == "postive",]
+  pos_ct = cts[cts$Residue == "positive",]
   neg_ct = cts[cts$Residue == "negative",]
   unc_ct = cts[cts$Residue == "uncharged",]
   spe_ct = cts[cts$Residue == "special",]
@@ -462,13 +462,18 @@ analyse_sides <- function(cts) {
 }
 
 pie_plot_sides <- function(counts, residue_string, region_string, subcellular_location) {
-  title = paste("Percentage of ", residue_string, " residue sides in ", region_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
-  plot = ggplot(counts, aes(x = "", y = perc, fill = Side)) +
-    geom_col() +
-    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-    coord_polar(theta = "y")+
-    guides(fill = guide_legend(title = "Side"))+
-    theme_void()+
-    ggtitle(title)
-  print(plot)
+  if (nrow(counts) == 0) {
+    print(paste("There are no counts of ", residue_string, " residue sides in ", region_string, " regions for ", subcellular_location, sep="", collapse=NULL))
+  }
+  else {
+    title = paste("Percentage of ", residue_string, " residue sides in ", region_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
+    plot = ggplot(counts, aes(x = "", y = perc, fill = Side)) +
+      geom_col() +
+      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
+      coord_polar(theta = "y")+
+      guides(fill = guide_legend(title = "Side"))+
+      theme_void()+
+      ggtitle(title)
+    print(plot)
+  }
 }
