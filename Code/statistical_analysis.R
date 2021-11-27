@@ -1,5 +1,4 @@
 # All functions dealing with significance tests
-source("tango_scores.R")
 
 #install.packages("dgof")
 library(dgof)

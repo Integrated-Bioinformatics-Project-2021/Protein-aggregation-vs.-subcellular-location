@@ -7,9 +7,9 @@ source("statistical_analysis.R")
 
 test_significance_secretory <- function(data){
   if (significance_secretory(data) == TRUE){
-    print("The observed difference is statistically significant")
+    print("The observed difference is statistically significant.")
   }
-  else{print("The observed difference is not statistically significant")}
+  else{print("The observed difference is not statistically significant.")}
 }
 
 # Average TANGO scores --------------------------------------------------------
