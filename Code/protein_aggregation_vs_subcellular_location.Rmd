@@ -31,6 +31,7 @@ output:
 ```
 
 ## Load the needed libraries.
+
 ```{r}
 library(UniprotR)
 library(sjmisc) # Used for str_contains
@@ -44,12 +45,14 @@ library(tidyverse)
 ```
 
 ## Define the working directory.
+
 ```{r}
 directory = dirname(rstudioapi::getSourceEditorContext()$path) # Place the data in a Data folder on the path of this file
 setwd(directory)
 ```
 
 ## Load the data.
+
 ```{r}
 source("load_data.R")
 return_value = read_data() # See load_data.R
@@ -59,21 +62,29 @@ rm(return_value) # To get rid of the extra memory usage
 ```
 
 # TANGO scores
+
 ```{r}
 source("tango_scores.R")
 ```
 
 ## Average tango score distribution in all proteins
+
 ```{r}
 plot_average_tango_scores_complete_proteins()
 plot_average_tango_scores_complete_proteins_joined_secreted()
+significance_tango_scores_complete_proteins_joined_secreted()
 ```
+
 ## Average tango score distribution in proteins with an APR region
+
 ```{r}
 plot_average_tango_scores_APR_proteins()
 plot_average_tango_scores_APR_proteins_joined_secreted()
+significance_tango_scores_APR_proteins_joined_secreted()
 ```
+
 Is this significantly different from the analysis without proteins that don't have an APR region?
+
 ```{r}
 source("statistical_analysis.R")
 
@@ -82,19 +93,26 @@ source("statistical_analysis.R")
 ```
 
 ## Distribution of maximal tango scores
+
 ```{r}
 plot_max_tango_scores()
+significance_tango_scores_max_joined_secreted()
 ```
+
 ## Distribution of number of APR regions per protein normalized for protein length
+
 ```{r}
 plot_average_tango_scores_complete_proteins()
 plot_average_tango_scores_complete_proteins_joined_secreted()
 ```
+
 # Peptide charges
+
 ```{r}
 source("charges.R")
 classify_subsets()
 ```
+
 ```{r}
 # TODO: make plots showing the differences between APR, GK and FR based on charges
 # TODO: see if differences when split into subcellular locations
@@ -106,58 +124,67 @@ classify_subsets()
 
 # Pie Plot for the residues
 
-Lysine (Lys) --> K <br />
-Arginine (Arg) --> R <br />
-Aspartic acid (Asp) --> D <br />
-Glutamic acid (Glu) --> E
+Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E
+
 ```{r}
 source("gatekeeper.R")
 ```
+
 ## Only for the GK regions
+
 ```{r}
 GK_analysis = analyse_gate_keeper_regions()
 ```
+
 PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
 ```
+
 PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 ```
+
 PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK REGIONS IN ALL PROTEINS
+
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
 ```
+
 PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK + FL REGIONS IN ALL PROTEINS
+
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK REGIONS")
 ```
 
 ## Interested residues
-Lysine (Lys) --> K <br />
-Arginine (Arg) --> R <br />
-Aspartic acid (Asp) --> D <br />
-Glutamic acid (Glu) --> E <br />
-Serine (Ser) --> S <br />
-Proline (Pro) --> P <br />
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+
+Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E <br /> Serine (Ser) --> S <br /> Proline (Pro) --> P <br /> PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+
 ```{r}
 GK_analysis_interested_aa = analyse_interested_gate_keeper_regions(GK_analysis)
 ```
+
 ```{r}
 pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk, "GK REGIONS")
 ```
+
 PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+
 ```{r}
 pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk_fl, "GK + FL REGIONS")
 ```
 
 PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
+
 ```{r}
 GK_analysis_GK_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_side)
 side_string = "GK"
 ```
+
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$lys_ct, "LYS", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$arg_ct, "ARG", side_string)
@@ -166,7 +193,9 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$glu_ct, "GLU", s
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$ser_ct, "SER", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$pro_ct, "PRO", side_string)
 ```
+
 PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+
 ```{r}
 GK_analysis_GK_and_FL_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_fl_side)
 side_string = "GK + FL"
@@ -180,17 +209,14 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$glu_ct, "
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "SER", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
 ```
-##INTERESTED GROUPINGS
-Postive charged (positive) --> K <br />
-Negative charged (negative) --> R <br />
-Uncharged (uncharged) --> D <br />
-Special cases (special) --> E <br />
-Hydrophobic (hydrophobic) --> S <br />
-PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+
+##INTERESTED GROUPINGS Postive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S <br /> PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+
 ```{r}
 GK_analysis_GK_groupings = analyse_gate_keeper_groupings(GK_analysis$cts_gk_groups_side)
 side_string = "GK"
 ```
+
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$positive, "positive charged", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$negative, "negative charged", side_string)
@@ -198,7 +224,9 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$uncharged, "unc
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$special, "special cases", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$hydrophobic, "hydrophobic", side_string)
 ```
+
 PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+
 ```{r}
 GK_analysis_GK_and_FL_groupings = analyse_gate_keeper_groupings(GK_analysis$cts_gk_fl_groups_side)
 side_string = "GK + FL"
@@ -211,9 +239,11 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$uncharge
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$special, "special cases", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$hydrophobic, "hydrophobic", side_string)
 ```
- 
+
 ## Subcellular location
+
 Previous analyses are done for all of the proteins, but now we will be working on all the proteins that belong to a specific subcellular location
+
 ```{r}
 # Statistics for each subcellular location
 for (i in 1:length(search_terms)) {

@@ -1,6 +1,17 @@
 # All functions dealing with the TANGO scores
 
 source("subcellular_location_annotation.R")
+source("statistical_analysis.R")
+
+# Statistical significance ---------------------------------------------------
+
+test_significance_secretory <- function(data){
+  if (significance_secretory(data) == TRUE){
+    print("The observed difference is statistically significant")
+  }
+  else{print("The observed difference is not statistically significant")}
+}
+
 # Average TANGO scores --------------------------------------------------------
 
 initialize_by_protein <- function() {
@@ -82,6 +93,10 @@ plot_average_tango_scores_complete_proteins_joined_secreted <- function() {
 violin_tango_sec_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
 
+significance_tango_scores_complete_proteins_joined_secreted <- function(){
+  test_significance_secretory(tango_scores_complete_protein)
+}
+
 plot_average_tango_scores_APR_proteins <- function() {
   if (! exists("tango_scores_APR_protein")) {
     calculate_average_tango_scores()
@@ -104,6 +119,9 @@ plot_average_tango_scores_APR_proteins_joined_secreted <- function() {
  violin_tango_sec_APR_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
 
+significance_tango_scores_APR_proteins_joined_secreted <- function(){
+  test_significance_secretory(tango_scores_APR_protein)
+}
 # ----------- Max Tango Scores for each protein and APR -----------------------
 
 calculate_max_tango_scores <- function() {
@@ -133,6 +151,12 @@ plot_max_tango_scores <- function() {
  violin_avgmax_complete_proteins <- ggplot(max_tango_scores, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
   geom_violin(trim=FALSE) + scale_color_brewer(palette="Dark2")
  violin_avgmax_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
+}
+
+#TODO: violin plot max tango score per secretory pathway missing!
+
+significance_tango_scores_max_joined_secreted <- function(){
+  test_significance_secretory(max_tango_scores)
 }
 
 # Number of APRs per subcellular location -------------------------------------
