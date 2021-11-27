@@ -1,2 +1,6 @@
 # Ignore all the big data files in the Data folder
 Code/Data/
+
+Code/protein_aggregation_vs_subcellular_location.nb.html
+
+*.pdf
