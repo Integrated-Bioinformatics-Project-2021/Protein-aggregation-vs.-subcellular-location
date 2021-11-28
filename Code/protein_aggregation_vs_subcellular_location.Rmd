@@ -31,6 +31,8 @@ output:
 #install.packages("dgof")
 #install.packages("igraph")
 #install.packages("ggpubr")
+#install.packages("gtools")
+
 ```
 
 ## Load the needed libraries.
@@ -85,6 +87,7 @@ plot_average_tango_scores_complete_proteins()
 significance_subcellular(tango_scores_complete_protein)
 get_krustal_test_results(tango_scores_complete_protein)
 get_wilcox_test_table(tango_scores_complete_protein)
+plot_stat_significance(tango_scores_complete_protein)
 ```
 ##Statistical tests and visualisation on secretory vs. non-secretory 
 ```{r}
@@ -101,8 +104,9 @@ plot_ks_test(tango_scores_complete_protein)
 ```{r}
 plot_average_tango_scores_APR_proteins()
 significance_subcellular(tango_scores_APR_protein)
-get_krustal_test_results(tango_scores_complete_protein)
-get_wilcox_test_table(tango_scores_complete_protein)
+get_krustal_test_results(tango_scores_APR_protein)
+get_wilcox_test_table(tango_scores_APR_protein)
+plot_stat_significance(tango_scores_APR_protein)
 ```
 
 ##Statistical tests and visualisation on secretory vs. non-secretory 
@@ -120,6 +124,8 @@ plot_max_tango_scores()
 significance_subcellular(max_tango_scores)
 get_krustal_test_results(max_tango_scores)
 get_wilcox_test_table(max_tango_scores)
+plot_stat_significance(max_tango_scores)
+
 ```
 ##Statistical tests and visualisation on secretory vs. non-secretory
 ```{r}
@@ -136,6 +142,8 @@ plot_ks_test(max_tango_scores)
 #significance_subcellular_nbAPR(normalized_number_APR_regions)
 #get_krustal_test_results_nbAPR(normalized_number_APR_regions)
 #get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
+#plot_stat_significance_nbAPR(normalized_number_APR_regions)
+
 ```
 
 ##Statistical tests and visualisation on secretory vs. non-secretory

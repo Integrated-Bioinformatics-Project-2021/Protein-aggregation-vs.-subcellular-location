@@ -45,6 +45,9 @@ get_wilcox_test_table <- function(data) {
 	write.csv(table_sig_subc_com_prot, file = file_path)
 }
 
+library(ggpubr)
+library(gtools)
+
 #FUNTION TO CALCULATE THE SIGNIFICANCE BETWEEN ALL SUBCELLULAR LOCATIONS FOR normalized_number_APR_regions
 #RETURNS A TABLE WITH ALL THE P-VALUES
 get_wilcox_test_table_nbAPR <- function(data) {
@@ -56,7 +59,27 @@ get_wilcox_test_table_nbAPR <- function(data) {
 	write.csv(table_sig_subc_com_prot, file = file_path)
 }
 
+plot_stat_significance <- function(data){
+  ggplot(data, aes(x=Subcellular_location, y = Tango_scores, fill = Secretory),
+         color = "supp", palette = "jco",
+         add = "jitter") + 
+    rotate_x_text(angle = 45)+
+    geom_violin() + 
+    geom_hline(yintercept = mean(data$Tango_scores), linetype = 2)+
+    stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
+    stat_compare_means(label = "p.signif", method = "wilcox.test",  ref.group = ".all.",  hide.ns = TRUE)
+}
 
+plot_stat_significance_nbAPR <- function(data){
+  ggplot(data, aes(x=Subcellular_location, y = Nb_APR, fill = Secretory),
+         color = "supp", palette = "jco",
+         add = "jitter") + 
+    rotate_x_text(angle = 45)+
+    geom_violin() + 
+    geom_hline(yintercept = mean(data$Nb_APR), linetype = 2)+
+    stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
+    stat_compare_means(label = "p.signif", method = "wilcox.test",  ref.group = ".all.",  hide.ns = TRUE)
+}
 
 
 
