@@ -68,7 +68,8 @@ rm(return_value) # To get rid of the extra memory usage
 ## Exploratory analysis
 ```{r}
 source("co_occurence.R")
-plot_co_occurence_absolute()
+plot_co_occurence(relative = FALSE)
+plot_co_occurence(relative = TRUE)
 ```
 
 # TANGO scores
