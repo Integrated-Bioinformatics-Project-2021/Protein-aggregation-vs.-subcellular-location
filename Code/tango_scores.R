@@ -1,6 +1,17 @@
 # All functions dealing with the TANGO scores
 
 source("subcellular_location_annotation.R")
+source("statistical_analysis.R")
+
+# Statistical significance ---------------------------------------------------
+
+test_significance_secretory <- function(data){
+  if (significance_secretory(data) == TRUE){
+    print("The observed difference is statistically significant.")
+  }
+  else{print("The observed difference is not statistically significant.")}
+}
+
 # Average TANGO scores --------------------------------------------------------
 
 initialize_by_protein <- function() {
@@ -135,6 +146,8 @@ plot_max_tango_scores <- function() {
  violin_avgmax_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
 }
 
+#TODO: violin plot max tango score per secretory pathway missing!
+
 # Number of APRs per subcellular location -------------------------------------
 
 #get normalized number of APR regions for a protein list
@@ -175,7 +188,6 @@ calculated_normalized_number_APR_regions <- function() {
     
   }
   colnames(normalized_number_APR_regions) <- c("Proteins", "Subcellular_location", "Nb_APRs", "Secretory")
-  normalized_number_APR_regions$Subcellular_location[normalized_number_APR_regions$Subcellular_location == "Secreted" & ! normalized_number_APR_regions$Proteins %in% normalized_number_APR_regions$Proteins[normalized_number_APR_regions$Subcellular_location == "Extracellular space"]] = "Extracellular space" 
   normalized_number_APR_regions <<- normalized_number_APR_regions
 }
 

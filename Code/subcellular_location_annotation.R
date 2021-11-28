@@ -3,7 +3,7 @@
 ## Get subcellular location of every protein ----------------------------------
 
 # Define all possible subcellular locations
-search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Secreted", "Extracellular space")
+search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Extracellular space")
 
 # Get the Uniprot information of the subcellular locations of all given proteins
 get_subcellular_locations_for_all_proteins <- function(proteins) {
@@ -23,10 +23,22 @@ add_subcellular_location_and_secretory_information <- function(data, proteins) {
   locations_short = data.frame(subcellular_location, secretory_pathway) # creating a dataframe to add the subcellular locations
   hashed_proteins = hash() #generate dictionary
   
+  initial_search_terms <- list("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Extracellular space", "Secreted")
+
   for (i in 1:dim(subcellular_locations)[1]) {
-    string_location <- str_contains(subcellular_locations[i,], search_terms, ignore.case = TRUE)
-    x <- search_terms[string_location]
+    string_location <- str_contains(subcellular_locations[i,], initial_search_terms, ignore.case = TRUE)
+    x <- initial_search_terms[string_location]
     if (length(x) != 0) {
+      
+      if ("Secreted" %in% x) { # Merge "Secreted" and "Extracellular Space" in only "Extracellular Space"
+        if ("Extracellular space" %in% x) {
+          x = x[x != "Secreted"]
+        }
+        else {
+          x[x == "Secreted"] = "Extracellular space"
+        }
+      }
+      
       if (length(x) > 1) {
         x <- paste(x, collapse = ", ")
       }
@@ -45,28 +57,10 @@ add_subcellular_location_and_secretory_information <- function(data, proteins) {
   return (list("data" = data, "hashed_proteins" = hashed_proteins))
 }
 
-# Get hashed_proteins when complete_data.R is loaded ---------------------------
-# get_hashed_proteins <- function(complete_data) {
-#   proteins = unique(complete_data$Protein)
-#   hashed_proteins = hash() #generate dictionary
-#   subcellular_location = matrix(ncol = 1, nrow = 0)
-#   secretory_pathway = matrix(ncol = 1, nrow = 0)
-#   
-#   locations_short = data.frame(subcellular_location, secretory_pathway) # creating a dataframe to add the subcellular locations
-#   
-#   for (i in 1:length(proteins)) {
-#     current_protein_name = proteins[i]
-#     locations_short[1,1] = complete_data$Subcellular_location[complete_data$Protein == current_protein_name][1]
-#     locations_short[1,2] = complete_data$Subcellular_location[complete_data$Protein == secretory_pathway][1]
-#     hashed_proteins[current_protein_name] <- locations_short[1,]
-#   }
-#   return (hashed_proteins)
-# }
-
 # Check secretory --------------------------------------------------------------
 
 # Define which subcellular locations are secretory and which are non-secretory
-secretory <- c("Cell membrane", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Secreted", "Extracellular space")
+secretory <- c("Cell membrane", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Extracellular space")
 non_secretory <- c("Cytoplasm", "Nucleus", "Mitochondrion")
 
 # Check if a given subcellular location group is secretory

@@ -10,54 +10,54 @@ analyse_gate_keeper_regions <- function() {
   # special cases aas ("special") --> C,G,P,A
   # hydrophobic aas ("hydrophobic") --> V,I,L,M,F,Y,W
 
-  GK_groupings <- GK_residues
-  GK_groupings$Residue <- as.character(GK_groupings$Residue)
-  GK_groupings$Residue <- case_when(
-    GK_groupings$Residue == "R" ~ "positive",
-    GK_groupings$Residue == "H" ~ "positive",
-    GK_groupings$Residue == "K" ~ "positive",
-    GK_groupings$Residue == "D" ~ "negative",
-    GK_groupings$Residue == "E" ~ "negative",
-    GK_groupings$Residue == "S" ~ "uncharged",
-    GK_groupings$Residue == "T" ~ "uncharged",
-    GK_groupings$Residue == "N" ~ "uncharged",
-    GK_groupings$Residue == "Q" ~ "uncharged",
-    GK_groupings$Residue == "C" ~ "special",
-    GK_groupings$Residue == "G" ~ "special",
-    GK_groupings$Residue == "P" ~ "special",
-    GK_groupings$Residue == "A" ~ "special",
-    GK_groupings$Residue == "V" ~ "hydrophobic",
-    GK_groupings$Residue == "I" ~ "hydrophobic",
-    GK_groupings$Residue == "L" ~ "hydrophobic",
-    GK_groupings$Residue == "M" ~ "hydrophobic",
-    GK_groupings$Residue == "F" ~ "hydrophobic",
-    GK_groupings$Residue == "Y" ~ "hydrophobic",
-    GK_groupings$Residue == "W" ~ "hydrophobic",
+  GK_groups <- GK_residues
+  GK_groups$Residue <- as.character(GK_groups$Residue)
+  GK_groups$Residue <- case_when(
+    GK_groups$Residue == "R" ~ "positive",
+    GK_groups$Residue == "H" ~ "positive",
+    GK_groups$Residue == "K" ~ "positive",
+    GK_groups$Residue == "D" ~ "negative",
+    GK_groups$Residue == "E" ~ "negative",
+    GK_groups$Residue == "S" ~ "uncharged",
+    GK_groups$Residue == "T" ~ "uncharged",
+    GK_groups$Residue == "N" ~ "uncharged",
+    GK_groups$Residue == "Q" ~ "uncharged",
+    GK_groups$Residue == "C" ~ "special",
+    GK_groups$Residue == "G" ~ "special",
+    GK_groups$Residue == "P" ~ "special",
+    GK_groups$Residue == "A" ~ "special",
+    GK_groups$Residue == "V" ~ "hydrophobic",
+    GK_groups$Residue == "I" ~ "hydrophobic",
+    GK_groups$Residue == "L" ~ "hydrophobic",
+    GK_groups$Residue == "M" ~ "hydrophobic",
+    GK_groups$Residue == "F" ~ "hydrophobic",
+    GK_groups$Residue == "Y" ~ "hydrophobic",
+    GK_groups$Residue == "W" ~ "hydrophobic",
     )
 
-  GK_FL_groupings <- GK_FL_residues
-  GK_FL_groupings$Residue <- as.character(GK_FL_groupings$Residue)
-  GK_FL_groupings$Residue <- case_when(
-    GK_FL_groupings$Residue == "R" ~ "positive",
-    GK_FL_groupings$Residue == "H" ~ "positive",
-    GK_FL_groupings$Residue == "K" ~ "positive",
-    GK_FL_groupings$Residue == "D" ~ "negative",
-    GK_FL_groupings$Residue == "E" ~ "negative",
-    GK_FL_groupings$Residue == "S" ~ "uncharged",
-    GK_FL_groupings$Residue == "T" ~ "uncharged",
-    GK_FL_groupings$Residue == "N" ~ "uncharged",
-    GK_FL_groupings$Residue == "Q" ~ "uncharged",
-    GK_FL_groupings$Residue == "C" ~ "special",
-    GK_FL_groupings$Residue == "G" ~ "special",
-    GK_FL_groupings$Residue == "P" ~ "special",
-    GK_FL_groupings$Residue == "A" ~ "special",
-    GK_FL_groupings$Residue == "V" ~ "hydrophobic",
-    GK_FL_groupings$Residue == "I" ~ "hydrophobic",
-    GK_FL_groupings$Residue == "L" ~ "hydrophobic",
-    GK_FL_groupings$Residue == "M" ~ "hydrophobic",
-    GK_FL_groupings$Residue == "F" ~ "hydrophobic",
-    GK_FL_groupings$Residue == "Y" ~ "hydrophobic",
-    GK_FL_groupings$Residue == "W" ~ "hydrophobic",
+  GK_FL_groups <- GK_FL_residues
+  GK_FL_groups$Residue <- as.character(GK_FL_groups$Residue)
+  GK_FL_groups$Residue <- case_when(
+    GK_FL_groups$Residue == "R" ~ "positive",
+    GK_FL_groups$Residue == "H" ~ "positive",
+    GK_FL_groups$Residue == "K" ~ "positive",
+    GK_FL_groups$Residue == "D" ~ "negative",
+    GK_FL_groups$Residue == "E" ~ "negative",
+    GK_FL_groups$Residue == "S" ~ "uncharged",
+    GK_FL_groups$Residue == "T" ~ "uncharged",
+    GK_FL_groups$Residue == "N" ~ "uncharged",
+    GK_FL_groups$Residue == "Q" ~ "uncharged",
+    GK_FL_groups$Residue == "C" ~ "special",
+    GK_FL_groups$Residue == "G" ~ "special",
+    GK_FL_groups$Residue == "P" ~ "special",
+    GK_FL_groups$Residue == "A" ~ "special",
+    GK_FL_groups$Residue == "V" ~ "hydrophobic",
+    GK_FL_groups$Residue == "I" ~ "hydrophobic",
+    GK_FL_groups$Residue == "L" ~ "hydrophobic",
+    GK_FL_groups$Residue == "M" ~ "hydrophobic",
+    GK_FL_groups$Residue == "F" ~ "hydrophobic",
+    GK_FL_groups$Residue == "Y" ~ "hydrophobic",
+    GK_FL_groups$Residue == "W" ~ "hydrophobic",
     )
 
   # Lysine (Lys) --> K
@@ -97,9 +97,9 @@ analyse_gate_keeper_regions <- function() {
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
   
-  # --GROUPINGS OF AAS--
+  # --groups OF AAS--
 
-  cts_gk_groups <- GK_groupings %>% 
+  cts_gk_groups <- GK_groups %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
@@ -107,7 +107,7 @@ analyse_gate_keeper_regions <- function() {
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
 
-  cts_gk_groups_side <- GK_groupings %>% 
+  cts_gk_groups_side <- GK_groups %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
@@ -115,7 +115,7 @@ analyse_gate_keeper_regions <- function() {
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
 
-  cts_gk_fl_groups <- GK_FL_groupings %>% 
+  cts_gk_fl_groups <- GK_FL_groups %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
@@ -123,7 +123,7 @@ analyse_gate_keeper_regions <- function() {
     arrange(perc) %>%
     mutate(labels = scales::percent(perc))
 
-  cts_gk_fl_groups_side <- GK_FL_groupings %>% 
+  cts_gk_fl_groups_side <- GK_FL_groups %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
@@ -133,8 +133,8 @@ analyse_gate_keeper_regions <- function() {
 
   return (list("GK_residues" = GK_residues,
                "GK_FL_residues" = GK_FL_residues,
-               "GK_groups" = GK_groupings,
-               "GK_FL_groupings" = GK_FL_groupings,
+               "GK_groups" = GK_groups,
+               "GK_FL_groups" = GK_FL_groups,
                "cts_gk" = cts_gk,
                "cts_gk_side" = cts_gk_side,
                "cts_gk_fl" = cts_gk_fl,
@@ -229,7 +229,7 @@ analyse_gate_keeper_residues <- function(sides) {
 }
 
 #PERCENTAGE OF ALL GROUPING FOR ALL SPECIFIED SITES 
-analyse_gate_keeper_groupings <- function(sides) {
+analyse_gate_keeper_groups <- function(sides) {
     pos_ct = sides[sides$Residue == "positive",]
     neg_ct = sides[sides$Residue == "negative",]
     unc_ct = sides[sides$Residue == "uncharged",]
@@ -289,7 +289,7 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
   cts_interest_gk <- GK_analysis$GK_residues[which(GK_analysis$GK_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_residues)]
   cts_interest_gk_fl <- GK_analysis$GK_FL_residues[which(GK_analysis$GK_FL_residues$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_residues)]
   cts_interest_gk_groups <- GK_analysis$GK_groups[which(GK_analysis$GK_groups$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_groups)]
-  cts_interest_gk_fl_groups <- GK_analysis$GK_FL_groupings[which(GK_analysis$GK_FL_groupings %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_groupings)]
+  cts_interest_gk_fl_groups <- GK_analysis$GK_FL_groups[which(GK_analysis$GK_FL_groups$Protein %in% given_protein_list$wanted_proteins),colnames(GK_analysis$GK_FL_groups)]
 
   # FOR ALL GK IN GIVEN SUBCELLULAR LOCATION
   
@@ -387,7 +387,7 @@ analyse_sides <- function(cts) {
   glu_ct = cts[cts$Residue == "E",]
   ser_ct = cts[cts$Residue == "S",]
   pro_ct = cts[cts$Residue == "P",]
-  pos_ct = cts[cts$Residue == "postive",]
+  pos_ct = cts[cts$Residue == "positive",]
   neg_ct = cts[cts$Residue == "negative",]
   unc_ct = cts[cts$Residue == "uncharged",]
   spe_ct = cts[cts$Residue == "special",]
@@ -462,13 +462,18 @@ analyse_sides <- function(cts) {
 }
 
 pie_plot_sides <- function(counts, residue_string, region_string, subcellular_location) {
-  title = paste("Percentage of ", residue_string, " residue sides in ", region_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
-  plot = ggplot(counts, aes(x = "", y = perc, fill = Side)) +
-    geom_col() +
-    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-    coord_polar(theta = "y")+
-    guides(fill = guide_legend(title = "Side"))+
-    theme_void()+
-    ggtitle(title)
-  print(plot)
+  if (nrow(counts) == 0) {
+    print(paste("There are no counts of ", residue_string, " residue sides in ", region_string, " regions for ", subcellular_location, sep="", collapse=NULL))
+  }
+  else {
+    title = paste("Percentage of ", residue_string, " residue sides in ", region_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
+    plot = ggplot(counts, aes(x = "", y = perc, fill = Side)) +
+      geom_col() +
+      geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
+      coord_polar(theta = "y")+
+      guides(fill = guide_legend(title = "Side"))+
+      theme_void()+
+      ggtitle(title)
+    print(plot)
+  }
 }
