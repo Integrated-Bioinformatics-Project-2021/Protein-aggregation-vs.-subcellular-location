@@ -70,33 +70,72 @@ source("tango_scores.R")
 
 ## Average tango score distribution in all proteins
 
+##Statistical tests and visualisation for subcellular location
 ```{r}
 plot_average_tango_scores_complete_proteins()
-plot_average_tango_scores_complete_proteins_joined_secreted()
-test_significance_secretory(tango_scores_complete_protein)
+significance_subcellular(tango_scores_complete_protein)
+get_krustal_test_results(tango_scores_complete_protein)
+get_wilcox_test_table(tango_scores_complete_protein)
 ```
+##Statistical tests and visualisation on secretory vs. non-secretory 
+```{r}
+plot_average_tango_scores_complete_proteins_joined_secreted()
+significance_secretory(tango_scores_complete_protein)
+plot_ks_test(tango_scores_complete_protein)
+```
+
+
 
 ## Average tango score distribution in proteins with an APR region
 
+##Statistical tests and visualisation for subcellular location
 ```{r}
 plot_average_tango_scores_APR_proteins()
+significance_subcellular(tango_scores_APR_protein)
+get_krustal_test_results(tango_scores_complete_protein)
+get_wilcox_test_table(tango_scores_complete_protein)
+```
+
+##Statistical tests and visualisation on secretory vs. non-secretory 
+```{r}
 plot_average_tango_scores_APR_proteins_joined_secreted()
-test_significance_secretory(tango_scores_APR_protein)
+significance_secretory(tango_scores_APR_protein)
+plot_ks_test(tango_scores_APR_protein)
 ```
 
 ## Distribution of maximal tango scores
 
+##Statistical tests and visualisation for subcellular location
 ```{r}
 plot_max_tango_scores()
-test_significance_secretory(max_tango_scores)
+significance_subcellular(scores_protein)
+get_krustal_test_results(scores_protein)
+get_wilcox_test_table(scores_protein)
 ```
+##Statistical tests and visualisation on secretory vs. non-secretory
+```{r}
+significance_secretory(scores_protein)
+plot_ks_test(scores_protein)
+```
+
 
 ## Distribution of number of APR regions per protein normalized for protein length
 
+##Statistical tests and visualisation for subcellular location
 ```{r}
 plot_average_tango_scores_complete_proteins()
-plot_average_tango_scores_complete_proteins_joined_secreted()
+significance_subcellular_nbAPR(normalized_number_APR_regions)
+get_krustal_test_results_nbAPR(normalized_number_APR_regions)
+get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
 ```
+
+##Statistical tests and visualisation on secretory vs. non-secretory
+```{r}
+plot_average_tango_scores_complete_proteins_joined_secreted()
+significance_secretory_nbAPR(normalized_number_APR_regions)
+plot_ks_test_nbAPR(normalized_number_APR_regions)
+```
+
 
 # Peptide charges
 
@@ -202,34 +241,34 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
 ```
 
-##INTERESTED GROUPINGS Postive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S <br /> PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+##INTERESTED GROUPS Postive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S <br /> PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
 
 ```{r}
-GK_analysis_GK_groupings = analyse_gate_keeper_groupings(GK_analysis$cts_gk_groups_side)
+GK_analysis_GK_groups = analyse_gate_keeper_groups(GK_analysis$cts_gk_groups_side)
 side_string = "GK"
 ```
 
 ```{r}
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$positive, "positive charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$negative, "negative charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$uncharged, "uncharged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$special, "special cases", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groupings$hydrophobic, "hydrophobic", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$positive, "positive charged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$negative, "negative charged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$uncharged, "uncharged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$special, "special cases", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$hydrophobic, "hydrophobic", side_string)
 ```
 
 PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
 
 ```{r}
-GK_analysis_GK_and_FL_groupings = analyse_gate_keeper_groupings(GK_analysis$cts_gk_fl_groups_side)
+GK_analysis_GK_and_FL_groups = analyse_gate_keeper_groups(GK_analysis$cts_gk_fl_groups_side)
 side_string = "GK + FL"
 ```
 
 ```{r}
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$positive, "positive charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$negative, "negative charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$uncharged, "uncharged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$special, "special cases", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groupings$hydrophobic, "hydrophobic", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$positive, "positive charged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$negative, "negative charged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$uncharged, "uncharged", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$special, "special cases", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic, "hydrophobic", side_string)
 ```
 
 ## Subcellular location
