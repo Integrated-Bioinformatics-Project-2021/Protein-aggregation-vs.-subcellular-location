@@ -65,6 +65,12 @@ hashed_proteins = return_value$hashed_proteins
 rm(return_value) # To get rid of the extra memory usage
 ```
 
+## Exploratory analysis
+```{r}
+source("co_occurence.R")
+plot_co_occurence_absolute()
+```
+
 # TANGO scores
 
 ```{r}
