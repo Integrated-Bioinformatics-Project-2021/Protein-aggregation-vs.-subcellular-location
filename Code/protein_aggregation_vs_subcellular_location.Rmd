@@ -29,6 +29,8 @@ output:
 #install.packages("dplyr")
 #install.packages("Peptides")
 #install.packages("dgof")
+#install.packages("igraph")
+#install.packages("ggpubr")
 ```
 
 ## Load the needed libraries.
@@ -36,13 +38,15 @@ output:
 ```{r}
 library(UniprotR)
 library(sjmisc) # Used for str_contains
-library(hash) # Used to make a disctionary
+library(hash) # Used to make a dictionary
 library(dplyr) # Used for aggregate (get avg tango score of protein)
 library(Peptides) # Used for charge (get the charge of a peptide sequence) ETC
 library(ggplot2)
 library(dplyr)
 library(ggrepel)
 library(tidyverse)
+library(igraph) # Used for igraph
+library(ggpubr) # Used for ggline
 ```
 
 ## Define the working directory.
