@@ -45,7 +45,6 @@ library(ggplot2)
 library(dplyr)
 library(ggrepel)
 library(tidyverse)
-library(igraph) # Used for igraph
 ```
 
 ## Define the working directory.

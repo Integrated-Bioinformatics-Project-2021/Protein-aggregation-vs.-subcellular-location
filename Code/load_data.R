@@ -10,8 +10,8 @@ read_data <- function() {
     load("Data/human_proteome_df.RData")
     data = human_proteome
     
-    #Delete all proteins witch were found in transmembrane regions or that are signal peptides (THMM, THMM_domain, SingalIP)
-    data <- subset(data, TMHMM == "No"& TMHMM_domain == "No"& SignalP == "No")
+    #Delete all proteins witch were found in transmembrane regions or that are signal peptides (THMM_domain, SingalIP)
+    data <- subset(data, TMHMM_domain == "No" & SignalP == "No")
     
     ## Get all unique protein identifiers
     proteins <- unique(data$Protein)

@@ -5,7 +5,7 @@ calculate_co_occurence <- function() {
   
   proteins_with_subcellular_location_no_empty <- proteins_with_subcellular_location[!(proteins_with_subcellular_location$Subcellular_location == ""),]
   
-  protein_in_subcellular_location = matrix(ncol = 9, nrow = nrow(proteins_with_subcellular_location_no_empty))
+  protein_in_subcellular_location = matrix(ncol = length(search_terms), nrow = nrow(proteins_with_subcellular_location_no_empty))
   
   for (j in 1:length(search_terms)) {
     protein_in_subcellular_location[,j] =  grepl(search_terms[[j]], proteins_with_subcellular_location_no_empty$Subcellular_location, fixed=TRUE)

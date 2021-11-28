@@ -188,7 +188,6 @@ calculated_normalized_number_APR_regions <- function() {
     
   }
   colnames(normalized_number_APR_regions) <- c("Proteins", "Subcellular_location", "Nb_APRs", "Secretory")
-  normalized_number_APR_regions$Subcellular_location[normalized_number_APR_regions$Subcellular_location == "Secreted" & ! normalized_number_APR_regions$Proteins %in% normalized_number_APR_regions$Proteins[normalized_number_APR_regions$Subcellular_location == "Extracellular space"]] = "Extracellular space" 
   normalized_number_APR_regions <<- normalized_number_APR_regions
 }
 
