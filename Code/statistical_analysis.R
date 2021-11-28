@@ -60,19 +60,19 @@ get_wilcox_test_table_nbAPR <- function(data) {
 
 
 
-group_by(tango_scores_complete_protein, Subcellular_location) %>%
-  summarise(
-    count = n(),
-    mean = mean(Tango_scores, na.rm = TRUE),
-    sd = sd(Tango_scores, na.rm = TRUE),
-    median = median(Tango_scores, na.rm = TRUE),
-    IQR = IQR(Tango_scores, na.rm = TRUE)
-  )
-
-ggline(tango_scores_complete_protein, x = "Subcellular_location", y = "Tango_scores", 
-       add = c("mean_se", "jitter"), 
-       order = c("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Secreted", "Extracellular space"),
-       ylab = "Tango_scores", xlab = "Subcellular_location")
+# group_by(tango_scores_complete_protein, Subcellular_location) %>%
+#   summarise(
+#     count = n(),
+#     mean = mean(Tango_scores, na.rm = TRUE),
+#     sd = sd(Tango_scores, na.rm = TRUE),
+#     median = median(Tango_scores, na.rm = TRUE),
+#     IQR = IQR(Tango_scores, na.rm = TRUE)
+#   )
+# 
+# ggline(tango_scores_complete_protein, x = "Subcellular_location", y = "Tango_scores", 
+#        add = c("mean_se", "jitter"), 
+#        order = c("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Secreted", "Extracellular space"),
+#        ylab = "Tango_scores", xlab = "Subcellular_location")
 
 
 #SECRETORY VS NON_SECRETORY
