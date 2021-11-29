@@ -13,13 +13,13 @@ calculate_co_occurence <- function() {
   
   protein_in_subcellular_location <- protein_in_subcellular_location*1
   
-  protein_in_subcellular_location_df <- as.data.frame(protein_in_subcellular_location)
-  colnames(protein_in_subcellular_location_df) <- c("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Secreted", "Extracellular space")
-  rownames(protein_in_subcellular_location_df) <- proteins_with_subcellular_location_no_empty$Protein
+  protein_in_subcellular_location_df <<- as.data.frame(protein_in_subcellular_location)
+  colnames(protein_in_subcellular_location_df) <<- c("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Extracellular space")
+  rownames(protein_in_subcellular_location_df) <<- proteins_with_subcellular_location_no_empty$Protein
   
   protein_in_subcellular_location_df
   
-  total_occurences <- colSums(protein_in_subcellular_location_df)
+  total_occurences <<- colSums(protein_in_subcellular_location_df)
   co_occurence <<- t(protein_in_subcellular_location) %*% protein_in_subcellular_location
 }
 
@@ -37,8 +37,8 @@ plot_co_occurence <- function(relative) {
   if (relative) {
     for (i in 1:(length(search_terms)-1)) {
       for (j in (i+1):length(search_terms)) {
-        co_occurence_copy[i,j] = co_occurence_copy[i,j]*10000/(co_occurence_copy[i,i] + co_occurence_copy[j,j] - co_occurence_copy[i,j])
-        co_occurence_copy[j,i] = co_occurence_copy[i,j]
+        co_occurence_copy[i,j] <- (co_occurence_copy[i,j]/(co_occurence_copy[i,i] + co_occurence_copy[j,j]))*100
+        co_occurence_copy[j,i] <- co_occurence_copy[i,j]
       }
     }
   }

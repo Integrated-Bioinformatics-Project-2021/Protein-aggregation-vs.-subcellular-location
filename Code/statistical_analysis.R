@@ -59,6 +59,7 @@ get_wilcox_test_table_nbAPR <- function(data) {
 }
 
 
+
 group_by(tango_scores_complete_protein, Subcellular_location) %>%
   summarise(
     count = n(),
