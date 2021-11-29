@@ -67,8 +67,10 @@ plot_stat_significance <- function(data){
     geom_violin() + 
     geom_hline(yintercept = mean(data$Tango_scores), linetype = 2)+
     stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
-    stat_compare_means(label = "p.signif", method = "wilcox.test",  ref.group = ".all.",  hide.ns = TRUE)
+    stat_compare_means(aes(label = ..p.adj..), method = "wilcox.test",  ref.group = ".all.", hide.ns = TRUE)
 }
+
+#try padj
 
 plot_stat_significance_nbAPR <- function(data){
   ggplot(data, aes(x=Subcellular_location, y = Nb_APR, fill = Secretory),
@@ -78,7 +80,7 @@ plot_stat_significance_nbAPR <- function(data){
     geom_violin() + 
     geom_hline(yintercept = mean(data$Nb_APR), linetype = 2)+
     stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
-    stat_compare_means(label = "p.signif", method = "wilcox.test",  ref.group = ".all.",  hide.ns = TRUE)
+    stat_compare_means(aes(label = ..p.adj.., hide.ns = TRUE), method = "wilcox.test",  ref.group = ".all.", hide.ns = TRUE)
 }
 
 
@@ -104,12 +106,6 @@ check_significance_sec <- function(x,y){
   return (res)
 }
 
-## Difference between TANGO scores distributions in subcellular locations belonging to secretory vs non-secretory pathways #### 
-
-# It can take as parameter the following datasets:
-# * tango_scores_APR_protein
-# * max_tango_scores
-# * tango_scores_complete_protein
 
 #FUNCTION TO CALCULATE SIGNIFICANCE, returning D-value and p-value 
 #FUNCTION USED FOR tango_scores_complete_protein, tango_scores_APR_protein, max_tango_scores
