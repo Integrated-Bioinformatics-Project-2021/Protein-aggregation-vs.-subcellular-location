@@ -1,7 +1,8 @@
 # All functions dealing with significance tests
 
 library(dgof)
-library(ggpubr) # Used for ggline
+library(ggpubr)
+library(gtools)
 
 #SUBCELLULAR LOCATION
 #FUNCTION TO CALCULATE SIGNIFICANCE BETWEEN THE SUBCELLULAR LOCATIONS FOR tango_scores_complete_protein, tango_scores_APR_protein, max_tango_scores
@@ -31,13 +32,13 @@ get_krustal_test_results_nbAPR <- function(data) {
 	return (sig_subc)
 }
 
-
 #FUNTION TO CALCULATE THE SIGNIFICANCE BETWEEN ALL SUBCELLULAR LOCATIONS FOR tango_scores_complete_protein, tango_scores_APR_protein, max_tango_scores
 #RETURNS A TABLE WITH ALL THE P-VALUES
 get_wilcox_test_table <- function(data) {
 	wilcox_sig_subc_com_prot<-pairwise.wilcox.test(data$Tango_scores, data$Subcellular_location,
                      p.adjust.method = "BH")
 	table_sig_subc_com_prot<-wilcox_sig_subc_com_prot$p.value
+	heatmap(as.matrix(table_sig_subc_com_prot), scale="column", Colv = NA, Rowv = NA)
 
 	print(table_sig_subc_com_prot)
 	
@@ -45,44 +46,17 @@ get_wilcox_test_table <- function(data) {
 	write.csv(table_sig_subc_com_prot, file = file_path)
 }
 
-library(ggpubr)
-library(gtools)
-
-#FUNTION TO CALCULATE THE SIGNIFICANCE BETWEEN ALL SUBCELLULAR LOCATIONS FOR normalized_number_APR_regions
+#FUNCTION TO CALCULATE THE SIGNIFICANCE BETWEEN ALL SUBCELLULAR LOCATIONS FOR normalized_number_APR_regions
 #RETURNS A TABLE WITH ALL THE P-VALUES
 get_wilcox_test_table_nbAPR <- function(data) {
 	wilcox_sig_subc_com_prot<-pairwise.wilcox.test(data$Nb_APR, data$Subcellular_location,
                      p.adjust.method = "BH")
 	table_sig_subc_com_prot<-wilcox_sig_subc_com_prot$p.value
+	heatmap(as.matrix(table_sig_subc_com_prot), scale="column", Colv = NA, Rowv = NA)
 
 	file_path = paste(directory, "/Output/table_sig_subc_com_prot.csv", sep="", collapse = NULL)
 	write.csv(table_sig_subc_com_prot, file = file_path)
 }
-
-plot_stat_significance <- function(data){
-  ggplot(data, aes(x=Subcellular_location, y = Tango_scores, fill = Secretory),
-         color = "supp", palette = "jco",
-         add = "jitter") + 
-    rotate_x_text(angle = 45)+
-    geom_violin() + 
-    geom_hline(yintercept = mean(data$Tango_scores), linetype = 2)+
-    stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
-    stat_compare_means(aes(label = ..p.adj..), method = "wilcox.test",  ref.group = ".all.", hide.ns = TRUE)
-}
-
-#try padj
-
-plot_stat_significance_nbAPR <- function(data){
-  ggplot(data, aes(x=Subcellular_location, y = Nb_APR, fill = Secretory),
-         color = "supp", palette = "jco",
-         add = "jitter") + 
-    rotate_x_text(angle = 45)+
-    geom_violin() + 
-    geom_hline(yintercept = mean(data$Nb_APR), linetype = 2)+
-    stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
-    stat_compare_means(aes(label = ..p.adj.., hide.ns = TRUE), method = "wilcox.test",  ref.group = ".all.", hide.ns = TRUE)
-}
-
 
 
 group_by(tango_scores_complete_protein, Subcellular_location) %>%
@@ -102,7 +76,7 @@ ggline(tango_scores_complete_protein, x = "Subcellular_location", y = "Tango_sco
 
 #SECRETORY VS NON_SECRETORY
 check_significance_sec <- function(x,y){
-  res <- ks.test(x, y)
+  res <- wilcox.test(x, y)
   return (res)
 }
 
@@ -121,41 +95,54 @@ significance_secretory_nbAPR <- function(data){
   return(check_significance_sec(x,y))
 }
 
-#FUNCTION FOR VISUALISATION OF THE KS-TEST FOR tango_scores_complete_protein, tango_scores_APR_protein, max_tango_scores
-plot_ks_test <- function(data) {
-	Secretory <- data$Tango_scores[data$Secretory == TRUE]
-	Non_secretory <- data$Tango_scores[data$Secretory == FALSE]
-	group <- c(rep("Secretory", length(Secretory)), rep("Non_secretory", length(Non_secretory)))
-	data_s1_s2<- data.frame(KSD = c(Secretory,Non_secretory), group = group)
+## Plotting options for statistical significance ####
 
-	cdf1 <- ecdf(Secretory)
-	cdf2 <- ecdf(Non_secretory)
+# 1. Violin plots per subcellular
+plot_stat_significance <- function(data){
+  ggplot(data, aes(x=Subcellular_location, y = Tango_scores, fill = Secretory),
+         color = "supp", palette = "jco",
+         add = "jitter") + 
+    rotate_x_text(angle = 45)+
+    geom_violin() + 
+    geom_hline(yintercept = mean(data$Tango_scores), linetype = 2)+
+    stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
+    stat_compare_means(aes(label = ..p.adj..), method = "wilcox.test",  ref.group = ".all.", hide.ns = TRUE)
+}
 
-	minMax <- seq(min(Secretory, Non_secretory), max(Secretory, Non_secretory), length.out=length(Secretory)) 
-	x0 <- minMax[which( abs(cdf1(minMax) - cdf2(minMax)) == max(abs(cdf1(minMax) - cdf2(minMax))) )] 
-	y0 <- cdf1(x0) 
-	y1 <- cdf2(x0) 
+plot_stat_significance_nbAPR <- function(data){
+  ggplot(data, aes(x=Subcellular_location, y = Tango_scores, fill = Secretory),
+         color = "supp", palette = "jco",
+         add = "jitter") +
+    rotate_x_text(angle = 45)+
+    geom_violin() + 
+    geom_hline(yintercept = mean(data$Nb_APR), linetype = 2)+
+    stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
+    stat_compare_means(aes(label = ..p.adj.., hide.ns = TRUE), method = "wilcox.test",  ref.group = ".all.", hide.ns = TRUE)
+}
 
-	ggplot(data_s1_s2, aes(x = KSD, group = group, color = group)) + stat_ecdf(size=1) + theme_bw(base_size = 28) + theme(legend.position ="top") + xlab("Group") + ylab("ECDF") + geom_segment(aes(x = x0[1], y = y0[1], xend = x0[1], yend = y1[1]), linetype = "dashed", color = "red") + geom_point(aes(x = x0[1] , y= y0[1]), color="red", size=8) + geom_point(aes(x = x0[1] , y= y1[1]), color="red", size=8) + ggtitle("K-S Test:\nSecretory / Non_secretory") + theme(legend.title=element_blank())
-	}
+# 2. Violin plots per secretory
 
-#FUNCTION FOR VISUALISATION OF THE KS-TEST FOR tango_scores_complete_protein, tango_scores_APR_protein, max_tango_scores
-plot_ks_test_nbAPR <- function(data) {
-	sample1 <- data$Nb_APRs[data$Secretory == TRUE]
-	sample2 <- data$Nb_APRs[data$Secretory == FALSE]
-	group <- c(rep("sample1", length(sample1)), rep("sample2", length(sample2)))
-	data_s1_s2<- data.frame(KSD = c(sample1,sample2), group = group)
+plot_stat_significance_secretory <- function(data){
+  ggplot(data, aes(x=Secretory, y = Tango_scores, fill = Secretory),
+         color = "supp", palette = "jco",
+         add = "jitter") + 
+    rotate_x_text(angle = 45)+
+    geom_violin() + 
+    geom_hline(yintercept = mean(data$Tango_scores), linetype = 2)+
+    stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
+    stat_compare_means(label = "p.signif", method = "wilcox.test",  ref.group = ".all.", hide.ns = TRUE)
+}
 
-	cdf1 <- ecdf(sample1)
-	cdf2 <- ecdf(sample2)
-
-	minMax <- seq(min(sample1, sample2), max(sample1, sample2), length.out=length(sample1)) 
-	x0 <- minMax[which( abs(cdf1(minMax) - cdf2(minMax)) == max(abs(cdf1(minMax) - cdf2(minMax))) )] 
-	y0 <- cdf1(x0) 
-	y1 <- cdf2(x0) 
-
-	ggplot(data_s1_s2, aes(x = KSD, group = group, color = group)) + stat_ecdf(size=1) + theme_bw(base_size = 28) + theme(legend.position ="top") + xlab("Sample") + ylab("ECDF") + geom_segment(aes(x = x0[1], y = y0[1], xend = x0[1], yend = y1[1]), linetype = "dashed", color = "red") + geom_point(aes(x = x0[1] , y= y0[1]), color="red", size=8) + geom_point(aes(x = x0[1] , y= y1[1]), color="red", size=8) + ggtitle("K-S Test: Sample 1 / Sample 2") + theme(legend.title=element_blank())
-	}
+plot_stat_significance_nbAPR_secretory <- function(data){
+  ggplot(data, aes(x=Secretory, y = Tango_scores, fill = Secretory),
+         color = "supp", palette = "jco",
+         add = "jitter") +
+    rotate_x_text(angle = 45)+
+    geom_violin() + 
+    geom_hline(yintercept = mean(data$Nb_APR), linetype = 2)+
+    stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red") +
+    stat_compare_means(label = "p.signif",  method = "wilcox.test",ref.group = ".all.", hide.ns = TRUE)
+}
 
 
 
