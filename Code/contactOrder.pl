@@ -3,6 +3,7 @@
 # contactOrder.pl
 # computes contact order of (protein) structures from PDB files
 # Author: Eric Alm <ealm3141@users.sourceforge.net>
+# Downloaded from: https://depts.washington.edu/bakerpg/contact_order/contact_order.cgi
 
 use strict;
 
