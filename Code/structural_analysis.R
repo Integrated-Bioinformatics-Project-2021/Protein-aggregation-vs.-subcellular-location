@@ -72,8 +72,8 @@ for (i in 1:length(total_list_of_proteins)) {
     # with <options> = -r: returns relative CO
     # with pdbfile the pdb file with the AlphaFold structure of a single domain
     
-    # TODO: uncomment line beneath and make it work in R
-    # contact_order_current_structure = contactOrder.pl -r current_structure
+    contact_order_current_structure = system("perl contactOrder.pl -r current_structure", intern = TRUE)
+    # TODO: errors -> why?
     
     # TODO: make a list/hash with every contact_order_current_structure
   }
