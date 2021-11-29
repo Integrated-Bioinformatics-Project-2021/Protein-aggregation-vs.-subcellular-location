@@ -15,6 +15,9 @@ library(bio3d) # Used for read.pdb
 # 1) Download all human AlphaFold structures -----------------------------------
 # Go to https://www.alphafold.ebi.ac.uk/download and download the entire human dataset.
 # Save it to the /Date folder and untar it.
+directory = dirname(rstudioapi::getSourceEditorContext()$path) # Place the data in a Data folder on the path of this file
+setwd(directory)
+load("Data/domains.RData")
 
 # 2) Generate a "sub-structure" ------------------------------------------------
 # Check if all proteins in data are present in domains:
