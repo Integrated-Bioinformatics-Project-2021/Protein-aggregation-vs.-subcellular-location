@@ -224,29 +224,34 @@ get_krustal_test_results_nbAPR(normalized_number_APR_regions)
 get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
 plot_stat_significance_nbAPR(normalized_number_APR_regions)
 ```
-
-
-```{r}
-significance_subcellular_nbAPR(normalized_number_APR_regions)
-get_krustal_test_results_nbAPR(normalized_number_APR_regions)
-get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
-# >>>>>>> Stashed changes
-```
-
 ##Statistical tests and visualisation on secretory vs. non-secretory
-```{r}
-#plot_average_tango_scores_complete_proteins_joined_secreted() # Should be: ##plot_normalized_number_APR_regions_joined_secreted()
-#significance_secretory_nbAPR(normalized_number_APR_regions)
-#plot_stat_significance_nbAPR_secretory(normalized_number_APR_regions)
 
+### Function Documentation:
+
+**plot_normalized_number_APR_regions_joined_secreted**: Generates the violin plot for number of normalized APR regions for all the proteins according to their subcellular location. However, this time all proteins are clustered under secretory and non-secretory groups. Red points are showing the mean value of Tango Score for these categories.
+
+**significance_secretory_nbAPR**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
+
+**plot_stat_significance_nbAPR_secretory**: Function for visualization of the Mann-Whitney test for the distributions of bumber of normalized APR regions. Distributions are calculated using secretory and non-secretory protein groups. All proteins are included in this calculation.
+
+```{r}
+plot_normalized_number_APR_regions_joined_secreted()
+significance_secretory_nbAPR(normalized_number_APR_regions)
+plot_stat_significance_nbAPR_secretory(normalized_number_APR_regions)
 ```
 
 # Peptide charges
+
+This part of the analysis is not considered. Still, explanation of the function is as follows:
+
+**classify_subsets**: Get the subset of the APR proteins depending on the definition of the residue (GK, distal region, flanking region, APR region). We define different subsets to filter the data depending on the residue category.
 
 ```{r}
 source("charges.R")
 classify_subsets()
 ```
+
+Defining the variables depending on the filtration method of the whole data.
 
 ```{r}
 # TODO: make plots showing the differences between APR, GK and FR based on charges
@@ -259,7 +264,18 @@ classify_subsets()
 
 # Pie Plot for the residues
 
-Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E
+postive charged aas ("positive") --> R,H,K 
+negative charged aas ("negative") --> D,E
+uncharged aas ("uncharged") --> S,T,N,Q
+special cases aas ("special") --> C,G,P,A
+hydrophobic aas ("hydrophobic") --> V,I,L,M,F,Y,W
+
+**Specific residues of interest**
+
+Lysine (Lys) --> K
+Arginine (Arg) --> R
+Aspartic acid (Asp) --> D
+Glutamic acid (Glu) --> E
 
 ```{r}
 source("gatekeeper.R")

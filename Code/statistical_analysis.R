@@ -135,7 +135,7 @@ plot_stat_significance_secretory <- function(data){
 }
 
 plot_stat_significance_nbAPR_secretory <- function(data){
-  ggplot(data, aes(x=Secretory, y = Tango_scores, fill = Secretory),
+  ggplot(data, aes(x=Secretory, y = Nb_APRs, fill = Secretory),
          color = "supp", palette = "jco",
          add = "jitter") +
     rotate_x_text(angle = 45)+
