@@ -117,6 +117,16 @@ plot_average_tango_scores_APR_proteins_joined_secreted <- function() {
 
 # ----------- Max Tango Scores for each protein and APR -----------------------
 
+plot_max_tango_scores_complete_proteins_joined_secreted <- function() {
+  if (! exists("max_tango_scores")) {
+    calculate_max_tango_scores()
+  }
+  #Plot complete proteins
+  violin_tango_sub_complete_proteins <- ggplot(max_tango_scores, aes(x=Tango_scores, y = Subcellular_location, fill = Secretory)) + 
+    geom_violin(notch=TRUE) + scale_color_brewer(palette="Dark2")
+  violin_tango_sub_complete_proteins + theme_minimal() + stat_summary(fun=mean, geom="point", shape=20, size=5, color="red", fill="red")
+}
+
 calculate_max_tango_scores <- function() {
   by_protein_max <<- aggregate(maxProtscore~Protein, data, max)
   scores_protein = data.frame()

@@ -47,6 +47,7 @@ library(ggplot2)
 library(dplyr)
 library(ggrepel)
 library(tidyverse)
+library(igraph)
 ```
 
 ## Define the working directory.
@@ -67,12 +68,18 @@ rm(return_value) # To get rid of the extra memory usage
 ```
 
 ## Exploratory analysis
+
+### -- Co-occurrence Matrix --
+This function gives the number of proteins that are shared by different subcellular locations.
+
+If relative = **FALSE**, the absolute number of shared proteins is displayed.
+
+If relative = **TRUE**, the ratio of the intersection to the union of the two subcellular locations is shown multiplied by 10000.
 ```{r}
 source("co_occurence.R")
 plot_co_occurence(relative = FALSE)
 plot_co_occurence(relative = TRUE)
 ```
-
 # TANGO scores
 
 ```{r}
@@ -80,6 +87,20 @@ source("tango_scores.R")
 ```
 
 ## Average tango score distribution in all proteins
+
+### Function Documentation:
+
+**plot_average_tango_scores_complete_proteins**: Generates the violin plot for all of the proteins according to their subcellular locations. Red points demonstrate the mean value of Tango Score for all subcellular locations.
+
+**significance_subcellular**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+
+**get_krustal_test_results**: For calculating the general significance of the proteins with respect to average tango scores for subcellular locations.
+
+**get_wilcox_test_table**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file. Also generates a heatmap to demonstrate these values.
+
+**plot_stat_significance**: Plotting the options for statistical significance for all proteins to check whether mean tango scores for each subcellular location are significant or not.
+
+**Click here to see more info about [violin plots](https://en.wikipedia.org/wiki/Violin_plot)**
 
 ##Statistical tests and visualisation for subcellular location
 ```{r}
@@ -90,15 +111,33 @@ get_wilcox_test_table(tango_scores_complete_protein)
 plot_stat_significance(tango_scores_complete_protein)
 ```
 ##Statistical tests and visualisation on secretory vs. non-secretory 
+
+### Function Documentation:
+
+**plot_average_tango_scores_complete_proteins_joined_secreted**: Generates the violin plot for all of the proteins according to their subcellular locations. However, this time all proteins are clustered under secretory and non-secretory groups. Red points are showing the mean value of Tango Score for these categories.
+
+**significance secretory**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
+
+**plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of tango scores. Distributions are calculated using secretory and non-secretory groups for all proteins.
+
 ```{r}
 #plot_average_tango_scores_complete_proteins_joined_secreted()
 significance_secretory(tango_scores_complete_protein)
 plot_stat_significance_secretory(tango_scores_complete_protein)
 ```
-
-
-
 ## Average tango score distribution in proteins with an APR region
+
+### Function Documentation:
+
+**plot_average_tango_scores_APR_proteins**: Generates the violin plot for all of the proteins that have APR region according to their subcellular locations. Red points demonstrate the mean value of the Tango Score for each subcellular location.
+
+**significance_subcellular**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+
+**get_krustal_test_results**: For calculating the general significance of the proteins with respect to average tango scores for subcellular locations.
+
+**get_wilcox_test_table**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file. Also generates a heatmap to demonstrate these values.
+
+**plot_stat_significance**: Plotting the options for statistical significance for only proteins with APR regions to check whether mean tango scores for each subcellular location are significant or not.
 
 ##Statistical tests and visualisation for subcellular location
 ```{r}
@@ -110,13 +149,33 @@ plot_stat_significance(tango_scores_APR_protein)
 ```
 
 ##Statistical tests and visualisation on secretory vs. non-secretory 
+
+### Function Documentation:
+
+**plot_average_tango_scores_APR_proteins_joined_secreted**: Generates the violin plot for all of the proteins with APR regions according to their subcellular locations. However, this time all APR proteins are clustered under secretory and non-secretory groups. Red points are showing the mean value of Tango Score for these categories.
+
+**significance_secretory**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
+
+**plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of tango scores. Distributions are calculated using secretory and non-secretory groups for all proteins.
+
 ```{r}
 #plot_average_tango_scores_APR_proteins_joined_secreted()
 significance_secretory(tango_scores_APR_protein)
 plot_stat_significance_secretory(tango_scores_APR_protein)
 ```
-
 ## Distribution of maximal tango scores
+
+### Function Documentation:
+
+**plot_max_tango_scores**: Generates the violin plot for max tango score of all proteins according to their subcellular locations. Red points demonstrate the mean value of the tango score for each subcellular location.
+
+**significance_subcellular**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+
+**get_krustal_test_results**: For calculating the general significance of the proteins with respect to their max tango scores for subcellular locations.
+
+**get_wilcox_test_table**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file.
+
+**plot_stat_significance**: Plotting the options for statistical significance for all proteins to check whether max tango scores for each subcellular location are significant or not.
 
 ##Statistical tests and visualisation for subcellular location
 ```{r}
@@ -127,22 +186,49 @@ get_wilcox_test_table(max_tango_scores)
 plot_stat_significance(max_tango_scores)
 ```
 ##Statistical tests and visualisation on secretory vs. non-secretory
+
+### Function Documentation:
+
+**plot_max_tango_scores_complete_proteins_joined_secreted**: Generates the violin plot for max tango score of all of the proteins according to their subcellular locations. However, this time all proteins are clustered under secretory and non-secretory groups. Red points are showing the mean value of Tango Score for these categories.
+
+**significance secretory**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
+
+**plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of max tango scores. Distributions are calculated using secretory and non-secretory protein groups. All proteins are included to the calculation.
+
 ```{r}
+# Are we going to add the plot here for secretory vs non-secretory
+#plot_max_tango_scores_complete_proteins_joined_secreted() No need to use
 significance_secretory(max_tango_scores)
 plot_stat_significance_secretory(max_tango_scores)
 ```
 
-
 ## Distribution of number of APR regions per protein normalized for protein length
+
+### Function Documentation:
+
+**plot_normalized_number_APR_regions**: Generates the violin plot for max tango score of all proteins according to their subcellular locations. Red points demonstrate the mean value of the tango score for each subcellular location.
+
+**significance_subcellular**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+
+**get_krustal_test_results**: For calculating the general significance of the proteins with respect to their max tango scores for subcellular locations.
+
+**get_wilcox_test_table**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file.
 
 ##Statistical tests and visualisation for subcellular location
 ```{r}
+#plot_normalized_number_APR_regions()
 #plot_average_tango_scores_complete_proteins() # Should be: plot_normalized_number_APR_regions()
+# <<<<<<< Updated upstream
 #significance_subcellular_nbAPR(normalized_number_APR_regions)
 #get_krustal_test_results_nbAPR(normalized_number_APR_regions)
 #get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
 #plot_stat_significance_nbAPR(normalized_number_APR_regions)
 
+# =======
+significance_subcellular_nbAPR(normalized_number_APR_regions)
+get_krustal_test_results_nbAPR(normalized_number_APR_regions)
+get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
+# >>>>>>> Stashed changes
 ```
 
 ##Statistical tests and visualisation on secretory vs. non-secretory
@@ -152,7 +238,6 @@ plot_stat_significance_secretory(max_tango_scores)
 #plot_stat_significance_nbAPR_secretory(normalized_number_APR_regions)
 
 ```
-
 
 # Peptide charges
 
