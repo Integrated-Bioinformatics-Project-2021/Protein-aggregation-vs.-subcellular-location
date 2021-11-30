@@ -1,4 +1,6 @@
 # The structural analysis
+# Please make sure that Perl is installed on your device:
+# https://learn.perl.org/installing/windows.html (for Windows)
 
 # ------------------------------------------------------------------------------
 # Steps:
@@ -42,7 +44,8 @@ get_structure_protein <- function(protein) {
   }, warning = function(w) {
     warning-handler-code
   }, error = function(e) {
-    print("There is no AlphaFold structure available for ",protein)
+    error_message = paste("There is no AlphaFold structure available for",protein)
+    print(error_message)
   }, finally = {
     NULL
   })
@@ -55,9 +58,9 @@ get_structure_domain <- function(structure, boundaries) {
   end_position = sub(".*-", "", boundaries)
   all_atoms <- start_position:end_position
   substructure = atom.select(structure, type="ATOM", eleno=all_atoms, value=TRUE)
-  #filename = paste(directory,"/Output/",protein,".pdb", sep="")
-  #write.pdb(pdb=file, file=filename)
-  return(substructure)
+  filename = paste(directory,"/Output/temp.pdb", sep="")
+  write.pdb(pdb=substructure, file=filename)
+  return(filename)
 }
 
 for (i in 1:length(total_list_of_proteins)) {
@@ -65,15 +68,17 @@ for (i in 1:length(total_list_of_proteins)) {
   protein_structure = get_structure_protein(current_protein)
   boundaries = get_domain_boundaries(current_protein)
   for (j in 1:length(boundaries)) {
-    current_structure = get_structure_domain(protein_structure, boundaries[j])
+    filename = get_structure_domain(protein_structure, boundaries[j])
     # 3) Calculate the contact order of each domain ----------------------------
     # https://depts.washington.edu/bakerpg/contact_order/ (Download Contact Order Program (Perl version))
     # contactOrder.pl <options> <pdbfile>
     # with <options> = -r: returns relative CO
     # with pdbfile the pdb file with the AlphaFold structure of a single domain
     
-    contact_order_current_structure = system("perl contactOrder.pl -r current_structure", intern = TRUE)
-    # TODO: errors -> why?
+    cmd = paste("perl contactOrder.pl -r ", filename)
+    contact_order_current_structure = system(cmd, intern = TRUE)
+    contact_order_current_structure_number = as.numeric(sub(".*: ", "", contact_order_current_structure))
+    print(contact_order_current_structure_number)
     
     # TODO: make a list/hash with every contact_order_current_structure
   }
