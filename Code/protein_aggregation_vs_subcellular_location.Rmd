@@ -77,7 +77,7 @@ If relative = **FALSE**, the absolute number of shared proteins is displayed.
 If relative = **TRUE**, the ratio of the intersection to the union of the two subcellular locations is shown multiplied by 10000.
 
 ### Interpretation:
-We see that most of the 
+We see that most of the proteins that are located in the nucleus are also common for the cytoplasm as a subcellular location. Cytoplasm also shares common proteins with cell membrane. Co-occurrence plot seem to be in line with the general pattern of protein locations. For example: It is most probably expected that if protein is located in the nucleus then it will also be in the cytoplasm (transcription factor).
 
 ```{r}
 source("co_occurence.R")
@@ -107,6 +107,10 @@ source("tango_scores.R")
 **Click here to see more info about [violin plots](https://en.wikipedia.org/wiki/Violin_plot)**
 
 ##Statistical tests and visualisation for subcellular location
+
+### Interpretation:
+Heatmap can be checked to see the significance level for the difference in the average score of different subcellular locations. All things considered, when significance is checked with respect to the mean, we see that only 3 subcellular locations are not significant according to the test.
+
 ```{r}
 plot_average_tango_scores_complete_proteins()
 significance_subcellular(tango_scores_complete_protein)
@@ -123,6 +127,9 @@ plot_stat_significance(tango_scores_complete_protein)
 **significance secretory**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
 
 **plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of tango scores. Distributions are calculated using secretory and non-secretory groups for all proteins.
+
+### Interpretation: 
+When proteins for different subcellular locations are clustered into 2 different categories such as secreted and non-secreted, these 2 categories are significantly different between each other.
 
 ```{r}
 #plot_average_tango_scores_complete_proteins_joined_secreted()
@@ -144,6 +151,10 @@ plot_stat_significance_secretory(tango_scores_complete_protein)
 **plot_stat_significance**: Plotting the options for statistical significance for only proteins with APR regions to check whether mean tango scores for each subcellular location are significant or not.
 
 ##Statistical tests and visualisation for subcellular location
+
+### Interpretation:
+When only proteins with APR regions are considered, significance levels are dropping significantly with respect to mean tango scores.
+
 ```{r}
 plot_average_tango_scores_APR_proteins()
 significance_subcellular(tango_scores_APR_protein)
@@ -162,12 +173,17 @@ plot_stat_significance(tango_scores_APR_protein)
 
 **plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of tango scores. Distributions are calculated using secretory and non-secretory groups for all proteins.
 
+### Interpretation:
+When proteins for different subcellular locations are clustered into 2 different categories such as secreted and non-secreted, these 2 categories are significantly different between each other in terms of mean tango scores.
+
 ```{r}
 #plot_average_tango_scores_APR_proteins_joined_secreted()
 significance_secretory(tango_scores_APR_protein)
 plot_stat_significance_secretory(tango_scores_APR_protein)
 ```
 ## Distribution of maximal tango scores
+
+### Statistical tests and visualisation for subcellular location
 
 ### Function Documentation:
 
@@ -181,7 +197,9 @@ plot_stat_significance_secretory(tango_scores_APR_protein)
 
 **plot_stat_significance**: Plotting the options for statistical significance for all proteins to check whether max tango scores for each subcellular location are significant or not.
 
-##Statistical tests and visualisation for subcellular location
+### Interpretation:
+We see that mean value of the max tango scores for each subcellular locations. Mean values are significant for all subcellular locations except lysosome and cell membrane.
+
 ```{r}
 plot_max_tango_scores()
 significance_subcellular(max_tango_scores)
@@ -199,6 +217,9 @@ plot_stat_significance(max_tango_scores)
 
 **plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of max tango scores. Distributions are calculated using secretory and non-secretory protein groups. All proteins are included to the calculation.
 
+### Interpretation:
+When proteins in different subcellular locations are clustered, mean of the max tango scores for non-secretory proteins are not deemed as significant.
+
 ```{r}
 # Are we going to add the plot here for secretory vs non-secretory
 #plot_max_tango_scores_complete_proteins_joined_secreted() No need to use
@@ -207,6 +228,8 @@ plot_stat_significance_secretory(max_tango_scores)
 ```
 
 ## Distribution of number of APR regions per protein normalized for protein length
+
+### Statistical tests and visualisation for subcellular location
 
 ### Function Documentation:
 
@@ -220,7 +243,9 @@ plot_stat_significance_secretory(max_tango_scores)
 
 **plot_stat_significance_nbAPR**: Plotting the options for statistical significance for all proteins to check whether normalized number of APR regions for each subcellular location are significant or not.
 
-##Statistical tests and visualisation for subcellular location
+### Interpretation:
+Mean of the number of normalized APR regions are considered as significant for all of the subcellular locations. Heatmap is again used for showing the significance levels in between different subcellular locations.
+
 ```{r}
 plot_normalized_number_APR_regions()
 significance_subcellular_nbAPR(normalized_number_APR_regions)
@@ -237,6 +262,9 @@ plot_stat_significance_nbAPR(normalized_number_APR_regions)
 **significance_secretory_nbAPR**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
 
 **plot_stat_significance_nbAPR_secretory**: Function for visualization of the Mann-Whitney test for the distributions of bumber of normalized APR regions. Distributions are calculated using secretory and non-secretory protein groups. All proteins are included in this calculation.
+
+### Interpretation:
+Again, both secretory and non-secretory groups of proteins are significant in terms of mean value of normalized APR regions. Important thing to notice in here is the fact that secretory proteins are showing a higher normalized APR region value compared to non-secretory group of proteins.
 
 ```{r}
 plot_normalized_number_APR_regions_joined_secreted()
@@ -264,6 +292,15 @@ Defining the variables depending on the filtration method of the whole data.
 # protein_sequences_APR_peptides = get_charge(APR_peptides)
 # protein_sequences_GK_peptides = get_charge(GK_peptides)
 # protein_sequences_FR_peptides = get_charge(FR_peptides)
+```
+
+If this analysis is not done, delete the following variables to speed up the memory
+
+```{r}
+rm(APR_peptides)
+rm(GK_peptides)
+rm(FR_peptides)
+rm(data)
 ```
 
 # Pie Plot for the residues
@@ -297,6 +334,9 @@ pie_plot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
 
 **pie_plot_percentage_of_all_residues**: Plots the percentage of all 20 residues for every protein. Considers the residues in the GK and flanking regions.
 
+### Interpretation:
+We have more abundance of specific residues when we only consider the percentage of the amino acids in the GK regions. However, when percentages are calculated for residues that are also in the flanking regions, we see that higher percentage of some residues are dropping to the average level instead of increasing or remaining still. This indicates that GK regions indeed have some preference for specific residues. These residues are mostly the charged amino acids.
+
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 ```
@@ -305,6 +345,9 @@ pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 
 **pie_plot_percentage_of_all_residues**: Occurrence of the residues in GK region depending on the category of the amino acid.
 
+### Intepretation:
+We see very little preference for hydrophobic residues since the whole purpose of GK regions are assumed to be preventing the aggregation of proteins with other hydrophobic regions.
+
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
 ```
@@ -312,6 +355,9 @@ pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
 ### PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK + FL REGIONS IN ALL PROTEINS
 
 **pie_plot_percentage_of_all_residues**: Occurrence of the residues in GK + FL region depending on the category of the amino acid.
+
+### Interpretation:
+When flanking regions are included, percentage of these groups of residues gets closer to average probability which is 20%
 
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK + FL REGIONS")
@@ -354,6 +400,9 @@ side_string = "GK"
 
 **pie_plot_percentage_of_specific_residue**: Plotting the side information for each interested amino acid in GK regions.
 
+### Interpretation:
+Slight preference for Ser on the right GK region and also huge preference for the Pro for the left side of the GK regions.
+
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$lys_ct, "LYS", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$arg_ct, "ARG", side_string)
@@ -373,6 +422,9 @@ side_string = "GK + FL"
 ```
 
 **pie_plot_percentage_of_specific_residue**: Plotting the side information for each interested amino acid in GK + flanking regions.
+
+### Interpretation:
+Nothing super interesting to see when FL regions are also included to the analysis.
 
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$lys_ct, "LYS", side_string)
@@ -398,6 +450,9 @@ side_string = "GK"
 
 **pie_plot_percentage_of_specific_residue**: Plotting the side information for each amino acid group in GK regions.
 
+### Interpretation:
+There is a preference for left side of the GK for special case residues whereas there is also a big preference for right side of the GK regions for hydrophobic residues.
+
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$positive, "POSITIVE CHARGED", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$negative, "NEGATIVE CHARGED", side_string)
@@ -417,12 +472,15 @@ side_string = "GK + FL"
 
 **pie_plot_percentage_of_specific_residue**: Plotting the side information for each amino acid group in GK + FL regions.
 
+### Interpretation:
+When GK + FL regions are considered, side distribution for all groups become nearly equal for left and right sides of the GK.
+
 ```{r}
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$positive, "positive charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$negative, "negative charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$uncharged, "uncharged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$special, "special cases", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic, "hydrophobic", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$positive, "POSITIVE CHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$negative, "NEGATIVE CHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$uncharged, "UNCHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$special, "SPECIAL CASES", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic, "HYDROPHOBIC", side_string)
 ```
 
 ## Now for the subcellular locations
@@ -441,6 +499,52 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic
 
 **pie_plot_sides**: Plotting the percentage of different sides for a given residue or a residue group.
 
+### Interpretation:
+
+**--Cell Membrane--**
+- Specific preference (more than 10%) for E,D and R in GK regions
+- 98% left preference for PRO in cell membrane protein GK regions
+- 68% right side preference for hydrophobic residues in GK regions of cell membrane proteins
+**--Mitochondrion--**
+- Increase in special residues in the GK regions
+- Specific preference (more than 10%) for E,D,K and R in GK regions
+- 96% left preference for PRO in cell membrane protein GK regions
+- 61% left preference for special cases in GK regions
+- 64% right preference for hydrophobic residues in GK regions
+**--Nucleus--**
+- Decrease in special residues in GK regions
+- Specific preference (more than 10%) for E,D,K and R in GK regions
+- 97% left preference for PRO in cell membrane protein GK regions
+- 62% left preference for special cases in GK regions
+- 66% right preference for hydrophobic residues in GK regions
+**--Endoplasmic Reticulum--**
+- Specific preference (more than 10%) for E,D,K and R in GK regions
+- Occurrence of between residues for GK regions
+- 62% left preference for special cases in GK regions
+- 67% right preference for hydrophobic residues in GK regions
+**--Golgo Apparatus--**
+- 26% preference for negative, positive, and uncharged residue groups
+- Specific preference (more than 10%) for E,D,K and R in GK regions with D being the highest (13.6%)
+- 98% left preference for PRO in cell membrane protein GK regions
+- 60% left preference for special cases in GK regions
+- 65% right preference for hydrophobic residues in GK regions
+**--Lysosome--**
+- 27.6% uncharged residue preference in the GK regions
+- Specific preference (more than 10%) for E,D,K and R in GK regions. S is close to 10% (9.2%)
+- 98% left preference for PRO in cell membrane protein GK regions
+- 62% left preference for special cases in GK regions
+- 70% right preference for hydrophobic residues in GK regions
+**--Cytoplasm--**
+- Specific preference (more than 10%) for E,D,K and R in GK regions
+- 97% left preference for PRO in cell membrane protein GK regions
+- 61% left preference for special cases in GK regions
+- 67% right preference for hydrophobic residues in GK regions
+**--Extracellular Space--**
+- 20% preference for special residues in GK regions
+- Specific preference (more than 10%) for E,D,K and R in GK regions with D being the highest (13.1%)
+- 96% left preference for PRO in cell membrane protein GK regions
+- 63% left preference for special cases in GK regions
+- 71% right preference for hydrophobic residues in GK regions
 
 ```{r}
 # Statistics for each subcellular location
