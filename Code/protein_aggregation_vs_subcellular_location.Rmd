@@ -206,25 +206,27 @@ plot_stat_significance_secretory(max_tango_scores)
 
 ### Function Documentation:
 
-**plot_normalized_number_APR_regions**: Generates the violin plot for max tango score of all proteins according to their subcellular locations. Red points demonstrate the mean value of the tango score for each subcellular location.
+**plot_normalized_number_APR_regions**: Generates the violin plot for normalized number of APR regions (where number of APR regions are divided into length of protein) for all proteins according to their subcellular locations. Red points demonstrate the mean value of the tango score for each subcellular location.
 
-**significance_subcellular**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+**significance_subcellular_nbAPR**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
 
-**get_krustal_test_results**: For calculating the general significance of the proteins with respect to their max tango scores for subcellular locations.
+**get_krustal_test_results_nbAPR**: For calculating the general significance of the proteins with respect to their normalized number of APR regions for subcellular locations.
 
-**get_wilcox_test_table**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file.
+**get_wilcox_test_table_nbAPR**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file.
+
+**plot_stat_significance_nbAPR**: Plotting the options for statistical significance for all proteins to check whether normalized number of APR regions for each subcellular location are significant or not.
 
 ##Statistical tests and visualisation for subcellular location
 ```{r}
-#plot_normalized_number_APR_regions()
-#plot_average_tango_scores_complete_proteins() # Should be: plot_normalized_number_APR_regions()
-# <<<<<<< Updated upstream
-#significance_subcellular_nbAPR(normalized_number_APR_regions)
-#get_krustal_test_results_nbAPR(normalized_number_APR_regions)
-#get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
-#plot_stat_significance_nbAPR(normalized_number_APR_regions)
+plot_normalized_number_APR_regions()
+significance_subcellular_nbAPR(normalized_number_APR_regions)
+get_krustal_test_results_nbAPR(normalized_number_APR_regions)
+get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
+plot_stat_significance_nbAPR(normalized_number_APR_regions)
+```
 
-# =======
+
+```{r}
 significance_subcellular_nbAPR(normalized_number_APR_regions)
 get_krustal_test_results_nbAPR(normalized_number_APR_regions)
 get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
