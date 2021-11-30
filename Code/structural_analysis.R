@@ -78,7 +78,8 @@ for (i in 1:length(total_list_of_proteins)) {
     cmd = paste("perl contactOrder.pl -r ", filename)
     contact_order_current_structure = system(cmd, intern = TRUE)
     contact_order_current_structure_number = as.numeric(sub(".*: ", "", contact_order_current_structure))
-    print(contact_order_current_structure_number)
+    
+    domains$contact_order[domains$Protein == current_protein & domains$boundaries == boundaries[j]] = contact_order_current_structure_number
     
     # TODO: make a list/hash with every contact_order_current_structure
   }
