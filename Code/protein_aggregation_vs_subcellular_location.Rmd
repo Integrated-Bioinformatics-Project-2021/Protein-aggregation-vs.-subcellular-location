@@ -75,6 +75,10 @@ This function gives the number of proteins that are shared by different subcellu
 If relative = **FALSE**, the absolute number of shared proteins is displayed.
 
 If relative = **TRUE**, the ratio of the intersection to the union of the two subcellular locations is shown multiplied by 10000.
+
+### Interpretation:
+We see that most of the 
+
 ```{r}
 source("co_occurence.R")
 plot_co_occurence(relative = FALSE)
@@ -224,7 +228,7 @@ get_krustal_test_results_nbAPR(normalized_number_APR_regions)
 get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
 plot_stat_significance_nbAPR(normalized_number_APR_regions)
 ```
-##Statistical tests and visualisation on secretory vs. non-secretory
+## Statistical tests and visualisation on secretory vs. non-secretory
 
 ### Function Documentation:
 
@@ -264,18 +268,11 @@ Defining the variables depending on the filtration method of the whole data.
 
 # Pie Plot for the residues
 
-postive charged aas ("positive") --> R,H,K 
-negative charged aas ("negative") --> D,E
-uncharged aas ("uncharged") --> S,T,N,Q
-special cases aas ("special") --> C,G,P,A
-hydrophobic aas ("hydrophobic") --> V,I,L,M,F,Y,W
+postive charged aas ("positive") --> R,H,K <br /> negative charged aas ("negative") --> D,E <br /> uncharged aas ("uncharged") --> S,T,N,Q <br />  special cases aas ("special") --> C,G,P,A  <br />  hydrophobic aas ("hydrophobic") --> V,I,L,M,F,Y,W
 
 **Specific residues of interest**
 
-Lysine (Lys) --> K
-Arginine (Arg) --> R
-Aspartic acid (Asp) --> D
-Glutamic acid (Glu) --> E
+Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E
 
 ```{r}
 source("gatekeeper.R")
@@ -283,58 +280,79 @@ source("gatekeeper.R")
 
 ## Only for the GK regions
 
+**analyse_gate_keeper_regions**: General analysis of all proteins for only GK regions
+
 ```{r}
 GK_analysis = analyse_gate_keeper_regions()
 ```
 
-PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+
+**pie_plot_percentage_of_all_residues**: Function to plot the percentage of all residues in the GK regions of all proteins.
 
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
 ```
+### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
 
-PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+**pie_plot_percentage_of_all_residues**: Plots the percentage of all 20 residues for every protein. Considers the residues in the GK and flanking regions.
 
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 ```
 
-PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK REGIONS IN ALL PROTEINS
+### PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK REGIONS IN ALL PROTEINS
+
+**pie_plot_percentage_of_all_residues**: Occurrence of the residues in GK region depending on the category of the amino acid.
 
 ```{r}
 pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
 ```
 
-PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK + FL REGIONS IN ALL PROTEINS
+### PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK + FL REGIONS IN ALL PROTEINS
+
+**pie_plot_percentage_of_all_residues**: Occurrence of the residues in GK + FL region depending on the category of the amino acid.
 
 ```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK REGIONS")
+pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK + FL REGIONS")
 ```
 
 ## Interested residues
 
-Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E <br /> Serine (Ser) --> S <br /> Proline (Pro) --> P <br /> PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+
+Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E <br /> Serine (Ser) --> S <br /> Proline (Pro) --> P <br /> 
+
+**analyse_interested_gate_keeper_regions**: Obtain the percentage of the interested residues in GK regions or GK + flanking regions.
 
 ```{r}
 GK_analysis_interested_aa = analyse_interested_gate_keeper_regions(GK_analysis)
 ```
 
+**pie_plot_percentage_of_interested_residues**: Plotting the percentage of interested residues in the GK region of all proteins.
+
 ```{r}
 pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk, "GK REGIONS")
 ```
 
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+
+**pie_plot_percentage_of_interested_residues**: Plotting the percentage of interested residues in the GK + flanking region of all proteins.
 
 ```{r}
 pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk_fl, "GK + FL REGIONS")
 ```
 
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
+
+**analyse_gate_keeper_residues**: Obtain the side information for the interested residues in the GK regions.
 
 ```{r}
 GK_analysis_GK_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_side)
 side_string = "GK"
 ```
+
+**pie_plot_percentage_of_specific_residue**: Plotting the side information for each interested amino acid in GK regions.
 
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$lys_ct, "LYS", side_string)
@@ -345,12 +363,16 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$ser_ct, "SER", s
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$pro_ct, "PRO", side_string)
 ```
 
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+
+**analyse_gate_keeper_residues**: Obtain the side information for the interested residues in the GK + flanking regions.
 
 ```{r}
 GK_analysis_GK_and_FL_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_fl_side)
 side_string = "GK + FL"
 ```
+
+**pie_plot_percentage_of_specific_residue**: Plotting the side information for each interested amino acid in GK + flanking regions.
 
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$lys_ct, "LYS", side_string)
@@ -361,27 +383,39 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
 ```
 
-##INTERESTED GROUPS Postive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S <br /> PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+## Interested Groups
+
+Postive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S 
+
+### PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+
+**analyse_gate_keeper_groups**: Obtain the side information for different groups of amino acids in the GK regions.
 
 ```{r}
 GK_analysis_GK_groups = analyse_gate_keeper_groups(GK_analysis$cts_gk_groups_side)
 side_string = "GK"
 ```
 
+**pie_plot_percentage_of_specific_residue**: Plotting the side information for each amino acid group in GK regions.
+
 ```{r}
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$positive, "positive charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$negative, "negative charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$uncharged, "uncharged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$special, "special cases", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$hydrophobic, "hydrophobic", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$positive, "POSITIVE CHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$negative, "NEGATIVE CHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$uncharged, "UNCHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$special, "SPECIAL CASES", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$hydrophobic, "HYDROPHOBIC", side_string)
 ```
 
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+
+**analyse_gate_keeper_groups**: Obtain the side information for different groups of amino acids in the GK + flanking regions.
 
 ```{r}
 GK_analysis_GK_and_FL_groups = analyse_gate_keeper_groups(GK_analysis$cts_gk_fl_groups_side)
 side_string = "GK + FL"
 ```
+
+**pie_plot_percentage_of_specific_residue**: Plotting the side information for each amino acid group in GK + FL regions.
 
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$positive, "positive charged", side_string)
@@ -391,9 +425,22 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$special, "s
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic, "hydrophobic", side_string)
 ```
 
-## Subcellular location
+## Now for the subcellular locations
 
-Previous analyses are done for all of the proteins, but now we will be working on all the proteins that belong to a specific subcellular location
+**Previous analyses** are done for all of the proteins, but now we will be working on all the proteins that belong to a specific subcellular location.
+
+### Functional Documentation:
+
+**get_counts_for_subcellular_location**: To obtain the corresponding subset of proteins that are belonging to a specific subcellular location for determined counts.
+
+**pie_plot_subcellular_location**: Function for plotting the residue percentage depending on the given category.
+
+**analyse_interested_gate_keeper_regions**: Obtain the subset of proteins (only interest) for combination of regions.
+
+**analyse_sides**: Obtain the percentage of single or groups of residues based on the given regions.
+
+**pie_plot_sides**: Plotting the percentage of different sides for a given residue or a residue group.
+
 
 ```{r}
 # Statistics for each subcellular location
