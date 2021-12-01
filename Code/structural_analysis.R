@@ -19,7 +19,6 @@ library(bio3d) # Used for read.pdb
 # Save it to the /Data/AF folder and untar it.
 directory = dirname(rstudioapi::getSourceEditorContext()$path) # Place the data in a Data folder on the path of this file
 setwd(directory)
-load("Data/domains.RData")
 
 # 2) Generate a "sub-structure" ------------------------------------------------
 # Check if all proteins in data are present in domains:
@@ -63,24 +62,42 @@ get_structure_domain <- function(structure, boundaries) {
   return(filename)
 }
 
-for (i in 1:length(total_list_of_proteins)) {
-  current_protein = total_list_of_proteins[i]
-  protein_structure = get_structure_protein(current_protein)
-  boundaries = get_domain_boundaries(current_protein)
-  for (j in 1:length(boundaries)) {
-    filename = get_structure_domain(protein_structure, boundaries[j])
-    # 3) Calculate the contact order of each domain ----------------------------
-    # https://depts.washington.edu/bakerpg/contact_order/ (Download Contact Order Program (Perl version))
-    # contactOrder.pl <options> <pdbfile>
-    # with <options> = -r: returns relative CO
-    # with pdbfile the pdb file with the AlphaFold structure of a single domain
-    
-    cmd = paste("perl contactOrder.pl -r ", filename)
-    contact_order_current_structure = system(cmd, intern = TRUE)
-    contact_order_current_structure_number = as.numeric(sub(".*: ", "", contact_order_current_structure))
-    
-    domains$contact_order[domains$Protein == current_protein & domains$boundaries == boundaries[j]] = contact_order_current_structure_number
-    
-    # TODO: make a list/hash with every contact_order_current_structure
+save_all_contact_orders <- function() {
+  for (i in 1:length(total_list_of_proteins)) {
+    print(i)
+    current_protein = total_list_of_proteins[i]
+    protein_structure = get_structure_protein(current_protein)
+    boundaries = get_domain_boundaries(current_protein)
+    for (j in 1:length(boundaries)) {
+      filename = get_structure_domain(protein_structure, boundaries[j])
+      # 3) Calculate the contact order of each domain ----------------------------
+      # https://depts.washington.edu/bakerpg/contact_order/ (Download Contact Order Program (Perl version))
+      # contactOrder.pl <options> <pdbfile>
+      # with <options> = -r: returns relative CO
+      # with pdbfile the pdb file with the AlphaFold structure of a single domain
+      
+      cmd = paste("perl contactOrder.pl -r ", filename)
+      contact_order_current_structure = system(cmd, intern = TRUE)
+      contact_order_current_structure_number = as.numeric(sub(".*: ", "", contact_order_current_structure))
+      
+      domains$contact_order[domains$Protein == current_protein & domains$boundaries == boundaries[j]] = contact_order_current_structure_number
+      
+      # TODO: make a list/hash with every contact_order_current_structure
+    }
   }
+  save(domains, file = "Data/domains_with_contact_order.RData")
+  return (domains)
 }
+
+main <- function() {
+  if (! file.exists("Data/domains_with_contact_order.RData")) { # Only retrieve the data when it isn't stored yet
+    load("Data/domains.RData")
+    save_all_contact_orders()
+  }
+  else {
+    load("Data/domains_with_contact_order.RData")
+  }
+  domains <<- domains
+}
+
+main()
