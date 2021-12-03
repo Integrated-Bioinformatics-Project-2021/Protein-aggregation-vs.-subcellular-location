@@ -325,42 +325,42 @@ GK_analysis = analyse_gate_keeper_regions()
 
 ### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
 
-**pie_plot_percentage_of_all_residues**: Function to plot the percentage of all residues in the GK regions of all proteins.
+**barplot_percentage_of_all_residues**: Function to plot the percentage of all residues in the GK regions of all proteins.
 
 ```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
+barplot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
 ```
 ### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
 
-**pie_plot_percentage_of_all_residues**: Plots the percentage of all 20 residues for every protein. Considers the residues in the GK and flanking regions.
+**barplot_percentage_of_all_residues**: Plots the percentage of all 20 residues for every protein. Considers the residues in the GK and flanking regions.
 
 ### Interpretation:
 We have more abundance of specific residues when we only consider the percentage of the amino acids in the GK regions. However, when percentages are calculated for residues that are also in the flanking regions, we see that higher percentage of some residues are dropping to the average level instead of increasing or remaining still. This indicates that GK regions indeed have some preference for specific residues. These residues are mostly the charged amino acids.
 
 ```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
+barplot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 ```
 
 ### PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK REGIONS IN ALL PROTEINS
 
-**pie_plot_percentage_of_all_residues**: Occurrence of the residues in GK region depending on the category of the amino acid.
+**barplot_percentage_of_all_residues**: Occurrence of the residues in GK region depending on the category of the amino acid.
 
 ### Intepretation:
 We see very little preference for hydrophobic residues since the whole purpose of GK regions are assumed to be preventing the aggregation of proteins with other hydrophobic regions.
 
 ```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
+barplot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
 ```
 
 ### PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK + FL REGIONS IN ALL PROTEINS
 
-**pie_plot_percentage_of_all_residues**: Occurrence of the residues in GK + FL region depending on the category of the amino acid.
+**barplot_percentage_of_all_residues**: Occurrence of the residues in GK + FL region depending on the category of the amino acid.
 
 ### Interpretation:
 When flanking regions are included, percentage of these groups of residues gets closer to average probability which is 20%
 
 ```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK + FL REGIONS")
+barplot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK + FL REGIONS")
 ```
 
 ## Interested residues
@@ -375,18 +375,18 @@ Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D 
 GK_analysis_interested_aa = analyse_interested_gate_keeper_regions(GK_analysis)
 ```
 
-**pie_plot_percentage_of_interested_residues**: Plotting the percentage of interested residues in the GK region of all proteins.
+**barplot_percentage_of_interested_residues**: Plotting the percentage of interested residues in the GK region of all proteins.
 
 ```{r}
-pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk, "GK REGIONS")
+barplot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk, "GK REGIONS")
 ```
 
 ### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
 
-**pie_plot_percentage_of_interested_residues**: Plotting the percentage of interested residues in the GK + flanking region of all proteins.
+**barplot_percentage_of_interested_residues**: Plotting the percentage of interested residues in the GK + flanking region of all proteins.
 
 ```{r}
-pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk_fl, "GK + FL REGIONS")
+barplot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk_fl, "GK + FL REGIONS")
 ```
 
 ### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
@@ -491,7 +491,7 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic
 
 **get_counts_for_subcellular_location**: To obtain the corresponding subset of proteins that are belonging to a specific subcellular location for determined counts.
 
-**pie_plot_subcellular_location**: Function for plotting the residue percentage depending on the given category.
+**barplot_subcellular_location**: Function for plotting the residue percentage depending on the given category.
 
 **analyse_interested_gate_keeper_regions**: Obtain the subset of proteins (only interest) for combination of regions.
 
@@ -552,17 +552,17 @@ for (i in 1:length(search_terms)) {
   counts = get_counts_for_subcellular_location(search_terms[i], GK_analysis) # Takes a while to run
   
   residue_category = "all"
-  pie_plot_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
-  pie_plot_subcellular_location(counts$cts_gk_groups, residue_category, "GK", search_terms[i])
-  pie_plot_subcellular_location(counts$cts_gk_fl, residue_category, "GK + FL", search_terms[i])
-  pie_plot_subcellular_location(counts$cts_gk_fl_groups, residue_category, "GK + FL", search_terms[i])
+  barplot_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
+  barplot_subcellular_location(counts$cts_gk_groups, residue_category, "GK", search_terms[i])
+  barplot_subcellular_location(counts$cts_gk_fl, residue_category, "GK + FL", search_terms[i])
+  barplot_subcellular_location(counts$cts_gk_fl_groups, residue_category, "GK + FL", search_terms[i])
   
   # PERCENTAGE OF INTERESTED PROTEINS IN SUBCELLULAR LOCATIONS
   
   counts_interest <- analyse_interested_gate_keeper_regions(counts)
   residue_category = "interested"
-  pie_plot_subcellular_location(counts_interest$cts_interest_gk, residue_category, "GK", search_terms[i])
-  pie_plot_subcellular_location(counts_interest$cts_interest_gk_fl, residue_category, "GK + FL", search_terms[i])
+  barplot_subcellular_location(counts_interest$cts_interest_gk, residue_category, "GK", search_terms[i])
+  barplot_subcellular_location(counts_interest$cts_interest_gk_fl, residue_category, "GK + FL", search_terms[i])
   
   # NOW THE SIDES PART
   counts_side_gk <- analyse_sides(counts$cts_gk_side)

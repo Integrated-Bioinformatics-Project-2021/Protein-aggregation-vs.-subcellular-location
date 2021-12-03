@@ -60,27 +60,12 @@ get_wilcox_test_table_nbAPR <- function(data) {
 
 
 
-group_by(tango_scores_complete_protein, Subcellular_location) %>%
-  summarise(
-    count = n(),
-    mean = mean(Tango_scores, na.rm = TRUE),
-    sd = sd(Tango_scores, na.rm = TRUE),
-    median = median(Tango_scores, na.rm = TRUE),
-    IQR = IQR(Tango_scores, na.rm = TRUE)
-  )
-
-ggline(tango_scores_complete_protein, x = "Subcellular_location", y = "Tango_scores", 
-       add = c("mean_se", "jitter"), 
-       order = c("Cell membrane", "Mitochondrion", "Nucleus", "Endoplasmic Reticulum", "Golgi apparatus", "Lysosome", "Cytoplasm", "Secreted", "Extracellular space"),
-       ylab = "Tango_scores", xlab = "Subcellular_location")
-
-
 #SECRETORY VS NON_SECRETORY
 check_significance_sec <- function(x,y){
   res <- wilcox.test(x, y)
   return (res)
 }
-
+    
 
 #FUNCTION TO CALCULATE SIGNIFICANCE, returning D-value and p-value 
 #FUNCTION USED FOR tango_scores_complete_protein, tango_scores_APR_protein, max_tango_scores
