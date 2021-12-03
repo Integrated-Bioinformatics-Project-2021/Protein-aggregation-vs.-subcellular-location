@@ -101,3 +101,23 @@ main <- function() {
 }
 
 main()
+
+### Mapping: take the maximum tango score for every domain in the dataset ####
+
+#### TODO: run it and upload the data on the drive!
+
+save_tango_per_domain <- function(){
+  for (p in 1:length(total_list_of_proteins)) {
+  current_protein = total_list_of_proteins[p]
+  protein_domains = subset(domains, domains$Protein == current_protein)
+  for (d in 1:nrow(protein_domains)){
+    domains_min = protein_domains$begin.domain
+    domains_max = protein_domains$end.domain
+    tango_domains = data[data$Protein == current_protein, "tango_Score"][domains_min[d]: domains_max[d]]
+    domains[domains$Protein == current_protein, "tango"] = max(tango_domains)
+    }
+  }
+  save(domains, file = "Data/domains_with_COandTango.RData")
+  return(domains)
+}
+
