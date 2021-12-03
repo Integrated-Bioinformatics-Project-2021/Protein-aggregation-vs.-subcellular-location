@@ -300,7 +300,6 @@ If this analysis is not done, delete the following variables to speed up the mem
 rm(APR_peptides)
 rm(GK_peptides)
 rm(FR_peptides)
-rm(data)
 ```
 
 # Pie Plot for the residues
@@ -522,7 +521,7 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic
 - Occurrence of between residues for GK regions
 - 62% left preference for special cases in GK regions
 - 67% right preference for hydrophobic residues in GK regions
-**--Golgo Apparatus--**
+**--Golgi Apparatus--**
 - 26% preference for negative, positive, and uncharged residue groups
 - Specific preference (more than 10%) for E,D,K and R in GK regions with D being the highest (13.6%)
 - 98% left preference for PRO in cell membrane protein GK regions
