@@ -67,7 +67,7 @@ save_all_contact_orders <- function() {
     print(i)
     current_protein = total_list_of_proteins[i]
     protein_structure = get_structure_protein(current_protein)
-    boundaries = get_domain_boundaries(current_protein)
+    boundaries = get_domain_boundaries(current_protein) # TODO: make more efficient using $begin.domain
     for (j in 1:length(boundaries)) {
       filename = get_structure_domain(protein_structure, boundaries[j])
       # 3) Calculate the contact order of each domain ----------------------------
@@ -106,18 +106,51 @@ main()
 
 #### TODO: run it and upload the data on the drive!
 
-save_tango_per_domain <- function(){
-  for (p in 1:length(total_list_of_proteins)) {
-  current_protein = total_list_of_proteins[p]
-  protein_domains = subset(domains, domains$Protein == current_protein)
-  for (d in 1:nrow(protein_domains)){
-    domains_min = protein_domains$begin.domain
-    domains_max = protein_domains$end.domain
-    tango_domains = data[data$Protein == current_protein, "tango_Score"][domains_min[d]: domains_max[d]]
-    domains[domains$Protein == current_protein, "tango"] = max(tango_domains)
+get_APRs_in_domain <- function(domain, APRs_in_protein) {
+  APRs_in_domain = list()
+  if (length(APRs_in_protein) == 0) {
+    return (APRs_in_domain)
+  }
+  domain_vector = c(domain$begin.domain:domain$end.domain)
+  for (k in 1:length(APRs_in_protein)) {
+    residues_in_APR = subset(data, data$APRcount_tango == APRs_in_protein[k])
+    min_pos = min(residues_in_APR["Position"])
+    max_pos = max(residues_in_APR["Position"])
+    # Assume the APR region lies in a domain if its middle residue lies within the domain boundaries
+    if (as.integer((max_pos + min_pos)/2) %in% domain_vector) {
+      APRs_in_domain = append(APRs_in_domain, APRs_in_protein[k])
     }
   }
-  save(domains, file = "Data/domains_with_COandTango.RData")
-  return(domains)
+  return (APRs_in_domain)
 }
 
+get_tango_score_domain <- function(APRs_in_domain) {
+  tango_score = 0
+  if (length(APRs_in_domain) == 0) {
+    return (tango_score)
+  }
+  for (k in 1:length(APRs_in_domain)) {
+    current_tango_score = data$avgScore[data$APRcount_tango == APRs_in_domain[k]][1]
+    tango_score = tango_score + current_tango_score
+  }
+  return (tango_score)
+}
+
+save_tango_per_domain <- function(){
+  for (p in 1:length(total_list_of_proteins)) {
+    print(p)
+    current_protein = total_list_of_proteins[p]
+    protein_domains = subset(domains, domains$Protein == current_protein)
+    for (d in 1:nrow(protein_domains)){
+      APRs_in_protein = unique(data[data$Protein == current_protein & data$APRcount_tango != 0, "APRcount_tango"]) # Get all non-zero APR domains in the protein
+      APRs_in_domain = get_APRs_in_domain(protein_domains[d,], APRs_in_protein)
+      tango_score_domain = get_tango_score_domain(APRs_in_domain)
+      domains[domains$CATH.domain.ID == protein_domains[d,]$CATH.domain.ID, "tango"] = tango_score_domain # Save in tango column of domains dataframe
+      }
+    }
+  save(domains, file = "Data/domains_with_COandTango.RData")
+  # return(domains)
+}
+
+save_tango_per_domain()
+load("Data/domains_with_COandTango.RData")
