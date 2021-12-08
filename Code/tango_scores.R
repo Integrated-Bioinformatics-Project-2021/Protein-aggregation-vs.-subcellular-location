@@ -168,6 +168,7 @@ get_normalized_number_APR_regions <- function(given_protein_list) {
     peptides_for_protein = subset(given_protein_list, given_protein_list$Protein == unique_proteins_in_list[j])
     total_length = nrow(peptides_for_protein) # count every row for the protein representing each residue 
     APR_list <- unique(peptides_for_protein$APRcount_tango) # add all unique APR ideas to the list
+    APR_list <-  APR_list[APR_list != 0] # Remove the 0 indicating that a part doesn't have an APR
     # get the number of APR regions in the current protein
     number_APR_regions = length(APR_list)
     # divide by the total length of the protein
