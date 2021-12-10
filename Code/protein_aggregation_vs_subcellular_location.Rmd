@@ -594,6 +594,8 @@ for (i in 1:length(search_terms)) {
   pie_plot_sides(counts_side_gk_fl_groups$unc_ct, "uncharged", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_fl_groups$spe_ct, "special cases", region_string, search_terms[i])
   pie_plot_sides(counts_side_gk_fl_groups$hyd_ct, "hydrophobic", region_string, search_terms[i])
+  
+  barplot_ratio_for_each_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
 }
 ```
 

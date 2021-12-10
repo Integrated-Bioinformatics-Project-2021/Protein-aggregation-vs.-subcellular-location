@@ -65,7 +65,7 @@ analyse_gate_keeper_regions <- function() {
   # Aspartic acid (Asp) --> D
   # Glutamic acid (Glu) --> E
 
-  cts_gk <- GK_residues %>% 
+  cts_gk_all <<- GK_residues %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
@@ -119,7 +119,7 @@ analyse_gate_keeper_regions <- function() {
                "GK_FL_residues" = GK_FL_residues,
                "GK_groups" = GK_groups,
                "GK_FL_groups" = GK_FL_groups,
-               "cts_gk" = cts_gk,
+               "cts_gk" = cts_gk_all,
                "cts_gk_side" = cts_gk_side,
                "cts_gk_fl" = cts_gk_fl,
                "cts_gk_fl_side" = cts_gk_fl_side,
@@ -327,6 +327,16 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
 barplot_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
   title = paste("Percentage of ", residue_category, " residues in ", side_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
   ggplot(counts, aes(x = Residue, y = perc, fill = Residue)) +
+    geom_bar(stat = 'identity') +
+    ggtitle(title)
+}
+
+#Barplot ratio amino acid in subcellular location vs. all proteins 
+barplot_ratio_for_each_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
+  ratio_df <- cts_gk_all
+  ratio_df$perc <- ((counts$perc/cts_gk_all$perc) - 1)
+  title = paste("Ratio of ", residue_category, " residues in ", side_string, " regions\n for ", subcellular_location, " compared to all subcellular locations", sep ="", collapse=NULL)
+  ggplot(ratio_df, aes(x= Residue, y = perc, fill = Residue)) + 
     geom_bar(stat = 'identity') +
     ggtitle(title)
 }
