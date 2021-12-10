@@ -154,3 +154,45 @@ save_tango_per_domain <- function(){
 
 save_tango_per_domain()
 load("Data/domains_with_COandTango.RData")
+
+#General plot 
+plot_domains_contact_order <- function() {
+  plot(domains$tango, domains$contact_order)
+  cor.test(domains$tango, domains$contact_order)
+}
+
+#plot grouping the domains for contact_order 
+plot_tango_contact_order_grouped <- function(data) {
+  labels <- c("<0.05", "0.05-0.1", "0.10-0.15", "0.15-0.20", "0.20-0.25", ">0.25")
+  ggplot(data, aes(x= .groups, y = tango)) + 
+    geom_boxplot() + scale_color_brewer(palette="Dark2") +
+    xlab("contact_order") +
+    scale_x_discrete(labels = labels)
+}
+#creating groupings for contact_order - domains without NA values
+get_grouped_domains <- function() {
+  domains <- domains[order(domains$contact_order),]
+  grouped_domains <- group(domains, n = 0.05, method = "staircase")
+  grouped_domains <- grouped_domains[!is.na(grouped_domains$contact_order),]
+  return(grouped_domains)
+}
+#creating groupings for contact_order - NA set to zero
+get_grouped_domains_NA_set_zero <- function() {
+  domains <- domains[order(domains$contact_order),]
+  grouped_domains_NA <- group(domains, n = 0.05, method = "staircase")
+  grouped_domains_NA <- grouped_domains_NA[!is.na(grouped_domains_NA$contact_order),]
+  grouped_domains_NA$contact_order[is.na(grouped_domains_NA$contact_order)] <- 0
+  return(grouped_domains_NA)
+}
+
+#density plot for every subcellular location 
+plot_2D_contact_order_and_tango_in_subcellular_location <- function() {
+  unique_prot_data <- data[!duplicated(data$Protein),]
+  domain_and_data <- merge(unique_prot_data, domains)
+  for (l in 1: length(search_terms)) {
+    domains_in_subcellular_location <- subset(domain_and_data, domain_and_data$Subcellular_location == search_terms[l])
+    ggplot(domains_in_subcellular_location, aes(x = tango, y = contact_order)) + 
+      geom_density2d()
+  }
+}
+
