@@ -602,7 +602,7 @@ for (i in 1:length(search_terms)) {
 source("structural_analysis.R")
 ```
 
-## Calculate the contact order for each domain and add it to the data frame
+## Calculate the contact order and tango score for each domain and add it to the data frame
 ```{r}
 load_full_domains()
 ```

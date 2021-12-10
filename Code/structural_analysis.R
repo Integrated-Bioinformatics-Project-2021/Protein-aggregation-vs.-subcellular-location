@@ -63,6 +63,8 @@ get_structure_domain <- function(structure, boundaries) {
   return(filename)
 }
 
+# For each domain, retrieve the substructure from AlphaFold, calculate its contact and add this to the domains dataframe.
+# Save the complete dataframe as "Data/domains_with_contact_order.RData".
 save_all_contact_orders <- function() {
   for (i in 1:length(total_list_of_proteins)) {
     print(i)
@@ -82,8 +84,6 @@ save_all_contact_orders <- function() {
       contact_order_current_structure_number = as.numeric(sub(".*: ", "", contact_order_current_structure))
       
       domains$contact_order[domains$Protein == current_protein & domains$boundaries == boundaries[j]] = contact_order_current_structure_number
-      
-      # TODO: make a list/hash with every contact_order_current_structure
     }
   }
   save(domains, file = "Data/domains_with_contact_order.RData")
@@ -92,8 +92,8 @@ save_all_contact_orders <- function() {
 
 ### Mapping: take the maximum tango score for every domain in the dataset ####
 
-#### TODO: run it and upload the data on the drive!
-
+# For the given domain, check which APRs from the list APRs_in_protein are within
+# the domain. An APR is part of a domain when its middle residue is within the boundaries of the domain.
 get_APRs_in_domain <- function(domain, APRs_in_protein) {
   APRs_in_domain = list()
   if (length(APRs_in_protein) == 0) {
@@ -112,6 +112,7 @@ get_APRs_in_domain <- function(domain, APRs_in_protein) {
   return (APRs_in_domain)
 }
 
+# Return the sum of the avgScore attribute of all the APRs in the given list APRs_in_domain.
 get_tango_score_domain <- function(APRs_in_domain) {
   tango_score = 0
   if (length(APRs_in_domain) == 0) {
@@ -124,6 +125,9 @@ get_tango_score_domain <- function(APRs_in_domain) {
   return (tango_score)
 }
 
+# For each protein in the list total_list_of_proteins, loop over the domains of the
+# protein and add the corresponding tango scores to the domains dataframe.
+# Save the complete dataframe as "Data/domains_with_COandTango.RData".
 save_tango_per_domain <- function(){
   for (p in 1:length(total_list_of_proteins)) {
     print(p)
@@ -140,6 +144,12 @@ save_tango_per_domain <- function(){
   # return(domains)
 }
 
+# MAIN FUNCTION
+# Load all the domains information. This function adds a column to the domains data frame
+# with the contact order of each domain and the tango score of each domain.
+# If this information already has been calculated, load the file "Data/domains_with_COandTango.RData"
+# for the full information, or the file "Data/domains_with_contact_order.RData" for the contact order information.
+# Calculated the remaining information if needed.
 load_full_domains <- function() {
   if (file.exists("Data/domains_with_COandTango.RData")) {
     load("Data/domains_with_COandTango.RData")
