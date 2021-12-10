@@ -596,3 +596,30 @@ for (i in 1:length(search_terms)) {
   pie_plot_sides(counts_side_gk_fl_groups$hyd_ct, "hydrophobic", region_string, search_terms[i])
 }
 ```
+
+##STRUCTURAL ANALYSIS
+```{r}
+source("structural_analysis.R")
+```
+
+#General plot + correlation test
+```{r}
+plot_domains_contact_order()
+```
+##Plot for contact_order grouped
+```{r}
+grouped_domains <- get_grouped_domains()
+plot_tango_contact_order_grouped(grouped_domains)
+```
+##Plot for contact_order grouped with NA sets to zero 
+```{r}
+grouped_domains_with_NA <- get_grouped_domains_NA_set_zero()
+plot_tango_contact_order_grouped(grouped_domains_with_NA)
+```
+
+##2D density plots for each subcellular location
+```{r}
+plot_2D_contact_order_and_tango_in_subcellular_location()
+```
+
+

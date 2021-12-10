@@ -7,7 +7,7 @@ classify_subsets <- function() {
     initialize_by_APR_protein()
   }
   APR_peptides <<- subset(only_APR_data, APRdef2_tango < 2)
-  GK_peptides <<- subset(only_APR_data, APRdef2_tango < 3)
+  GK_peptides <<- subset(only_APR_data, APRdef2_tango < 3) # Most interesting group + group on intra/extra --> APR part can stay bc prob no charge
   FR_peptides <<-  subset(only_APR_data, APRdef2_tango < 5)
 }
 
