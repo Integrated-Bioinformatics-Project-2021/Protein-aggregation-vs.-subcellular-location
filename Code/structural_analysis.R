@@ -22,6 +22,7 @@ setwd(directory)
 
 # 2) Generate a "sub-structure" ------------------------------------------------
 # Check if all proteins in data are present in domains:
+load("Data/domains.RData")
 proteins_with_subcellular_location <- unique(data$Protein[data$Subcellular_location != ""])
 length(proteins_with_subcellular_location)
 proteins_with_annotated_domains <- unique(domains$Protein)
@@ -89,19 +90,6 @@ save_all_contact_orders <- function() {
   return (domains)
 }
 
-main <- function() {
-  if (! file.exists("Data/domains_with_contact_order.RData")) { # Only retrieve the data when it isn't stored yet
-    load("Data/domains.RData")
-    save_all_contact_orders()
-  }
-  else {
-    load("Data/domains_with_contact_order.RData")
-  }
-  domains <<- domains
-}
-
-main()
-
 ### Mapping: take the maximum tango score for every domain in the dataset ####
 
 #### TODO: run it and upload the data on the drive!
@@ -152,8 +140,22 @@ save_tango_per_domain <- function(){
   # return(domains)
 }
 
-save_tango_per_domain()
-load("Data/domains_with_COandTango.RData")
+load_full_domains <- function() {
+  if (file.exists("Data/domains_with_COandTango.RData")) {
+    load("Data/domains_with_COandTango.RData")
+  }
+  else {
+    if (file.exists("Data/domains_with_contact_order.RData")) {
+      load("Data/domains_with_contact_order.RData")
+    }
+    else { # Only retrieve the data when it isn't stored yet
+      # load("Data/domains.RData") # Loaded at top of file
+      save_all_contact_orders()
+    }
+    save_tango_per_domain()
+  }
+  domains <<- domains
+}
 
 #General plot 
 plot_domains_contact_order <- function() {

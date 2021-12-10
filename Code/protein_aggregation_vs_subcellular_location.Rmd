@@ -597,12 +597,17 @@ for (i in 1:length(search_terms)) {
 }
 ```
 
-##STRUCTURAL ANALYSIS
+# STRUCTURAL ANALYSIS
 ```{r}
 source("structural_analysis.R")
 ```
 
-#General plot + correlation test
+## Calculate the contact order for each domain and add it to the data frame
+```{r}
+load_full_domains()
+```
+
+##General plot + correlation test
 ```{r}
 plot_domains_contact_order()
 ```
