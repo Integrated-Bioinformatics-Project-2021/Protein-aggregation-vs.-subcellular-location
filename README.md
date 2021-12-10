@@ -1,3 +1,6 @@
 # Protein-aggregation-vs.-subcellular-location
 
-Add the data **human_proteome_df.RData** to the folder **Code>Data**.
+Add the following data to the folder **Code>Data**:
+-  **complete_data.RData** 
+-  **hashed_proteins.RData**
+-  **domains_with_COandTango.RData**
