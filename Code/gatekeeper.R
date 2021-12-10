@@ -326,9 +326,10 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
 
 barplot_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
   title = paste("Percentage of ", residue_category, " residues in ", side_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
-  ggplot(counts, aes(x = Residue, y = perc, fill = Residue)) +
+  plot = ggplot(counts, aes(x = Residue, y = perc, fill = Residue)) +
     geom_bar(stat = 'identity') +
     ggtitle(title)
+  print(plot)
 }
 
 #Barplot ratio amino acid in subcellular location vs. all proteins 
