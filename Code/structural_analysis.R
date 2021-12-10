@@ -190,8 +190,10 @@ plot_2D_contact_order_and_tango_in_subcellular_location <- function() {
   unique_prot_data <- data[!duplicated(data$Protein),]
   domain_and_data <- merge(unique_prot_data, domains)
   for (l in 1: length(search_terms)) {
-    domains_in_subcellular_location <- subset(domain_and_data, domain_and_data$Subcellular_location == search_terms[[l]])
-    ggplot(domains_in_subcellular_location, aes(x = tango, y = contact_order)) + geom_density2d()
+    domains_in_subcellular_location <- subset(domain_and_data, search_terms[l] %in% domain_and_data$Subcellular_location)
+    plot <- ggplot(domains_in_subcellular_location, aes(x = tango, y = contact_order)) + 
+      geom_density2d()
+    print(plot)
   }
 }
 
