@@ -334,12 +334,14 @@ barplot_subcellular_location <- function(counts, residue_category, side_string, 
 
 #Barplot ratio amino acid in subcellular location vs. all proteins 
 barplot_ratio_for_each_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
-  ratio_df <- cts_gk_all
+  ratio_df <- counts
   ratio_df$perc <- ((counts$perc/cts_gk_all$perc) - 1)
-  title = paste("Ratio of ", residue_category, " residues in ", side_string, " regions\n for ", subcellular_location, " compared to all subcellular locations", sep ="", collapse=NULL)
+  title = paste(subcellular_location)
   plot = ggplot(ratio_df, aes(x= Residue, y = perc, fill = Residue)) + 
     geom_bar(stat = 'identity') +
-    ggtitle(title)
+    geom_text(label = ratio_df$n) +
+    ggtitle(title) +
+    theme(plot.title = element_text(hjust = 0.5))
   print(plot)
 }
 
