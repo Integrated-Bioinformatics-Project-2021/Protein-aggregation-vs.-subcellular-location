@@ -185,17 +185,32 @@ get_grouped_domains_NA_set_zero <- function() {
   return(grouped_domains_NA)
 }
 
-#density plot for every subcellular location 
-plot_2D_contact_order_and_tango_in_subcellular_location <- function() {
+#density plot for every subcellular location, all tango of zero excluded 
+plot_2D_contact_order_and_tango_in_subcellular_location_no_zero <- function() {
   unique_prot_data <- data[!duplicated(data$Protein),]
   domain_and_data <- merge(unique_prot_data, domains)
+  domain_and_data <- domain_and_data[!domain_and_data$tango == 0,]
   for (l in 1: length(search_terms)) {
-    domains_in_subcellular_location <- subset(domain_and_data, search_terms[l] %in% domain_and_data$Subcellular_location)
+    domains_in_subcellular_location <- subset(domain_and_data, grepl(search_terms[l], domain_and_data$Subcellular_location))
     plot <- ggplot(domains_in_subcellular_location, aes(x = tango, y = contact_order)) + 
       geom_density2d()
     print(plot)
   }
 }
+
+#density plot for every subcellular location, with tango of zero
+plot_2D_contact_order_and_tango_in_subcellular_location <- function() {
+  unique_prot_data <- data[!duplicated(data$Protein),]
+  domain_and_data <- merge(unique_prot_data, domains)
+  for (l in 1: length(search_terms)) {
+    domains_in_subcellular_location <- subset(domain_and_data, grepl(search_terms[l], domain_and_data$Subcellular_location))
+    plot <- ggplot(domains_in_subcellular_location, aes(x = tango, y = contact_order)) + 
+      geom_density2d()
+    print(plot)
+  }
+}
+
+#Creating 
 
 # In Lysosome we have a small fraction of proteins with high tango and low contact order that goes against the trend
 # Secreted: small fraction with very small tango and medium contact order
