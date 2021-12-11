@@ -337,9 +337,10 @@ barplot_ratio_for_each_subcellular_location <- function(counts, residue_category
   ratio_df <- cts_gk_all
   ratio_df$perc <- ((counts$perc/cts_gk_all$perc) - 1)
   title = paste("Ratio of ", residue_category, " residues in ", side_string, " regions\n for ", subcellular_location, " compared to all subcellular locations", sep ="", collapse=NULL)
-  ggplot(ratio_df, aes(x= Residue, y = perc, fill = Residue)) + 
+  plot = ggplot(ratio_df, aes(x= Residue, y = perc, fill = Residue)) + 
     geom_bar(stat = 'identity') +
     ggtitle(title)
+  print(plot)
 }
 
 analyse_sides <- function(cts) {
