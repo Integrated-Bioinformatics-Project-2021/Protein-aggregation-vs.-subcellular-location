@@ -47,6 +47,7 @@ library(ggplot2)
 library(dplyr)
 library(ggrepel)
 library(tidyverse)
+library(groupdata2)
 library(igraph)
 ```
 
@@ -433,6 +434,7 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$glu_ct, "
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "SER", side_string)
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
 ```
+
 
 ## Interested Groups
 

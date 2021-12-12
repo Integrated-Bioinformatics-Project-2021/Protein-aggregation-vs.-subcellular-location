@@ -68,7 +68,6 @@ get_structure_domain <- function(structure, boundaries) {
 # Save the complete dataframe as "Data/domains_with_contact_order.RData".
 save_all_contact_orders <- function() {
   for (i in 1:length(total_list_of_proteins)) {
-    print(i)
     current_protein = total_list_of_proteins[i]
     protein_structure = get_structure_protein(current_protein)
     boundaries = get_domain_boundaries(current_protein) # TODO: make more efficient using $begin.domain
@@ -225,4 +224,35 @@ plot_2D_contact_order_and_tango_in_subcellular_location_no_zero <- function() {
     print(plot)
   }
 }
+
+### Getting a domain with high contact order, few APRs, low TANGO, extra-cellular
+unique_prot_data <- data[!duplicated(data$Protein),]
+domain_and_data <- merge(unique_prot_data, domains)
+
+high_contact <- domain_and_data[order(-domain_and_data$contact_order),]
+high_contact <- high_contact[high_contact$Subcellular_location=="Extracellular space",]
+high_contact <- high_contact[high_contact$tango>0,]
+high_contact <- high_contact[high_contact$contact_order>0.3,]
+high_contact <- high_contact[order(high_contact$tango),]
+high_contact <- high_contact[is.na(high_contact)==FALSE,]
+high_contact 
+protein <- data[data$Protein == "Q9H324", ]
+protein <- protein[protein$APRcount_tango>0,]
+protein_APR <- protein[protein$APRdef2_tango>1,]
+get_domain <- domain_and_data[domain_and_data$Protein=="Q9H324",]$PDB
+protein_APR[1:nrow(protein_APR),]
+
+### Getting a domain with low contact order, strong APRs, high TANGO, cytoplasm or nucleus
+low_contact <- domain_and_data[order(domain_and_data$contact_order),]
+low_contact <- low_contact[low_contact$Subcellular_location=="Nucleus",]
+low_contact <- low_contact[low_contact$tango>0,]
+low_contact <- low_contact[low_contact$contact_order<0.1,]
+low_contact <- low_contact[order(-low_contact$tango),]
+low_contact <- low_contact[is.na(low_contact)==FALSE,]
+low_contact
+protein <- data[data$Protein == "Q6KC79", ]
+protein <- protein[protein$APRcount_tango>0,]
+protein_APR <- protein[protein$APRdef2_tango==1,]
+get_domain <- domain_and_data[domain_and_data$Protein=="Q6KC79",]$PDB
+protein_APR[1:nrow(protein_APR),]
 
