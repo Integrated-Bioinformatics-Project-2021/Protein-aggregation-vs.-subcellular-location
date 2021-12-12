@@ -31,6 +31,7 @@ output:
 #install.packages("dgof")
 #install.packages("igraph")
 #install.packages("ggpubr")
+#install.packages("gtools")
 #install.packages("groupdata2")
 ```
 
@@ -47,6 +48,7 @@ library(dplyr)
 library(ggrepel)
 library(tidyverse)
 library(groupdata2)
+library(igraph)
 ```
 
 ## Define the working directory.
@@ -67,12 +69,22 @@ rm(return_value) # To get rid of the extra memory usage
 ```
 
 ## Exploratory analysis
+
+### -- Co-occurrence Matrix --
+This function gives the number of proteins that are shared by different subcellular locations.
+
+If relative = **FALSE**, the absolute number of shared proteins is displayed.
+
+If relative = **TRUE**, the ratio of the intersection to the union of the two subcellular locations is shown multiplied by 10000.
+
+### Interpretation:
+We see that most of the proteins that are located in the nucleus are also common for the cytoplasm as a subcellular location. Cytoplasm also shares common proteins with cell membrane. Co-occurrence plot seem to be in line with the general pattern of protein locations. For example: It is most probably expected that if protein is located in the nucleus then it will also be in the cytoplasm (transcription factor).
+
 ```{r}
 source("co_occurence.R")
 plot_co_occurence(relative = FALSE)
 plot_co_occurence(relative = TRUE)
 ```
-
 # TANGO scores
 
 ```{r}
@@ -81,79 +93,198 @@ source("tango_scores.R")
 
 ## Average tango score distribution in all proteins
 
+### Function Documentation:
+
+**plot_average_tango_scores_complete_proteins**: Generates the violin plot for all of the proteins according to their subcellular locations. Red points demonstrate the mean value of Tango Score for all subcellular locations.
+
+**significance_subcellular**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+
+**get_krustal_test_results**: For calculating the general significance of the proteins with respect to average tango scores for subcellular locations.
+
+**get_wilcox_test_table**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file. Also generates a heatmap to demonstrate these values.
+
+**plot_stat_significance**: Plotting the options for statistical significance for all proteins to check whether mean tango scores for each subcellular location are significant or not.
+
+**Click here to see more info about [violin plots](https://en.wikipedia.org/wiki/Violin_plot)**
+
 ##Statistical tests and visualisation for subcellular location
+
+### Interpretation:
+Heatmap can be checked to see the significance level for the difference in the average score of different subcellular locations. All things considered, when significance is checked with respect to the mean, we see that only 3 subcellular locations are not significant according to the test.
+
 ```{r}
 plot_average_tango_scores_complete_proteins()
 significance_subcellular(tango_scores_complete_protein)
 get_krustal_test_results(tango_scores_complete_protein)
 get_wilcox_test_table(tango_scores_complete_protein)
+plot_stat_significance(tango_scores_complete_protein)
 ```
 ##Statistical tests and visualisation on secretory vs. non-secretory 
+
+### Function Documentation:
+
+**plot_average_tango_scores_complete_proteins_joined_secreted**: Generates the violin plot for all of the proteins according to their subcellular locations. However, this time all proteins are clustered under secretory and non-secretory groups. Red points are showing the mean value of Tango Score for these categories.
+
+**significance secretory**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
+
+**plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of tango scores. Distributions are calculated using secretory and non-secretory groups for all proteins.
+
+### Interpretation: 
+When proteins for different subcellular locations are clustered into 2 different categories such as secreted and non-secreted, these 2 categories are significantly different between each other.
+
 ```{r}
-plot_average_tango_scores_complete_proteins_joined_secreted()
+#plot_average_tango_scores_complete_proteins_joined_secreted()
 significance_secretory(tango_scores_complete_protein)
-plot_ks_test(tango_scores_complete_protein)
+plot_stat_significance_secretory(tango_scores_complete_protein)
 ```
-
-
-
 ## Average tango score distribution in proteins with an APR region
 
+### Function Documentation:
+
+**plot_average_tango_scores_APR_proteins**: Generates the violin plot for all of the proteins that have APR region according to their subcellular locations. Red points demonstrate the mean value of the Tango Score for each subcellular location.
+
+**significance_subcellular**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+
+**get_krustal_test_results**: For calculating the general significance of the proteins with respect to average tango scores for subcellular locations.
+
+**get_wilcox_test_table**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file. Also generates a heatmap to demonstrate these values.
+
+**plot_stat_significance**: Plotting the options for statistical significance for only proteins with APR regions to check whether mean tango scores for each subcellular location are significant or not.
+
 ##Statistical tests and visualisation for subcellular location
+
+### Interpretation:
+When only proteins with APR regions are considered, significance levels are dropping significantly with respect to mean tango scores.
+
 ```{r}
 plot_average_tango_scores_APR_proteins()
 significance_subcellular(tango_scores_APR_protein)
-get_krustal_test_results(tango_scores_complete_protein)
-get_wilcox_test_table(tango_scores_complete_protein)
+get_krustal_test_results(tango_scores_APR_protein)
+get_wilcox_test_table(tango_scores_APR_protein)
+plot_stat_significance(tango_scores_APR_protein)
 ```
 
 ##Statistical tests and visualisation on secretory vs. non-secretory 
-```{r}
-plot_average_tango_scores_APR_proteins_joined_secreted()
-significance_secretory(tango_scores_APR_protein)
-plot_ks_test(tango_scores_APR_protein)
-```
 
+### Function Documentation:
+
+**plot_average_tango_scores_APR_proteins_joined_secreted**: Generates the violin plot for all of the proteins with APR regions according to their subcellular locations. However, this time all APR proteins are clustered under secretory and non-secretory groups. Red points are showing the mean value of Tango Score for these categories.
+
+**significance_secretory**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
+
+**plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of tango scores. Distributions are calculated using secretory and non-secretory groups for all proteins.
+
+### Interpretation:
+When proteins for different subcellular locations are clustered into 2 different categories such as secreted and non-secreted, these 2 categories are significantly different between each other in terms of mean tango scores.
+
+```{r}
+#plot_average_tango_scores_APR_proteins_joined_secreted()
+significance_secretory(tango_scores_APR_protein)
+plot_stat_significance_secretory(tango_scores_APR_protein)
+```
 ## Distribution of maximal tango scores
 
-##Statistical tests and visualisation for subcellular location
+### Statistical tests and visualisation for subcellular location
+
+### Function Documentation:
+
+**plot_max_tango_scores**: Generates the violin plot for max tango score of all proteins according to their subcellular locations. Red points demonstrate the mean value of the tango score for each subcellular location.
+
+**significance_subcellular**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+
+**get_krustal_test_results**: For calculating the general significance of the proteins with respect to their max tango scores for subcellular locations.
+
+**get_wilcox_test_table**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file.
+
+**plot_stat_significance**: Plotting the options for statistical significance for all proteins to check whether max tango scores for each subcellular location are significant or not.
+
+### Interpretation:
+We see that mean value of the max tango scores for each subcellular locations. Mean values are significant for all subcellular locations except lysosome and cell membrane.
+
 ```{r}
 plot_max_tango_scores()
 significance_subcellular(max_tango_scores)
 get_krustal_test_results(max_tango_scores)
 get_wilcox_test_table(max_tango_scores)
+plot_stat_significance(max_tango_scores)
 ```
 ##Statistical tests and visualisation on secretory vs. non-secretory
-```{r}
-significance_secretory(max_tango_scores)
-plot_ks_test(max_tango_scores)
-```
 
+### Function Documentation:
+
+**plot_max_tango_scores_complete_proteins_joined_secreted**: Generates the violin plot for max tango score of all of the proteins according to their subcellular locations. However, this time all proteins are clustered under secretory and non-secretory groups. Red points are showing the mean value of Tango Score for these categories.
+
+**significance secretory**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
+
+**plot_stat_significance_secretory**: Function for visualization of the Mann-Whitney test for the distributions of max tango scores. Distributions are calculated using secretory and non-secretory protein groups. All proteins are included to the calculation.
+
+### Interpretation:
+When proteins in different subcellular locations are clustered, mean of the max tango scores for non-secretory proteins are not deemed as significant.
+
+```{r}
+# Are we going to add the plot here for secretory vs non-secretory
+#plot_max_tango_scores_complete_proteins_joined_secreted() No need to use
+significance_secretory(max_tango_scores)
+plot_stat_significance_secretory(max_tango_scores)
+```
 
 ## Distribution of number of APR regions per protein normalized for protein length
 
-##Statistical tests and visualisation for subcellular location
-```{r}
-#plot_average_tango_scores_complete_proteins() # Should be: plot_normalized_number_APR_regions()
-#significance_subcellular_nbAPR(normalized_number_APR_regions)
-#get_krustal_test_results_nbAPR(normalized_number_APR_regions)
-#get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
-```
+### Statistical tests and visualisation for subcellular location
 
-##Statistical tests and visualisation on secretory vs. non-secretory
-```{r}
-#plot_average_tango_scores_complete_proteins_joined_secreted() # Should be: plot_normalized_number_APR_regions_joined_secreted()
-#significance_secretory_nbAPR(normalized_number_APR_regions)
-#plot_ks_test_nbAPR(normalized_number_APR_regions)
-```
+### Function Documentation:
 
+**plot_normalized_number_APR_regions**: Generates the violin plot for normalized number of APR regions (where number of APR regions are divided into length of protein) for all proteins according to their subcellular locations. Red points demonstrate the mean value of the tango score for each subcellular location.
+
+**significance_subcellular_nbAPR**: Following function calculates the significance in tango scores between the subcellular locations. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the p-value table of pairwise subcellular locations.
+
+**get_krustal_test_results_nbAPR**: For calculating the general significance of the proteins with respect to their normalized number of APR regions for subcellular locations.
+
+**get_wilcox_test_table_nbAPR**: Function that is used to calculate the significance between all subcellular locations for different datasets of proteins (all proteins, only proteins with APR regions) and their respective tango scores (max score, average score) and writes the result into csv file.
+
+**plot_stat_significance_nbAPR**: Plotting the options for statistical significance for all proteins to check whether normalized number of APR regions for each subcellular location are significant or not.
+
+### Interpretation:
+Mean of the number of normalized APR regions are considered as significant for all of the subcellular locations. Heatmap is again used for showing the significance levels in between different subcellular locations.
+
+```{r}
+plot_normalized_number_APR_regions()
+significance_subcellular_nbAPR(normalized_number_APR_regions)
+get_krustal_test_results_nbAPR(normalized_number_APR_regions)
+get_wilcox_test_table_nbAPR(normalized_number_APR_regions)
+plot_stat_significance_nbAPR(normalized_number_APR_regions)
+```
+## Statistical tests and visualisation on secretory vs. non-secretory
+
+### Function Documentation:
+
+**plot_normalized_number_APR_regions_joined_secreted**: Generates the violin plot for number of normalized APR regions for all the proteins according to their subcellular location. However, this time all proteins are clustered under secretory and non-secretory groups. Red points are showing the mean value of Tango Score for these categories.
+
+**significance_secretory_nbAPR**: Following function calculates the significance in tango scores between the secretory and non-secretory proteins. It uses Mann-Whitney significance test to compare between two protein sample groups. As a result, returns the pairwise p-value of these 2 protein groups.
+
+**plot_stat_significance_nbAPR_secretory**: Function for visualization of the Mann-Whitney test for the distributions of bumber of normalized APR regions. Distributions are calculated using secretory and non-secretory protein groups. All proteins are included in this calculation.
+
+### Interpretation:
+Again, both secretory and non-secretory groups of proteins are significant in terms of mean value of normalized APR regions. Important thing to notice in here is the fact that secretory proteins are showing a higher normalized APR region value compared to non-secretory group of proteins.
+
+```{r}
+plot_normalized_number_APR_regions_joined_secreted()
+significance_secretory_nbAPR(normalized_number_APR_regions)
+plot_stat_significance_nbAPR_secretory(normalized_number_APR_regions)
+```
 
 # Peptide charges
+
+This part of the analysis is not considered. Still, explanation of the function is as follows:
+
+**classify_subsets**: Get the subset of the APR proteins depending on the definition of the residue (GK, distal region, flanking region, APR region). We define different subsets to filter the data depending on the residue category.
 
 ```{r}
 source("charges.R")
 classify_subsets()
 ```
+
+Defining the variables depending on the filtration method of the whole data.
 
 ```{r}
 # TODO: make plots showing the differences between APR, GK and FR based on charges
@@ -164,7 +295,19 @@ classify_subsets()
 # protein_sequences_FR_peptides = get_charge(FR_peptides)
 ```
 
+If this analysis is not done, delete the following variables to speed up the memory
+
+```{r}
+rm(APR_peptides)
+rm(GK_peptides)
+rm(FR_peptides)
+```
+
 # Pie Plot for the residues
+
+postive charged aas ("positive") --> R,H,K <br /> negative charged aas ("negative") --> D,E <br /> uncharged aas ("uncharged") --> S,T,N,Q <br />  special cases aas ("special") --> C,G,P,A  <br />  hydrophobic aas ("hydrophobic") --> V,I,L,M,F,Y,W
+
+**Specific residues of interest**
 
 Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E
 
@@ -174,58 +317,91 @@ source("gatekeeper.R")
 
 ## Only for the GK regions
 
+**analyse_gate_keeper_regions**: General analysis of all proteins for only GK regions
+
 ```{r}
 GK_analysis = analyse_gate_keeper_regions()
 ```
 
-PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+
+**barplot_percentage_of_all_residues**: Function to plot the percentage of all residues in the GK regions of all proteins.
 
 ```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
+barplot_percentage_of_all_residues(GK_analysis$cts_gk, "GK REGIONS")
+```
+### PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+
+**barplot_percentage_of_all_residues**: Plots the percentage of all 20 residues for every protein. Considers the residues in the GK and flanking regions.
+
+### Interpretation:
+We have more abundance of specific residues when we only consider the percentage of the amino acids in the GK regions. However, when percentages are calculated for residues that are also in the flanking regions, we see that higher percentage of some residues are dropping to the average level instead of increasing or remaining still. This indicates that GK regions indeed have some preference for specific residues. These residues are mostly the charged amino acids.
+
+```{r}
+barplot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
 ```
 
-PERCENTAGE OF ALL RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+### PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK REGIONS IN ALL PROTEINS
+
+**barplot_percentage_of_all_residues**: Occurrence of the residues in GK region depending on the category of the amino acid.
+
+### Intepretation:
+We see very little preference for hydrophobic residues since the whole purpose of GK regions are assumed to be preventing the aggregation of proteins with other hydrophobic regions.
 
 ```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl, "GK + FL REGIONS")
+barplot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
 ```
 
-PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK REGIONS IN ALL PROTEINS
+### PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK + FL REGIONS IN ALL PROTEINS
+
+**barplot_percentage_of_all_residues**: Occurrence of the residues in GK + FL region depending on the category of the amino acid.
+
+### Interpretation:
+When flanking regions are included, percentage of these groups of residues gets closer to average probability which is 20%
 
 ```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_groups, "GK REGIONS")
-```
-
-PERCENTAGE OF ALL GROUPS OF RESIDUES FOR ALL THE GK + FL REGIONS IN ALL PROTEINS
-
-```{r}
-pie_plot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK REGIONS")
+barplot_percentage_of_all_residues(GK_analysis$cts_gk_fl_groups, "GK + FL REGIONS")
 ```
 
 ## Interested residues
 
-Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E <br /> Serine (Ser) --> S <br /> Proline (Pro) --> P <br /> PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
+
+Lysine (Lys) --> K <br /> Arginine (Arg) --> R <br /> Aspartic acid (Asp) --> D <br /> Glutamic acid (Glu) --> E <br /> Serine (Ser) --> S <br /> Proline (Pro) --> P <br /> 
+
+**analyse_interested_gate_keeper_regions**: Obtain the percentage of the interested residues in GK regions or GK + flanking regions.
 
 ```{r}
 GK_analysis_interested_aa = analyse_interested_gate_keeper_regions(GK_analysis)
 ```
 
-```{r}
-pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk, "GK REGIONS")
-```
-
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+**barplot_percentage_of_interested_residues**: Plotting the percentage of interested residues in the GK region of all proteins.
 
 ```{r}
-pie_plot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk_fl, "GK + FL REGIONS")
+barplot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk, "GK REGIONS")
 ```
 
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL REGIONS IN ALL PROTEINS
+
+**barplot_percentage_of_interested_residues**: Plotting the percentage of interested residues in the GK + flanking region of all proteins.
+
+```{r}
+barplot_percentage_of_interested_residues(GK_analysis_interested_aa$cts_interest_gk_fl, "GK + FL REGIONS")
+```
+
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK SIDES
+
+**analyse_gate_keeper_residues**: Obtain the side information for the interested residues in the GK regions.
 
 ```{r}
 GK_analysis_GK_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_side)
 side_string = "GK"
 ```
+
+**pie_plot_percentage_of_specific_residue**: Plotting the side information for each interested amino acid in GK regions.
+
+### Interpretation:
+Slight preference for Ser on the right GK region and also huge preference for the Pro for the left side of the GK regions.
 
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$lys_ct, "LYS", side_string)
@@ -236,12 +412,19 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$ser_ct, "SER", s
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_residues$pro_ct, "PRO", side_string)
 ```
 
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+
+**analyse_gate_keeper_residues**: Obtain the side information for the interested residues in the GK + flanking regions.
 
 ```{r}
 GK_analysis_GK_and_FL_residues = analyse_gate_keeper_residues(GK_analysis$cts_gk_fl_side)
 side_string = "GK + FL"
 ```
+
+**pie_plot_percentage_of_specific_residue**: Plotting the side information for each interested amino acid in GK + flanking regions.
+
+### Interpretation:
+Nothing super interesting to see when FL regions are also included to the analysis.
 
 ```{r}
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$lys_ct, "LYS", side_string)
@@ -252,39 +435,117 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
 ```
 
-##INTERESTED GROUPS Positive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S <br /> PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+
+## Interested Groups
+
+Postive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S 
+
+### PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+
+**analyse_gate_keeper_groups**: Obtain the side information for different groups of amino acids in the GK regions.
 
 ```{r}
 GK_analysis_GK_groups = analyse_gate_keeper_groups(GK_analysis$cts_gk_groups_side)
 side_string = "GK"
 ```
 
+**pie_plot_percentage_of_specific_residue**: Plotting the side information for each amino acid group in GK regions.
+
+### Interpretation:
+There is a preference for left side of the GK for special case residues whereas there is also a big preference for right side of the GK regions for hydrophobic residues.
+
 ```{r}
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$positive, "positive charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$negative, "negative charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$uncharged, "uncharged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$special, "special cases", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$hydrophobic, "hydrophobic", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$positive, "POSITIVE CHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$negative, "NEGATIVE CHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$uncharged, "UNCHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$special, "SPECIAL CASES", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_groups$hydrophobic, "HYDROPHOBIC", side_string)
 ```
 
-PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+### PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK + FL SIDES
+
+**analyse_gate_keeper_groups**: Obtain the side information for different groups of amino acids in the GK + flanking regions.
 
 ```{r}
 GK_analysis_GK_and_FL_groups = analyse_gate_keeper_groups(GK_analysis$cts_gk_fl_groups_side)
 side_string = "GK + FL"
 ```
 
+**pie_plot_percentage_of_specific_residue**: Plotting the side information for each amino acid group in GK + FL regions.
+
+### Interpretation:
+When GK + FL regions are considered, side distribution for all groups become nearly equal for left and right sides of the GK.
+
 ```{r}
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$positive, "positive charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$negative, "negative charged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$uncharged, "uncharged", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$special, "special cases", side_string)
-pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic, "hydrophobic", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$positive, "POSITIVE CHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$negative, "NEGATIVE CHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$uncharged, "UNCHARGED", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$special, "SPECIAL CASES", side_string)
+pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_groups$hydrophobic, "HYDROPHOBIC", side_string)
 ```
 
-## Subcellular location
+## Now for the subcellular locations
 
-Previous analyses are done for all of the proteins, but now we will be working on all the proteins that belong to a specific subcellular location
+**Previous analyses** are done for all of the proteins, but now we will be working on all the proteins that belong to a specific subcellular location.
+
+### Functional Documentation:
+
+**get_counts_for_subcellular_location**: To obtain the corresponding subset of proteins that are belonging to a specific subcellular location for determined counts.
+
+**barplot_subcellular_location**: Function for plotting the residue percentage depending on the given category.
+
+**analyse_interested_gate_keeper_regions**: Obtain the subset of proteins (only interest) for combination of regions.
+
+**analyse_sides**: Obtain the percentage of single or groups of residues based on the given regions.
+
+**pie_plot_sides**: Plotting the percentage of different sides for a given residue or a residue group.
+
+### Interpretation:
+
+**--Cell Membrane--**
+- Specific preference (more than 10%) for E,D and R in GK regions
+- 98% left preference for PRO in cell membrane protein GK regions
+- 68% right side preference for hydrophobic residues in GK regions of cell membrane proteins
+**--Mitochondrion--**
+- Increase in special residues in the GK regions
+- Specific preference (more than 10%) for E,D,K and R in GK regions
+- 96% left preference for PRO in cell membrane protein GK regions
+- 61% left preference for special cases in GK regions
+- 64% right preference for hydrophobic residues in GK regions
+**--Nucleus--**
+- Decrease in special residues in GK regions
+- Specific preference (more than 10%) for E,D,K and R in GK regions
+- 97% left preference for PRO in cell membrane protein GK regions
+- 62% left preference for special cases in GK regions
+- 66% right preference for hydrophobic residues in GK regions
+**--Endoplasmic Reticulum--**
+- Specific preference (more than 10%) for E,D,K and R in GK regions
+- Occurrence of between residues for GK regions
+- 62% left preference for special cases in GK regions
+- 67% right preference for hydrophobic residues in GK regions
+**--Golgi Apparatus--**
+- 26% preference for negative, positive, and uncharged residue groups
+- Specific preference (more than 10%) for E,D,K and R in GK regions with D being the highest (13.6%)
+- 98% left preference for PRO in cell membrane protein GK regions
+- 60% left preference for special cases in GK regions
+- 65% right preference for hydrophobic residues in GK regions
+**--Lysosome--**
+- 27.6% uncharged residue preference in the GK regions
+- Specific preference (more than 10%) for E,D,K and R in GK regions. S is close to 10% (9.2%)
+- 98% left preference for PRO in cell membrane protein GK regions
+- 62% left preference for special cases in GK regions
+- 70% right preference for hydrophobic residues in GK regions
+**--Cytoplasm--**
+- Specific preference (more than 10%) for E,D,K and R in GK regions
+- 97% left preference for PRO in cell membrane protein GK regions
+- 61% left preference for special cases in GK regions
+- 67% right preference for hydrophobic residues in GK regions
+**--Extracellular Space--**
+- 20% preference for special residues in GK regions
+- Specific preference (more than 10%) for E,D,K and R in GK regions with D being the highest (13.1%)
+- 96% left preference for PRO in cell membrane protein GK regions
+- 63% left preference for special cases in GK regions
+- 71% right preference for hydrophobic residues in GK regions
 
 ```{r}
 # Statistics for each subcellular location
@@ -292,17 +553,18 @@ for (i in 1:length(search_terms)) {
   counts = get_counts_for_subcellular_location(search_terms[i], GK_analysis) # Takes a while to run
   
   residue_category = "all"
-  pie_plot_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
-  pie_plot_subcellular_location(counts$cts_gk_groups, residue_category, "GK", search_terms[i])
-  pie_plot_subcellular_location(counts$cts_gk_fl, residue_category, "GK + FL", search_terms[i])
-  pie_plot_subcellular_location(counts$cts_gk_fl_groups, residue_category, "GK + FL", search_terms[i])
+  barplot_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
+  barplot_subcellular_location(counts$cts_gk_groups, residue_category, "GK", search_terms[i])
+  barplot_ratio_for_each_subcellular_location(counts$cts_gk, residue_category, "GK", search_terms[i])
+  barplot_subcellular_location(counts$cts_gk_fl, residue_category, "GK + FL", search_terms[i])
+  barplot_subcellular_location(counts$cts_gk_fl_groups, residue_category, "GK + FL", search_terms[i])
   
   # PERCENTAGE OF INTERESTED PROTEINS IN SUBCELLULAR LOCATIONS
   
   counts_interest <- analyse_interested_gate_keeper_regions(counts)
   residue_category = "interested"
-  pie_plot_subcellular_location(counts_interest$cts_interest_gk, residue_category, "GK", search_terms[i])
-  pie_plot_subcellular_location(counts_interest$cts_interest_gk_fl, residue_category, "GK + FL", search_terms[i])
+  barplot_subcellular_location(counts_interest$cts_interest_gk, residue_category, "GK", search_terms[i])
+  barplot_subcellular_location(counts_interest$cts_interest_gk_fl, residue_category, "GK + FL", search_terms[i])
   
   # NOW THE SIDES PART
   counts_side_gk <- analyse_sides(counts$cts_gk_side)
@@ -338,12 +600,17 @@ for (i in 1:length(search_terms)) {
 }
 ```
 
-##STRUCTURAL ANALYSIS
+# STRUCTURAL ANALYSIS
 ```{r}
 source("structural_analysis.R")
 ```
 
-#General plot + correlation test
+## Calculate the contact order and tango score for each domain and add it to the data frame
+```{r}
+load_full_domains()
+```
+
+##General plot + correlation test
 ```{r}
 plot_domains_contact_order()
 ```
@@ -358,9 +625,15 @@ grouped_domains_with_NA <- get_grouped_domains_NA_set_zero()
 plot_tango_contact_order_grouped(grouped_domains_with_NA)
 ```
 
-##2D density plots for each subcellular location
+##2D density plots for each subcellular location - proteins with tango score of zero excluded
+```{r}
+plot_2D_contact_order_and_tango_in_subcellular_location_no_zero()
+```
+##2D density plots for each subcellular location - proteins with tango score of zero included
+
 ```{r}
 plot_2D_contact_order_and_tango_in_subcellular_location()
 ```
+
 
 

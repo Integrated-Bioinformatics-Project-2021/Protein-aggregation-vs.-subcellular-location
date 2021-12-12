@@ -23,8 +23,6 @@ calculate_co_occurence <- function() {
   co_occurence <<- t(protein_in_subcellular_location) %*% protein_in_subcellular_location
 }
 
-library(igraph)
-
 # Plot the co-occurency map for the number of shared proteins in the subcellular locations
 # If relative = FALSE, the absolute number of shared proteins is displayed.
 # If relative = TRUE, the ratio of the intersection to the union of the two subcellular locations is shown multiplied by 10000.

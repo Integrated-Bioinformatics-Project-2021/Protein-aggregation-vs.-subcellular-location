@@ -65,37 +65,29 @@ analyse_gate_keeper_regions <- function() {
   # Aspartic acid (Asp) --> D
   # Glutamic acid (Glu) --> E
 
-  cts_gk <- GK_residues %>% 
+  cts_gk_all <<- GK_residues %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_side <- GK_residues %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_fl <- GK_FL_residues %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_fl_side <- GK_FL_residues %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   # --groups OF AAS--
 
@@ -103,39 +95,31 @@ analyse_gate_keeper_regions <- function() {
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
 
   cts_gk_groups_side <- GK_groups %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
 
   cts_gk_fl_groups <- GK_FL_groups %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
 
   cts_gk_fl_groups_side <- GK_FL_groups %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
 
   return (list("GK_residues" = GK_residues,
                "GK_FL_residues" = GK_FL_residues,
                "GK_groups" = GK_groups,
                "GK_FL_groups" = GK_FL_groups,
-               "cts_gk" = cts_gk,
+               "cts_gk" = cts_gk_all,
                "cts_gk_side" = cts_gk_side,
                "cts_gk_fl" = cts_gk_fl,
                "cts_gk_fl_side" = cts_gk_fl_side,
@@ -145,17 +129,11 @@ analyse_gate_keeper_regions <- function() {
                "cts_gk_fl_groups_side" = cts_gk_fl_groups_side))
 }
 
-pie_plot_percentage_of_all_residues <- function(given_region, region_string) {
+barplot_percentage_of_all_residues <- function(given_region, region_string) {
   title = paste("PERCENTAGE OF ALL RESIDUES FOR ALL\n OF THE ", region_string,  " IN ALL PROTEINS", sep="", collapse=NULL)
-  ggplot(given_region, aes(x = "", y = perc, fill = Residue)) +
-    geom_col() +
-    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-    coord_polar(theta = "y")+
-    guides(fill = guide_legend(title = "Residue"))+
-    theme_void()+
+  ggplot(given_region, aes(x = Residue, y = perc, fill = Residue)) +
+    geom_bar(stat = 'identity') +
     ggtitle(title)
-  #scale_fill_brewer(palette="PiYG")+
-  #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
 }
 
 # PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE GK REGIONS IN ALL PROTEINS
@@ -168,17 +146,11 @@ analyse_interested_gate_keeper_regions <- function(GK_analysis) {
                "cts_interest_gk_fl" = cts_interest_gk_fl))
 }
 
-pie_plot_percentage_of_interested_residues <- function(given_region, region_string) {
+barplot_percentage_of_interested_residues <- function(given_region, region_string) {
   title = paste("PERCENTAGE OF INTERESTED RESIDUES FOR ALL\n OF THE ", region_string," IN ALL PROTEINS", sep="", collapse=NULL)
-  ggplot(given_region, aes(x = "", y = perc, fill = Residue)) +
-    geom_col() +
-    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-    coord_polar(theta = "y")+
-    guides(fill = guide_legend(title = "Residue"))+
-    theme_void()+
-    scale_fill_brewer(palette="Dark2")+
+  ggplot(given_region, aes(x = Residue, y = perc, fill = Residue)) +
+    geom_bar(stat = 'identity') +
     ggtitle(title)
-  #geom_label(aes(label = labels), position = position_stack(vjust = 0.5), show.legend = FALSE)
 }
 
 # PERCENTAGE OF INTERESTED RESIDUES FOR ALL OF THE SPECIFIED SIDES
@@ -297,65 +269,49 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_fl <- cts_interest_gk_fl %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_side <- cts_interest_gk %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_fl_side <- cts_interest_gk_fl %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
 
   cts_gk_groups <- cts_interest_gk_groups %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_fl_groups <- cts_interest_gk_fl_groups %>% 
     group_by(Residue) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_groups_side <- cts_interest_gk_groups %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   cts_gk_fl_groups_side <- cts_interest_gk_fl_groups %>% 
     group_by(Residue, Side) %>% # Variable to be transformed
     count() %>% 
     ungroup() %>% 
-    mutate(perc = `n` / sum(`n`)) %>% 
-    arrange(perc) %>%
-    mutate(labels = scales::percent(perc))
+    mutate(perc = (`n` / sum(`n`)*100))
   
   
   return (list("cts_gk" = cts_gk,
@@ -368,15 +324,24 @@ get_counts_for_subcellular_location <- function(subcellular_location, GK_analysi
                "cts_gk_fl_groups_side" = cts_gk_fl_groups_side))
 }
 
-pie_plot_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
+barplot_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
   title = paste("Percentage of ", residue_category, " residues in ", side_string, " regions\n for ", subcellular_location, sep="", collapse=NULL)
-  plot = ggplot(counts, aes(x = "", y = perc, fill = Residue)) +
-    geom_col() +
-    geom_label_repel(aes(label = labels), max.overlaps = 30,size = 4.5, position = position_stack(vjust = 0.5), show.legend = FALSE)+
-    coord_polar(theta = "y")+
-    guides(fill = guide_legend(title = "Residue"))+
-    theme_void()+
+  plot = ggplot(counts, aes(x = Residue, y = perc, fill = Residue)) +
+    geom_bar(stat = 'identity') +
     ggtitle(title)
+  print(plot)
+}
+
+#Barplot ratio amino acid in subcellular location vs. all proteins 
+barplot_ratio_for_each_subcellular_location <- function(counts, residue_category, side_string, subcellular_location) {
+  ratio_df <- counts
+  ratio_df$perc <- ((counts$perc/cts_gk_all$perc) - 1)
+  title = paste(subcellular_location)
+  plot = ggplot(ratio_df, aes(x= Residue, y = perc, fill = Residue)) + 
+    geom_bar(stat = 'identity') +
+    geom_text(label = ratio_df$n) +
+    ggtitle(title) +
+    theme(plot.title = element_text(hjust = 0.5))
   print(plot)
 }
 
