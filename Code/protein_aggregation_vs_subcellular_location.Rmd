@@ -31,6 +31,7 @@ output:
 #install.packages("dgof")
 #install.packages("igraph")
 #install.packages("ggpubr")
+#install.packages("groupdata2")
 ```
 
 ## Load the needed libraries.
@@ -45,6 +46,7 @@ library(ggplot2)
 library(dplyr)
 library(ggrepel)
 library(tidyverse)
+library(groupdata2)
 ```
 
 ## Define the working directory.
@@ -250,7 +252,7 @@ pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$ser_ct, "
 pie_plot_percentage_of_specific_residue(GK_analysis_GK_and_FL_residues$pro_ct, "PRO", side_string)
 ```
 
-##INTERESTED GROUPS Postive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S <br /> PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
+##INTERESTED GROUPS Positive charged (positive) --> K <br /> Negative charged (negative) --> R <br /> Uncharged (uncharged) --> D <br /> Special cases (special) --> E <br /> Hydrophobic (hydrophobic) --> S <br /> PERCENTAGE OF INTERESTED GROUPS FOR ALL THE GK SIDES
 
 ```{r}
 GK_analysis_GK_groups = analyse_gate_keeper_groups(GK_analysis$cts_gk_groups_side)
